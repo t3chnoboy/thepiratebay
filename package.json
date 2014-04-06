@@ -1,17 +1,17 @@
 {
-  "name": "thepiratebay-es6",
+  "name": "thepiratebay",
   "version": "0.0.1",
   "description": "The pirate bay client",
-  "homepage": "http://github.com/t3chnoboy/thepiratebay-es6",
-  "repository": "git://github.com/t3chnoboy/thepiratebay-es6.git",
+  "homepage": "http://github.com/t3chnoboy/thepiratebay",
+  "repository": "git://github.com/t3chnoboy/thepiratebay.git",
   "author": "Dmitry Mazuro <dmitry.mazuro@icloud.com>",
   "main": "./index.js",
   "keywords": [
     "thepiratebay",
     "pirate bay",
     "torrent",
-    "scraper",
-    "es6"
+    "client",
+    "scraper"
   ],
   "scripts": {
     "test": "mocha --harmony"
@@ -26,11 +26,9 @@
     "should": "^3.2.0"
   },
   "dependencies": {
-    "cheerio": "^0.14.0",
-    "co": "^3.0.5",
-    "co-request": "^0.2.0"
+    "cheerio": "^0.14.0"
   },
   "engines": {
-    "node": ">= 0.11.0"
+    "node": ">= 0.9.0"
   }
 }
