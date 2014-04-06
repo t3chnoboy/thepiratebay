@@ -2,3 +2,4 @@
 --reporter nyan
 --compilers coffee:coffee-script/register
 --require co-mocha
+--timeout 5000
