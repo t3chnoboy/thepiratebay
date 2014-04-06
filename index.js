@@ -1,10 +1,10 @@
-var baseUrl, cheerio, co, getCategories, parseCategories, parseResults, recentTorrents, request, search, topTorrents;
+var Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, request, search, topTorrents;
 
-request = require('co-request');
+request = require('request');
 
 cheerio = require('cheerio');
 
-co = require('co');
+Promise = require('es6-promise').Promise;
 
 baseUrl = 'http://thepiratebay.se';
 
@@ -29,8 +29,8 @@ baseUrl = 'http://thepiratebay.se';
  *     10 - leeches asc
  */
 
-search = function*(title, opts) {
-  var query, response, results;
+search = function(title, opts, cb) {
+  var query;
   if (opts == null) {
     opts = {};
   }
@@ -43,26 +43,51 @@ search = function*(title, opts) {
       orderBy: opts.orderBy || '99'
     }
   };
-  response = yield request(query);
-  results = parseResults(response.body);
-  return results;
+  return parsePage(query, parseResults, cb);
 };
 
-topTorrents = function*(category) {
-  var response, results;
+topTorrents = function(category, cb) {
   if (category == null) {
     category = 'all';
   }
-  response = yield request(baseUrl + '/top/' + category);
-  results = parseResults(response.body);
-  return results;
+  return parsePage(baseUrl + '/top/' + category, parseResults, cb);
 };
 
-recentTorrents = function*() {
-  var response, results;
-  response = yield request(baseUrl + '/recent');
-  results = parseResults(response.body);
-  return results;
+recentTorrents = function(cb) {
+  return parsePage(baseUrl + '/recent', parseResults, cb);
+};
+
+getCategories = function(cb) {
+  return parsePage(baseUrl + '/recent', parseCategories, cb);
+};
+
+parsePage = function(url, parse, cb) {
+  if (typeof cb === 'function') {
+    request(url, function(err, resp, body) {
+      var categories;
+      if (err != null) {
+        cb(err);
+      }
+      if (resp.statusCode !== 200) {
+        cb(body);
+      }
+      categories = parse(body);
+      return cb(null, categories);
+    });
+  }
+  return new Promise(function(resolve, reject) {
+    return request(url, function(err, resp, body) {
+      var categories;
+      if (err != null) {
+        reject(err);
+      }
+      if (resp.statusCode !== 200) {
+        reject(body);
+      }
+      categories = parse(body);
+      return resolve(categories);
+    });
+  });
 };
 
 parseCategories = function(categoriesHTML) {
@@ -127,13 +152,6 @@ parseResults = function(resultsHTML) {
     };
   });
   return results.get();
-};
-
-getCategories = function*() {
-  var categories, response;
-  response = yield request(baseUrl + '/recent');
-  categories = parseCategories(response.body);
-  return categories;
 };
 
 exports.search = search;

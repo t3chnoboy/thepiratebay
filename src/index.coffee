@@ -1,6 +1,6 @@
-request = require 'co-request'
+request = require 'request'
 cheerio = require 'cheerio'
-co = require 'co'
+Promise = require('es6-promise').Promise
 
 baseUrl = 'http://thepiratebay.se'
 
@@ -23,7 +23,8 @@ baseUrl = 'http://thepiratebay.se'
 #     9  - leeches desc
 #     10 - leeches asc
 ###
-search = (title, opts = {}) -->
+search = (title, opts = {}, cb) ->
+
   query =
     url: baseUrl + '/s/'
     qs:
@@ -31,22 +32,36 @@ search = (title, opts = {}) -->
       category: opts.category || '0'
       page: opts.page || '0'
       orderBy: opts.orderBy || '99'
-  response = yield request query
-  results = parseResults response.body
-  return results
+
+  parsePage query, parseResults, cb
 
 
-topTorrents = (category = 'all') -->
-  response = yield request (baseUrl + '/top/' + category)
-  results = parseResults response.body
-  return results
+topTorrents = (category = 'all', cb) ->
+  parsePage (baseUrl + '/top/' + category), parseResults, cb
 
 
-recentTorrents = -->
-  response = yield request (baseUrl + '/recent')
-  results = parseResults response.body
-  return results
+recentTorrents = (cb) ->
+  parsePage (baseUrl + '/recent'), parseResults, cb
 
+
+getCategories = (cb) ->
+  parsePage (baseUrl + '/recent'), parseCategories, cb
+
+
+parsePage = (url, parse, cb) ->
+
+  if typeof cb is 'function'
+    request (url), (err, resp, body) ->
+      cb err if err?
+      cb body if resp.statusCode isnt 200
+      categories = parse body
+      cb null, categories
+  return new Promise (resolve, reject) ->
+    request (url), (err, resp, body) ->
+      reject err if err?
+      reject body if resp.statusCode isnt 200
+      categories = parse body
+      resolve categories
 
 parseCategories = (categoriesHTML) ->
   $ = cheerio.load categoriesHTML
@@ -106,11 +121,6 @@ parseResults = (resultsHTML) ->
 
   return results.get()
 
-
-getCategories = -->
-  response = yield request (baseUrl + '/recent')
-  categories = parseCategories response.body
-  return categories
 
 exports.search = search
 exports.topTorrents = topTorrents
