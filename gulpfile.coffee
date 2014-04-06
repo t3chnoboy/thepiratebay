@@ -1,5 +1,5 @@
 gulp       = require 'gulp'
-coffee     = require 'gulp-coffee-es6'
+coffee     = require 'gulp-coffee'
 
 gulp.task 'compile', ->
   gulp.src './src/**/*.coffee'
