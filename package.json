@@ -19,7 +19,7 @@
   "devDependencies": {
     "co": "^3.0.5",
     "co-mocha": "0.0.2",
-    "coffee-script": "^1.7.1",
+    "coffee-script": "git://github.com/xixixao/coffee-script.git#35ca45d13a784af508095214547b8bd57b33a40c",
     "gulp": "^3.6.0",
     "gulp-coffee": "^1.4.1",
     "gulp-mocha": "^0.4.1",
