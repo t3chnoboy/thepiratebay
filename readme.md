@@ -11,7 +11,7 @@ npm install thepiratebay
 
 ```javascript
 tpb = require('thepiratebay');
-
+```
 
 using promises:
 ```javascript
