@@ -61,7 +61,8 @@ co(function *(){
 
 ##Sample output
 ```javascript
-{ name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
+{
+  name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
   size: '4.17 GiB',
   link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thrones_(2014)(dvd5)_Season_4_DVD_1_SAM_TBS',
   category: { id: '200', name: 'Video' },
@@ -70,7 +71,8 @@ co(function *(){
   uploadDate: 'Today 00:57',
   magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0bac5c67973acab&dn=Game+of+Thrones+%282014%29%28dvd5%29+Season+4+DVD+1+SAM+TBS&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A6969&tr=udp%3A%2F%2Ftracker.ccc.de%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337',
   subcategory: { id: '202', name: 'Movies DVDR' },
-  torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thrones_(2014)(dvd5)_Season_4_DVD_1_SAM_TBS.10013794.TPB.torrent' },
+  torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thrones_(2014)(dvd5)_Season_4_DVD_1_SAM_TBS.10013794.TPB.torrent'
+},
 ```
 ###Search query options:
 
