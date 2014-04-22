@@ -27,7 +27,7 @@
     "should": "^3.2.0"
   },
   "dependencies": {
-    "cheerio": "^0.14.0",
+    "cheerio": "^0.15.0",
     "es6-promise": "^0.1.1",
     "request": "^2.34.0"
   },
