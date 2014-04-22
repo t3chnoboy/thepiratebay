@@ -1,7 +1,13 @@
-The Pirate Bay node.js client
+The Pirate Bay node.js client 
 =============================
+[![Build Status](https://travis-ci.org/t3chnoboy/thepiratebay.svg?branch=master)](https://travis-ci.org/t3chnoboy/thepiratebay)
+[![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
+[![Dependency Status](https://gemnasium.com/t3chnoboy/thepiratebay.svg)](https://gemnasium.com/t3chnoboy/thepiratebay)
+
 
 ## Installation
+[![NPM](https://nodei.co/npm/thepiratebay.png)](https://nodei.co/npm/thepiratebay/)  
+
 Install using npm:
 ```sh
 npm install thepiratebay
