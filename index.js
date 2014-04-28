@@ -40,7 +40,7 @@ search = function(title, opts, cb) {
       q: title || '',
       category: opts.category || '0',
       page: opts.page || '0',
-      orderBy: opts.orderBy || '99'
+      orderby: opts.orderBy || '99'
     }
   };
   return parsePage(query, parseResults, cb);
