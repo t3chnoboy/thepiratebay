@@ -125,7 +125,7 @@ parseResults = function(resultsHTML) {
     name = $(this).find('a.detLink').text();
     uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
     size = $(this).find('font').text().match(/Size (.+?),/)[1];
-    seeders = $(this).find('td[align="right"]').text();
+    seeders = $(this).find('td[align="right"]').first().text();
     leechers = $(this).find('td[align="right"]').next().text();
     link = baseUrl + $(this).find('div.detName a').attr('href');
     magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');

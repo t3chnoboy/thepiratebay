@@ -95,7 +95,7 @@ parseResults = (resultsHTML) ->
     name = $(@).find('a.detLink').text()
     uploadDate = $(@).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1]
     size = $(@).find('font').text().match(/Size (.+?),/)[1]
-    seeders = $(@).find('td[align="right"]').text()
+    seeders = $(@).find('td[align="right"]').first().text()
     leechers = $(@).find('td[align="right"]').next().text()
     link = baseUrl + $(@).find('div.detName a').attr 'href'
     magnetLink = $(@).find('a[title="Download this torrent using magnet"]').attr 'href'
