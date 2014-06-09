@@ -1,5 +1,6 @@
 request = require 'request'
 cheerio = require 'cheerio'
+zlib    = require 'zlib'
 Promise = require('es6-promise').Promise
 
 baseUrl = 'http://thepiratebay.se'
@@ -26,6 +27,7 @@ baseUrl = 'http://thepiratebay.se'
 search = (title, opts = {}, cb) ->
 
   query =
+    encoding: null
     url: baseUrl + '/s/'
     qs:
       q: title || ''
@@ -54,14 +56,19 @@ parsePage = (url, parse, cb) ->
     request (url), (err, resp, body) ->
       cb err if err?
       cb body if resp.statusCode isnt 200
-      categories = parse body
-      cb null, categories
+      zlib.gunzip body, (err, unzipped) ->
+        cb err if err?
+        results = parse unzipped.toString()
+        cb null, results
+
   return new Promise (resolve, reject) ->
     request (url), (err, resp, body) ->
       reject err if err?
       reject body if resp.statusCode isnt 200
-      categories = parse body
-      resolve categories
+      zlib.gunzip body, (err, unzipped) ->
+        reject err if err?
+        results = parse unzipped.toString()
+        resolve results
 
 parseCategories = (categoriesHTML) ->
   $ = cheerio.load categoriesHTML

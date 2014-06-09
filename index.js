@@ -1,8 +1,10 @@
-var Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, request, search, topTorrents;
+var Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, request, search, topTorrents, zlib;
 
 request = require('request');
 
 cheerio = require('cheerio');
+
+zlib = require('zlib');
 
 Promise = require('es6-promise').Promise;
 
@@ -35,6 +37,7 @@ search = function(title, opts, cb) {
     opts = {};
   }
   query = {
+    encoding: null,
     url: baseUrl + '/s/',
     qs: {
       q: title || '',
@@ -64,28 +67,38 @@ getCategories = function(cb) {
 parsePage = function(url, parse, cb) {
   if (typeof cb === 'function') {
     request(url, function(err, resp, body) {
-      var categories;
       if (err != null) {
         cb(err);
       }
       if (resp.statusCode !== 200) {
         cb(body);
       }
-      categories = parse(body);
-      return cb(null, categories);
+      return zlib.gunzip(body, function(err, unzipped) {
+        var results;
+        if (err != null) {
+          cb(err);
+        }
+        results = parse(unzipped.toString());
+        return cb(null, results);
+      });
     });
   }
   return new Promise(function(resolve, reject) {
     return request(url, function(err, resp, body) {
-      var categories;
       if (err != null) {
         reject(err);
       }
       if (resp.statusCode !== 200) {
         reject(body);
       }
-      categories = parse(body);
-      return resolve(categories);
+      return zlib.gunzip(body, function(err, unzipped) {
+        var results;
+        if (err != null) {
+          reject(err);
+        }
+        results = parse(unzipped.toString());
+        return resolve(results);
+      });
     });
   });
 };

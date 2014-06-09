@@ -68,7 +68,7 @@ describe 'scraper', ->
           searchResult.subcategory.id.should.match /[1-6][09][1-9]/
           searchResult.subcategory.name.should.match /[a-zA-Z0-9 ()/-]/
 
-  describe 'scraper.getCategories()', ->
+  describe.skip 'scraper.getCategories()', ->
 
     it 'should return an array of categories', -->
       categories = yield scraper.getCategories()
@@ -106,7 +106,7 @@ describe 'scraper', ->
 
 
 
-  describe 'scraper.topTorrents(category, opts)', ->
+  describe.skip 'scraper.topTorrents(category, opts)', ->
     it 'should return an array of top torrents of the selected category', -->
       results = yield scraper.topTorrents '205'
       results.should.be.an.Array
@@ -118,7 +118,7 @@ describe 'scraper', ->
           searchResult.category.name.should.be.equal 'Video'
           searchResult.subcategory.name.should.be.equal 'TV shows'
 
-  describe 'scraper.recentTorrents()', ->
+  describe.skip 'scraper.recentTorrents()', ->
     it 'should return an array of the most recent torrents', -->
       results = yield scraper.recentTorrents()
       results.should.be.an.Array
