@@ -17,19 +17,19 @@
     "test": "mocha --harmony"
   },
   "devDependencies": {
-    "co": "^3.0.6",
+    "co": "^3.1.0",
     "co-mocha": "0.0.4",
     "coffee-script": "git://github.com/xixixao/coffee-script.git#35ca45d13a784af508095214547b8bd57b33a40c",
-    "gulp": "^3.8.5",
-    "gulp-coffee": "^2.0.1",
-    "gulp-mocha": "^0.4.1",
-    "mocha": "^1.20.1",
+    "gulp": "^3.8.7",
+    "gulp-coffee": "^2.1.1",
+    "gulp-mocha": "^0.5.2",
+    "mocha": "^1.21.4",
     "should": "^4.0.4"
   },
   "dependencies": {
     "cheerio": "^0.17.0",
     "es6-promise": "^1.0.0",
-    "request": "^2.36.0"
+    "request": "^2.39.0"
   },
   "engines": {
     "node": ">= 0.9.0"
