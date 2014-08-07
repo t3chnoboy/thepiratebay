@@ -6,7 +6,7 @@ The Pirate Bay node.js client
 
 
 ## Installation
-[![NPM](https://nodei.co/npm/thepiratebay.png)](https://nodei.co/npm/thepiratebay/)  
+[![NPM](https://nodei.co/npm/thepiratebay.png?downloads=true)](https://nodei.co/npm/thepiratebay/)  
 
 Install using npm:
 ```sh
