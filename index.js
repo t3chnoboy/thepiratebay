@@ -64,16 +64,14 @@ getCategories = function(cb) {
 
 parsePage = function(url, parse, cb) {
     if (typeof cb === 'function') {
-        request(url, function(err, resp, body) {
+        requestWithEncoding(url, function(err, data) {
             var categories;
-            if (err != null) {
+            if (err) {
                 cb(err);
+            } else {
+              categories = parse(data);
+              return cb(null, categories);
             }
-            if (resp.statusCode !== 200) {
-                cb(body);
-            }
-            categories = parse(body);
-            return cb(null, categories);
         });
     }
     return new Promise(function(resolve, reject) {
