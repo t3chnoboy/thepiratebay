@@ -149,15 +149,7 @@ parseResults = function(resultsHTML) {
     $ = cheerio.load(resultsHTML);
     rawResults = $('table#searchResult tr:has(a.detLink)');
     results = rawResults.map(function(elem) {
-        var check = $('body').find('body h2').text().match(/from (.*?) to (.*?) \(approx (.*?) found/);
-        if (check === null) {
-            return result = {
-                total: 0
-            };
-        }
-        var itemsByPage, total, category, leechers, link, magnetLink, name, result, seeders, size, subcategory, torrentLink, uploadDate;
-        itemsByPage = $('body').find('body h2').text().match(/from (.*?) to (.*?) \(approx (.*?) found/)[2];
-        total = $('body').find('body h2').text().match(/from (.*?) to (.*?) \(approx (.*?) found/)[3];
+        var category, leechers, link, magnetLink, name, result, seeders, size, subcategory, torrentLink, uploadDate;
         name = $(this).find('a.detLink').text();
         uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
         size = $(this).find('font').text().match(/Size (.+?),/)[1];
@@ -175,8 +167,6 @@ parseResults = function(resultsHTML) {
             name: $(this).find('center a').last().text()
         };
         return result = {
-            total: total,
-            byPage: itemsByPage,
             name: name,
             size: size,
             link: link,
