@@ -47,6 +47,14 @@ search = function(title, opts, cb) {
     return parsePage(query, parseResults, cb);
 };
 
+getTorrent = function(id, cb) {
+  var url;
+  url = (typeof id === Number) || /^\d+$/.test(id) ? "" + baseUrl + "/torrent/" + id : id;
+  return parsePage({
+    url: url
+  }, parseTorrentPage, cb);
+};
+
 topTorrents = function(category, cb) {
     if (category == null) {
         category = 'all';
@@ -215,6 +223,33 @@ parseTvShow = function(tvShowPage) {
     return results;
 };
 
+parseTorrentPage = function(torrentPage) {
+  var $, filesCount, leechers, name, seeders, size, torrent, uploadDate;
+  $ = cheerio.load(torrentPage);
+  name = $('#title').text().trim();
+  filesCount = parseInt($('a[title="Files"]').text());
+  size = $('dt:contains(Size:) + dd').text().trim();
+  uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
+  seeders = $('dt:contains(Seeders:) + dd').text().trim();
+  leechers = $('dt:contains(Leechers:) + dd').text().trim();
+  link = baseUrl + $('a[title="Files"]').attr('href');
+  id = link.match(/\/torrent\/(\d+)/)[1];
+  magnetLink = $('a[title="Get this torrent"]').attr('href');
+  torrentLink = $('a[title="Torrent File"]').attr('href');
+  return torrent = {
+    name: name,
+    filesCount: filesCount,
+    size: size,
+    seeders: seeders,
+    leechers: leechers,
+    uploadDate: uploadDate,
+    torrentLink: torrentLink,
+    magnetLink: magnetLink,
+    link: link,
+    id: id
+  };
+};
+
 
 parseResults = function(resultsHTML) {
     var $, rawResults, results;
@@ -260,3 +295,4 @@ exports.recentTorrents = recentTorrents;
 exports.getCategories = getCategories;
 exports.tvShows = tvShows;
 exports.getTvShow = getTvShow;
+exports.getTorrent = getTorrent;

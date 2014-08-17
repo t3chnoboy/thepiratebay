@@ -2,6 +2,83 @@ scraper = require '../'
 
 describe 'scraper', ->
 
+  describe 'scraper.getTorrent(id)', ->
+    torrent = {}
+
+    before -->
+      torrent = yield scraper.getTorrent 10676856
+
+    # it 'should find a torrent by link', ->
+    #   torrent = yield scraper.getTorrent 'http://thepiratebay.se/torrent/10676856/The_Amazing_Spider-Man_2_(2014)_1080p_BrRip_x264_-_YIFY'
+
+    # it 'should find a torrent by id when id is a number', ->
+    #   torrent = yield scraper.getTorrent 10676856
+
+    # it 'should find a torrent by id', ->
+
+    describe 'torrent', ->
+
+      it 'shold have a name', ->
+        torrent.should.have.property 'name'
+        torrent.name.should.equal 'The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY'
+
+      it 'should have a number of files', ->
+        torrent.should.have.property 'filesCount'
+        torrent.filesCount.should.equal 2
+
+      it.skip 'should have tags', ->
+        torrent.should.have.property 'tags'
+        torrent.tags.should.be.an.Array
+        torrent.tags.should.be ['YIFY', '720p', '1080p', 'movies', 'x264', 'Bluray', 'BrRip']
+
+      it.skip 'should have uploader', ->
+        torrent.should.have.property 'uploader'
+        torrent.uploader.should.equal 'YIFY'
+
+      it.skip 'should have an info hash', ->
+        torrent.should.have.property 'uploader'
+        torrent.infoHash.should.equal '0259F6B98A7CA160A36F13457C89344C7DD34000'
+
+      it 'should have an id', ->
+        torrent.should.have.property 'id'
+        torrent.id.should.equal '10676856'
+
+      it 'should have upload date', ->
+        torrent.should.have.property 'uploadDate'
+        torrent.uploadDate.should.equal '2014-08-02 08:15:25 GMT'
+
+      it 'should have size', ->
+        torrent.should.have.property 'size'
+        torrent.size.should.match /\d+\.\d+\s(G|M|K)iB/
+
+      it 'should have seeders and leechers count', ->
+        torrent.should.have.property 'seeders'
+        torrent.should.have.property 'leechers'
+        (~~torrent.leechers).should.be.within 5, 100000
+        (~~torrent.seeders).should.be.within 5, 100000
+
+      it 'should have a link', ->
+        torrent.should.have.property 'link'
+        torrent.link.should.equal 'http://thepiratebay.se/torrent/10676856/'
+
+      it 'should have a magnet link', ->
+        torrent.should.have.property 'magnetLink'
+        torrent.magnetLink.should.equal 'magnet:?xt=urn:btih:0259f6b98a7ca160a36f13457c89344c7dd34000&dn=The+Amazing+Spider-Man+2+%282014%29+1080p+BrRip+x264+-+YIFY&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A6969&tr=udp%3A%2F%2Fopen.demonii.com%3A1337'
+
+      it 'may have a torrent link', ->
+        torrent.should.have.property 'torrentLink'
+        torrent.torrentLink.should.match /\/\/piratebaytorrents\.info\/\d+\/.+\.torrent/ unless torrent.torrentLink isnt ''
+
+      it.skip 'should have a category', ->
+        torrent.should.have.property 'category'
+        torrent.category.id.should.match /[1-6]00/
+        torrent.category.name.should.match /\w+/
+
+      it.skip 'should have a subcategory', ->
+        torrent.should.have.property 'subcategory'
+        torrent.subcategory.id.should.match /[1-6][09][1-9]/
+        torrent.subcategory.name.should.match /[a-zA-Z0-9 ()/-]/
+
 
   describe 'scraper.search(title, opts)', ->
     results = []
