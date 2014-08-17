@@ -18,6 +18,8 @@ npm install thepiratebay
 ```javascript
 tpb = require('thepiratebay');
 ```
+All methods are asynchronous!
+You can use promises, es6 generators (with co.js) or simply pass a callback
 
 using promises:
 ```javascript
@@ -136,6 +138,7 @@ tpb.search('Game of Thrones', { category: '205', page: '3', orderBy: '5' })
   },
   ...
 ]
+*/
 ```
 #### Search query options:
 
