@@ -150,21 +150,30 @@ parseCategories = function(categoriesHTML) {
 
 
 parseTvShows = function(tvShowsPage) {
-    var $, rawResults, results;
+    var $, rawResults, results = [];
     $ = cheerio.load(tvShowsPage);
-    rawResults = $('dt a');
-    results = rawResults.map(function(elem) {
-        var title = $(this).text();
-        var seasons = []
-        $(this).next().find('a').each(function(e){
-          seasons.push($(this).text())
-        })
-        return result = {
-            title: title,
-            seasons: seasons
-        };
+    rawTitles = $('dt a');
+    titles = rawTitles.map(function(elem) {
+      return $(this).text();
+    }).get();
+
+    rawSeasons = $('dd');
+    var seasons = []
+
+    rawSeasons.each(function(elem) {
+      seasons.push($(this).find('a')
+                    .text()
+                    .match(/S\d+/g));
     });
-    return results.get();
+
+    titles.forEach(function(title, index){
+      results.push({
+        title: title,
+        seasons: seasons[index]
+      });
+    });
+
+    return results;
 };
 
 

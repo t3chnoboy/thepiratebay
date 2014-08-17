@@ -164,4 +164,4 @@ describe 'scraper', ->
         tvShows[0].seasons.length.should.be.greaterThan 0
 
       it 'season number should be valid', ->
-        tvShows[0].seasons[0].should.be 'S01'
+        tvShows[0].seasons[0].should.match /^S\d+$/
