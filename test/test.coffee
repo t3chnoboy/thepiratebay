@@ -159,6 +159,9 @@ describe 'scraper', ->
       it 'should have a title', ->
         tvShows[0].title.should.be.a.String
 
+      it 'should have an id', ->
+        tvShows[0].id.should.match /^\d+$/
+
       it 'should have sesons list', ->
         tvShows[0].seasons.should.be.an.Array
         tvShows[0].seasons.length.should.be.greaterThan 0

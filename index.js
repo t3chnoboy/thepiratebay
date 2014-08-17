@@ -153,8 +153,11 @@ parseTvShows = function(tvShowsPage) {
     var $, rawResults, results = [];
     $ = cheerio.load(tvShowsPage);
     rawTitles = $('dt a');
-    titles = rawTitles.map(function(elem) {
-      return $(this).text();
+    series = rawTitles.map(function(elem) {
+      return {
+        title: $(this).text(),
+        id: $(this).attr('href').match(/\/tv\/(\d+)/)[1]
+      };
     }).get();
 
     rawSeasons = $('dd');
@@ -166,9 +169,10 @@ parseTvShows = function(tvShowsPage) {
                     .match(/S\d+/g));
     });
 
-    titles.forEach(function(title, index){
+    series.forEach(function(s, index){
       results.push({
-        title: title,
+        title: s.title,
+        id: s.id,
         seasons: seasons[index]
       });
     });
