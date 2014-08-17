@@ -79,6 +79,14 @@ describe 'scraper', ->
         torrent.subcategory.id.should.match /[1-6][09][1-9]/
         torrent.subcategory.name.should.match /[a-zA-Z0-9 ()/-]/
 
+      it 'should have a description', ->
+        torrent.should.have.property 'description'
+        torrent.description.should.be.a.String
+
+      it 'should have a picture', ->
+        torrent.should.have.property 'picture'
+        torrent.picture.should.be.a.String
+
 
   describe 'scraper.search(title, opts)', ->
     results = []

@@ -236,6 +236,8 @@ parseTorrentPage = function(torrentPage) {
   id = link.match(/\/torrent\/(\d+)/)[1];
   magnetLink = $('a[title="Get this torrent"]').attr('href');
   torrentLink = $('a[title="Torrent File"]').attr('href');
+  description = $('div.nfo').text().trim();
+  picture = 'http:' + $('img[title="picture"]').attr('src');
   return torrent = {
     name: name,
     filesCount: filesCount,
@@ -246,7 +248,9 @@ parseTorrentPage = function(torrentPage) {
     torrentLink: torrentLink,
     magnetLink: magnetLink,
     link: link,
-    id: id
+    id: id,
+    description: description,
+    picture: picture
   };
 };
 
