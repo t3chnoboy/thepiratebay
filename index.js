@@ -62,6 +62,10 @@ tvShows = function(cb) {
     return parsePage(baseUrl + '/tv/all', parseTvShows, cb);
 };
 
+getTvShow = function(id, cb) {
+    return parsePage(baseUrl + '/tv/' + id, parseTvShow, cb);
+};
+
 getCategories = function(cb) {
     return parsePage(baseUrl + '/recent', parseCategories, cb);
 };
@@ -181,6 +185,37 @@ parseTvShows = function(tvShowsPage) {
 };
 
 
+parseTvShow = function(tvShowPage) {
+    var $, rawResults, results = [], seasons = [], torrents = [];
+    $ = cheerio.load(tvShowPage);
+
+    seasons = $('dt a').map(function(elem) {
+      return $(this).text();
+    }).get();
+
+    rawLinks = $('dd');
+
+    rawLinks.each(function(elem) {
+      torrents.push($(this).find('a').map(function(link){
+        return {
+          title: $(this).text(),
+          link: (baseUrl + $(this).attr('href')),
+          id: $(this).attr('href').match(/\/torrent\/(\d+)/)[1]
+        }
+      }).get());
+    });
+
+    seasons.forEach(function(s, index){
+      results.push({
+        title: s,
+        torrents: torrents[index]
+      });
+    });
+
+    return results;
+};
+
+
 parseResults = function(resultsHTML) {
     var $, rawResults, results;
     $ = cheerio.load(resultsHTML);
@@ -224,3 +259,4 @@ exports.topTorrents = topTorrents;
 exports.recentTorrents = recentTorrents;
 exports.getCategories = getCategories;
 exports.tvShows = tvShows;
+exports.getTvShow = getTvShow;

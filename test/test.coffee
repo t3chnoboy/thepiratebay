@@ -168,3 +168,32 @@ describe 'scraper', ->
 
       it 'season number should be valid', ->
         tvShows[0].seasons[0].should.match /^S\d+$/
+
+  describe 'scraper.getTvShow(id)', ->
+    tvShow = {}
+
+    before -->
+      tvShow = yield scraper.getTvShow('2')
+
+    it 'should return an array of seasons', ->
+      tvShow.should.be.an.Array
+
+    describe 'season', ->
+
+      it 'should have a title', ->
+        tvShow[0].title.should.be.a.String
+        tvShow[0].title.should.match /^S\d+$/
+
+      it 'should have an array of torrents', ->
+        tvShow[0].torrents.should.be.an.Array
+
+      describe 'link', ->
+
+        it 'should have a title', ->
+          tvShow[0].torrents[0].title.should.be.a.String
+
+        it 'should have a link', ->
+          tvShow[0].torrents[0].link.should.be.a.String
+
+        it 'should have an id', ->
+          tvShow[0].torrents[0].id.should.match /^\d+$/
