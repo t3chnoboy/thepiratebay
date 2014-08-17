@@ -2,8 +2,8 @@ scraper = require '../'
 
 describe 'scraper', ->
 
-  describe 'scraper.search(title, opts)', ->
 
+  describe 'scraper.search(title, opts)', ->
     results = []
 
     before -->
@@ -11,6 +11,7 @@ describe 'scraper', ->
 
     it 'should return an array of search results', ->
       results.should.be.an.Array
+
 
     describe 'search result', ->
 
@@ -71,6 +72,7 @@ describe 'scraper', ->
         results[0].subcategory.id.should.match /[1-6][09][1-9]/
         results[0].subcategory.name.should.match /[a-zA-Z0-9 ()/-]/
 
+
   describe 'scraper.getCategories()', ->
 
     categories = []
@@ -112,7 +114,6 @@ describe 'scraper', ->
           subcategory.name.should.be.a.String
 
 
-
   describe 'scraper.topTorrents(category, opts)', ->
 
     results = []
@@ -128,6 +129,7 @@ describe 'scraper', ->
         results[0].category.name.should.be.equal 'Video'
         results[0].subcategory.name.should.be.equal 'TV shows'
 
+
   describe 'scraper.recentTorrents()', ->
     results = []
 
@@ -141,3 +143,24 @@ describe 'scraper', ->
       it 'should be uploaded recently', ->
         recentTorrent = results[0]
         recentTorrent.uploadDate.should.match /\d+\smins?\sago/
+
+
+  describe.skip 'scraper.tvShows()', ->
+    tvShows = []
+
+    before -->
+      tvShows = yield scraper.tvShows()
+
+    it 'should return an array', ->
+      tvShows.should.be.an.Array
+
+    describe 'tv show', ->
+
+      it 'should have a title', ->
+        tvShows[0].title.should.be.a.String
+
+      it 'should have sesons list', ->
+        tvShows[0].seasons.should.be.an.Array
+
+      it 'season should be valid', ->
+        tvShows[0].seasons[0].should.be 'S01'
