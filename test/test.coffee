@@ -145,7 +145,7 @@ describe 'scraper', ->
         recentTorrent.uploadDate.should.match /\d+\smins?\sago/
 
 
-  describe.skip 'scraper.tvShows()', ->
+  describe 'scraper.tvShows()', ->
     tvShows = []
 
     before -->
@@ -161,6 +161,7 @@ describe 'scraper', ->
 
       it 'should have sesons list', ->
         tvShows[0].seasons.should.be.an.Array
+        tvShows[0].seasons.length.should.be.greaterThan 0
 
-      it 'season should be valid', ->
+      it 'season number should be valid', ->
         tvShows[0].seasons[0].should.be 'S01'
