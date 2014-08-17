@@ -109,12 +109,44 @@ http://thepiratebay.se/recent
 http://thepiratebay.se/tv
 ```javascript
   tpb.tvShows() // returns array of all tv shows
+  /*
+  [
+    ...
+
+     { title: 'Outsiders', id: '2675', seasons: [ 'S01', 'S04', 'S05', 'S06', 'S07', 'S09' ] },
+     { title: 'Over The Rainbow', id: '71119', seasons: [ 'S01' ] },
+     { title: 'Over The Rainbow 2010', id: '75789', seasons: [ 'S01' ] },
+     { title: 'Over There', id: '1087', seasons: [ 'S01' ] },
+
+    ...
+    ]
+  */
 ```
 
 ### getTvShow
 http://thepiratebay.se/tv/9619/
 ```javascript
   tpb.getTvShow('2') // returns array of all seasons and links for tv show with id '2'
+  /*
+   [
+     { title: 'S01',
+     torrents:[
+       { title: 'South.Park.s01e01.Cartman.Gets.an.Anal.Probe.DVDRip.DivX-sli',
+       link: 'http://thepiratebay.se/torrent/3302063/South.Park.s01e01.Cartman.Gets.an.Anal.Probe.DVDRip.DivX-sli',
+       id: '3302063' },
+       { title: 'South.Park.S01E01.SWESUB.inXz.mkv',
+       link: 'http://thepiratebay.se/torrent/4297449/South.Park.S01E01.SWESUB.inXz.mkv',
+       id: '4297449' },
+       { title: 'South.Park.S01E01.SWESUB.DVDRiP.XviD-TOMTEN',
+       link: 'http://thepiratebay.se/torrent/4627911/South.Park.S01E01.SWESUB.DVDRiP.XviD-TOMTEN',
+       id: '4627911' }
+     ]},
+     { title: 'S02',
+       torrents: [...]
+     },
+     ...
+  ]
+  */
 ```
 
 ### search
