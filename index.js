@@ -48,8 +48,7 @@ search = function(title, opts, cb) {
 };
 
 getTorrent = function(id, cb) {
-  var url;
-  url = (typeof id === Number) || /^\d+$/.test(id) ? "" + baseUrl + "/torrent/" + id : id;
+  var url = (typeof id === Number) || /^\d+$/.test(id) ? "" + baseUrl + "/torrent/" + id : id.link || id;
   return parsePage({
     url: url
   }, parseTorrentPage, cb);
