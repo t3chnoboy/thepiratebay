@@ -28,7 +28,7 @@
   },
   "dependencies": {
     "cheerio": "^0.17.0",
-    "es6-promise": "^1.0.0",
+    "es6-promise": "1.0.0",
     "request": "^2.39.0"
   },
   "engines": {
