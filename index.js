@@ -226,20 +226,20 @@ parseTorrentPage = function(torrentPage) {
   var $, filesCount, leechers, name, seeders, size, torrent, uploadDate;
   $ = cheerio.load(torrentPage);
   name = $('#title').text().trim();
-  filesCount = parseInt($('a[title="Files"]').text());
+  // filesCount = parseInt($('a[title="Files"]').text());
   size = $('dt:contains(Size:) + dd').text().trim();
   uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
   seeders = $('dt:contains(Seeders:) + dd').text().trim();
   leechers = $('dt:contains(Leechers:) + dd').text().trim();
-  link = baseUrl + $('a[title="Files"]').attr('href');
-  id = link.match(/\/torrent\/(\d+)/)[1];
+  id = $('input[name=id]').attr('value');
+  link = baseUrl + '/torrent/' + id
   magnetLink = $('a[title="Get this torrent"]').attr('href');
   torrentLink = $('a[title="Torrent File"]').attr('href');
   description = $('div.nfo').text().trim();
   picture = 'http:' + $('img[title="picture"]').attr('src');
   return torrent = {
     name: name,
-    filesCount: filesCount,
+    // filesCount: filesCount,
     size: size,
     seeders: seeders,
     leechers: leechers,
