@@ -14,7 +14,8 @@
     "scraper"
   ],
   "scripts": {
-    "test": "mocha --harmony"
+    "test": "mocha --harmony",
+    "debug": "mocha debug --harmony"
   },
   "devDependencies": {
     "co": "^3.1.0",
