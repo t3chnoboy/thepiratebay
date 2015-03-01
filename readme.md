@@ -4,6 +4,9 @@ The Pirate Bay node.js client
 [![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
 [![Dependency Status](https://gemnasium.com/t3chnoboy/thepiratebay.svg)](https://gemnasium.com/t3chnoboy/thepiratebay)
 
+<p align="center">
+  <img src="https://i.imgur.com/xP3s8Xum.png"/>
+</p>
 
 ## Installation
 [![NPM](https://nodei.co/npm/thepiratebay.png?downloads=true)](https://nodei.co/npm/thepiratebay/)  
