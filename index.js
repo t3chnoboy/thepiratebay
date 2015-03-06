@@ -1,4 +1,4 @@
-var zlib, Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, request, search, topTorrents;
+var zlib, Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, userTorrents, request, search, topTorrents;
 
 request = require('request');
 
@@ -63,6 +63,21 @@ topTorrents = function(category, cb) {
 
 recentTorrents = function(cb) {
     return parsePage(baseUrl + '/recent', parseResults, cb);
+};
+
+userTorrents = function(userName, opts, cb) {
+    var query;
+    if (opts == null) {
+        opts = {};
+    }
+    query = {
+        url: baseUrl + '/user/' + userName,
+        qs: {
+            page: opts.page || '0',
+            orderby: opts.orderBy || '99'
+        }
+    };
+    return parsePage(query, parseResults, cb);
 };
 
 tvShows = function(cb) {
@@ -292,10 +307,11 @@ parseResults = function(resultsHTML) {
     return results.get();
 };
 
-exports.search = search;
-exports.topTorrents = topTorrents;
+exports.search         = search;
+exports.topTorrents    = topTorrents;
 exports.recentTorrents = recentTorrents;
-exports.getCategories = getCategories;
-exports.tvShows = tvShows;
-exports.getTvShow = getTvShow;
-exports.getTorrent = getTorrent;
+exports.userTorrents   = userTorrents;
+exports.getCategories  = getCategories;
+exports.tvShows        = tvShows;
+exports.getTvShow      = getTvShow;
+exports.getTorrent     = getTorrent;
