@@ -1,4 +1,4 @@
-The Pirate Bay node.js client 
+The Pirate Bay node.js client
 =============================
 [![Build Status](https://travis-ci.org/t3chnoboy/thepiratebay.svg?branch=master)](https://travis-ci.org/t3chnoboy/thepiratebay)
 [![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
@@ -9,7 +9,7 @@ The Pirate Bay node.js client
 </p>
 
 ## Installation
-[![NPM](https://nodei.co/npm/thepiratebay.png?downloads=true)](https://nodei.co/npm/thepiratebay/)  
+[![NPM](https://nodei.co/npm/thepiratebay.png?downloads=true)](https://nodei.co/npm/thepiratebay/)
 
 Install using npm:
 ```sh
@@ -106,6 +106,12 @@ http://thepiratebay.se/top
 http://thepiratebay.se/recent
 ```javascript
   tpb.recentTorrents() // returns most recent torrents
+```
+
+### userTorrents
+http://thepiratebay.se/user/YIFY/3/5/0
+```javascript
+tpb.userTorrents('YIFY', { page: '3', orderBy: '5' })
 ```
 
 ### tvShows
