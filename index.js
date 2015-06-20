@@ -1,4 +1,4 @@
-var zlib, Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, userTorrents, request, search, topTorrents;
+var zlib, Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, userTorrents, request, search, topTorrents, setUrl;
 
 request = require('request');
 
@@ -6,7 +6,7 @@ cheerio = require('cheerio');
 
 Promise = require('es6-promise').Promise;
 
-baseUrl = 'http://thepiratebay.se';
+baseUrl = 'http://thepiratebay.am';
 
 zlib = require('zlib');
 
@@ -307,6 +307,10 @@ parseResults = function(resultsHTML) {
     return results.get();
 };
 
+setUrl = function(url) {
+  baseUrl = url;
+};
+
 exports.search         = search;
 exports.topTorrents    = topTorrents;
 exports.recentTorrents = recentTorrents;
@@ -315,3 +319,4 @@ exports.getCategories  = getCategories;
 exports.tvShows        = tvShows;
 exports.getTvShow      = getTvShow;
 exports.getTorrent     = getTorrent;
+exports.setUrl         = setUrl;

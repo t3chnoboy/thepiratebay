@@ -1,5 +1,8 @@
 scraper = require '../'
 
+baseUrl = 'http://thepiratebay.am'
+scraper.setUrl(baseUrl)
+
 describe 'scraper', ->
 
   describe 'scraper.getTorrent(id)', ->
@@ -51,7 +54,7 @@ describe 'scraper', ->
 
       it 'should have a link', ->
         torrent.should.have.property 'link'
-        torrent.link.should.equal 'http://thepiratebay.se/torrent/10676856'
+        torrent.link.should.equal "#{baseUrl}/torrent/10676856"
 
       it 'should have a magnet link', ->
         torrent.should.have.property 'magnetLink'
@@ -127,7 +130,7 @@ describe 'scraper', ->
       it 'should have a link', ->
         results[0].should.have.property 'link'
         #e.g http://thepiratebay.se/torrent/9897245/Game_of_Thrones_Season_3_[Hard_Subs_in_English__AVI_format]
-        results[0].link.should.match /http:\/\/thepiratebay.se\/torrent\/\d+\/.+/
+        results[0].link.should.match new RegExp(baseUrl + '/torrent/\\d+/\.+')
 
       it 'should have a magnet link', ->
         results[0].should.have.property 'magnetLink'
@@ -267,7 +270,7 @@ describe 'scraper', ->
       it 'should have a link', ->
         results[0].should.have.property 'link'
         #e.g http://thepiratebay.se/torrent/9897245/Game_of_Thrones_Season_3_[Hard_Subs_in_English__AVI_format]
-        results[0].link.should.match /http:\/\/thepiratebay.se\/torrent\/\d+\/.+/
+        results[0].link.should.match new RegExp(baseUrl + '/torrent/\\d+/\.+')
 
       it 'should have a magnet link', ->
         results[0].should.have.property 'magnetLink'
