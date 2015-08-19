@@ -244,6 +244,8 @@ parseTorrentPage = function(torrentPage) {
   // filesCount = parseInt($('a[title="Files"]').text());
   size = $('dt:contains(Size:) + dd').text().trim();
   uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
+  uploader = $('dt:contains(By:) + dd').text().trim();
+  uploaderLink = baseUrl + $('dt:contains(By:) + dd a').attr('href');
   seeders = $('dt:contains(Seeders:) + dd').text().trim();
   leechers = $('dt:contains(Leechers:) + dd').text().trim();
   id = $('input[name=id]').attr('value');
@@ -264,7 +266,9 @@ parseTorrentPage = function(torrentPage) {
     link: link,
     id: id,
     description: description,
-    picture: picture
+    picture: picture,
+    uploader: uploader,
+    uploaderLink: uploaderLink
   };
 };
 
@@ -283,6 +287,8 @@ parseResults = function(resultsHTML) {
         link = baseUrl + $(this).find('div.detName a').attr('href');
         magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
         torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
+        uploader = $(this).find('font .detDesc').text();
+        uploaderLink = baseUrl + $(this).find('font a').attr('href');
         category = {
             id: $(this).find('center a').first().attr('href').match(/\/browse\/(\d+)/)[1],
             name: $(this).find('center a').first().text()
@@ -301,7 +307,9 @@ parseResults = function(resultsHTML) {
             uploadDate: uploadDate,
             magnetLink: magnetLink,
             subcategory: subcategory,
-            torrentLink: torrentLink
+            torrentLink: torrentLink,
+            uploader: uploader,
+            uploaderLink: uploaderLink
         };
     });
     return results.get();

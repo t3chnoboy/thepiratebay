@@ -26,9 +26,13 @@ describe 'scraper', ->
         torrent.tags.should.be.an.Array
         torrent.tags.should.be ['YIFY', '720p', '1080p', 'movies', 'x264', 'Bluray', 'BrRip']
 
-      it.skip 'should have uploader', ->
+      it 'should have uploader', ->
         torrent.should.have.property 'uploader'
         torrent.uploader.should.equal 'YIFY'
+
+      it 'should have uploader link', ->
+        torrent.should.have.property 'uploaderLink'
+        torrent.uploaderLink.should.equal "#{baseUrl}/user/YIFY/"
 
       it.skip 'should have an info hash', ->
         torrent.should.have.property 'uploader'
@@ -152,6 +156,9 @@ describe 'scraper', ->
         results[0].subcategory.id.should.match /[1-6][09][1-9]/
         results[0].subcategory.name.should.match /[a-zA-Z0-9 ()/-]/
 
+      it 'should have an uploader and uploader link', ->
+        results[0].should.have.property 'uploader'
+        results[0].should.have.property 'uploaderLink'
 
   describe 'scraper.getCategories()', ->
 
