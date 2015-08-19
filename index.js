@@ -6,7 +6,7 @@ cheerio = require('cheerio');
 
 Promise = require('es6-promise').Promise;
 
-baseUrl = 'http://thepiratebay.am';
+baseUrl = 'http://thepiratebay.mn';
 
 zlib = require('zlib');
 
