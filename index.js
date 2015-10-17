@@ -38,7 +38,7 @@ search = function(title, opts, cb) {
     query = {
         url: baseUrl + '/s/',
         qs: {
-            q: title || '',
+            q: title || '*',
             category: opts.category || '0',
             page: opts.page || '0',
             orderby: opts.orderBy || '99'
