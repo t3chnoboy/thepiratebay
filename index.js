@@ -99,7 +99,12 @@ parsePage = function(url, parse, cb) {
             if (err) {
                 cb(err);
             } else {
-              categories = parse(data);
+              try {
+                categories = parse(data);
+              }
+              catch(err) {
+                return cb(err);
+              }
               return cb(null, categories);
             }
         });
@@ -110,7 +115,12 @@ parsePage = function(url, parse, cb) {
             if (err) {
                 reject(err);
             } else {
-                categories = parse(data);
+                try {
+                  categories = parse(data);
+                }
+                catch(err) {
+                  return reject(err)
+                }
                 return resolve(categories);
             }
         })
