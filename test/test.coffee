@@ -1,6 +1,6 @@
 scraper = require '../'
 
-baseUrl = 'http://thepiratebay.mn'
+baseUrl = 'http://thepiratebay.se'
 scraper.setUrl(baseUrl)
 
 describe 'scraper', ->
