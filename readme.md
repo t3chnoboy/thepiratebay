@@ -68,7 +68,7 @@ co(function *(){
 
 ### getTorrent
 ```javascript
-/* takes id or link */
+/* takes an id or a link */
 tpb.getTorrent('10676856')
 .then(function(results){
   console.log(results);
@@ -99,13 +99,13 @@ output:
 http://thepiratebay.se/top
 ```javascript
   tpb.topTorrents() // returns top 100 torrents
-  tpb.topTorrents('400') // returns top 100 torrents for category 400 aka Games
+  tpb.topTorrents('400') // returns top 100 torrents for the category '400' aka Games
 ```
 
 ### recentTorrents
 http://thepiratebay.se/recent
 ```javascript
-  tpb.recentTorrents() // returns most recent torrents
+  tpb.recentTorrents() // returns the most recent torrents
 ```
 
 ### userTorrents
@@ -117,7 +117,7 @@ tpb.userTorrents('YIFY', { page: '3', orderBy: '5' })
 ### tvShows
 http://thepiratebay.se/tv
 ```javascript
-  tpb.tvShows() // returns array of all tv shows
+  tpb.tvShows() // returns an array of all tv shows
   /*
   [
     ...
@@ -163,7 +163,7 @@ http://thepiratebay.se/tv/9619/
 // takes a single callback function as argument
 tpb.getCategories(cb);
 
-/* outputs array of categories
+/* returns an array of categories
 [
   ...
   { name: 'Video',
@@ -185,10 +185,10 @@ tpb.getCategories(cb);
 ```
 ### search
 ```javascript
-// takes search query and options
+// takes a search query and options
 tpb.search('Game of Thrones', { category: '205', page: '3', orderBy: '5' })
 
-/* outputs array of search results:
+/* returns an array of search results:
 [
   {
     name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
