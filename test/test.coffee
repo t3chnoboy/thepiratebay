@@ -99,6 +99,10 @@ describe 'scraper', ->
 
     describe 'search result', ->
 
+      it 'should have an id', ->
+        results[0].should.have.property 'id'
+        results[0].id.should.match /^\d+$/
+
       it 'should have a name', ->
         results[0].should.have.property 'name'
         results[0].name.should.match /game.of.thrones/i
