@@ -288,13 +288,15 @@ parseResults = function(resultsHTML) {
     $ = cheerio.load(resultsHTML);
     rawResults = $('table#searchResult tr:has(a.detLink)');
     results = rawResults.map(function(elem) {
-        var category, leechers, link, magnetLink, name, result, seeders, size, subcategory, torrentLink, uploadDate;
+        var id, category, leechers, link, magnetLink, name, result, seeders, size, subcategory, torrentLink, uploadDate, relativeLink;
         name = $(this).find('a.detLink').text();
         uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
         size = $(this).find('font').text().match(/Size (.+?),/)[1];
         seeders = $(this).find('td[align="right"]').first().text();
         leechers = $(this).find('td[align="right"]').next().text();
-        link = baseUrl + $(this).find('div.detName a').attr('href');
+        relativeLink = $(this).find('div.detName a').attr('href');
+        link = baseUrl + relativeLink;
+        id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1]);
         magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
         torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
         uploader = $(this).find('font .detDesc').text();
@@ -308,6 +310,7 @@ parseResults = function(resultsHTML) {
             name: $(this).find('center a').last().text()
         };
         return result = {
+            id: id,
             name: name,
             size: size,
             link: link,
