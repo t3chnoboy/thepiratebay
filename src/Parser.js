@@ -11,7 +11,25 @@ import request from 'request';
 import { baseUrl } from './Torrent';
 
 
-export function parsePage(url, parse) {
+export function parsePage(url, parse, cb) {
+  if (typeof cb === 'function') {
+    requestWithEncoding(url, (err, data) => {
+      let categories;
+
+      if (err) {
+        cb(err);
+      } else {
+        try {
+          categories = parse(data);
+        } catch (error) {
+          return cb(error);
+        }
+
+        return cb(null, categories);
+      }
+    });
+  }
+
   return new Promise((resolve, reject) => {
     let categories;
 

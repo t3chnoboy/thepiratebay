@@ -8,7 +8,7 @@
 
 /* eslint no-unused-expressions: 0 */
 import { expect } from 'chai';
-import Parser from '../src/Parser';
+import Parser, { parseCategories, parsePage } from '../src/Parser';
 import Torrent, { baseUrl } from '../src/Torrent';
 
 
@@ -140,6 +140,10 @@ describe('Torrent', () => {
     });
   });
 
+  //
+  // Original tests
+  //
+
   describe('Torrent.getTorrent(id)', function () {
     before(async () => {
       this.torrent = await torrentFactory();
@@ -251,57 +255,58 @@ describe('Torrent', () => {
       done();
     });
   });
-});
 
-//
-// Original tests
-//
-
-describe('Torrent.getCategories()', function () {
-  before(async () => {
-    try {
-      this.cagtegories = await Torrent.getCategories();
-      console.log(this.categories);
-      this.subcategory = this.categories[0].subcategories[0];
-    } catch (err) {
-      console.log(err);
-    }
-  });
-
-  it('should return an array of categories', () => {
-    expect(this.categories).to.be.an('array');
-  });
-
-  describe('category', () => {
-    it('should have an id', () => {
-      expect(this.categories[0]).to.have.property('id');
-      expect(this.categories[0].id).to.match(/\d00/);
+  describe('Torrent.getCategories()', function testGetTorrents() {
+    before(async () => {
+      try {
+        this.categories = await Torrent.getCategories();
+        console.log(this.categories);
+        this.subcategory = this.categories[0].subcategories[0];
+      } catch (err) {
+        console.log(err);
+      }
     });
 
-    it('should have a name', () => {
-      expect(this.categories[0]).to.have.property('name');
-      expect(this.categories[0].name).to.be.a('string');
+    it('should return promise', (done) => {
+      expect(parsePage(`${baseUrl}/recent`, parseCategories)).to.be.a('promise');
+      done();
     });
 
-    it('name should match id', () => {
-      const video = this.categories.find((elem) => elem.name === 'Video');
-      expect(video.id).to.equal('200');
+    it('should return an array of categories', () => {
+      expect(this.categories).to.be.an('array');
     });
 
-    it('shold have subcategories array', () => {
-      expect(this.categories[0]).to.have.property('subcategories');
-      expect(this.categories[0].subcategories).to.be.an('array');
-    });
-
-    describe('subcategory', () => {
+    describe('category', () => {
       it('should have an id', () => {
-        expect(this.subcategory).to.have.property('id');
-        expect(this.subcategory.id).to.match(/\d{3}/);
+        expect(this.categories[0]).to.have.property('id');
+        expect(this.categories[0].id).to.match(/\d00/);
       });
 
       it('should have a name', () => {
-        expect(this.subcategory).to.have.property('name');
-        expect(this.subcategory.name).to.be.a('string');
+        expect(this.categories[0]).to.have.property('name');
+        expect(this.categories[0].name).to.be.a('string');
+      });
+
+      it('name should match id', () => {
+        const video = this.categories.find((elem) => elem.name === 'Video');
+        expect(video.id).to.equal('200');
+      });
+
+      it('shold have subcategories array', () => {
+        expect(this.categories[0]).to.have.property('subcategories');
+        expect(this.categories[0].subcategories).to.be.an('array');
+      });
+
+      describe('subcategory', () => {
+        it('should have an id', () => {
+          expect(this.subcategory).to.have.property('id');
+          expect(this.subcategory.id).to.match(/\d{3}/);
+        });
+
+        it('should have a name', () => {
+          expect(this.subcategory).to.have.property('name');
+          expect(this.subcategory.name).to.be.a('string');
+        });
       });
     });
   });
