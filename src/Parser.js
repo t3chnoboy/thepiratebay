@@ -1,67 +1,60 @@
-export function parsePage(url, parse) {
-  if (typeof cb === 'function') {
-    requestWithEncoding(url, function(err, data) {
-      var categories;
-      if (err) {
-        cb(err);
-      } else {
-        try {
-          categories = parse(data);
-        }
-        catch(err) {
-          return cb(err);
-        }
-        return cb(null, categories);
-      }
-    });
-  }
+/**
+ * Parse all pages
+ *
+ * @todo: support callbacks with callbackify
+ */
+import cheerio from 'cheerio';
+import zlib from 'zlib';
+import request from 'request';
 
+
+export function parsePage(url, parse) {
   return new Promise((resolve, reject) => {
-    var categories;
-    requestWithEncoding(url, function(err, data) {
+    let categories;
+
+    requestWithEncoding(url, (err, data) => {
       if (err) {
         reject(err);
       } else {
         try {
           categories = parse(data);
+        } catch (error) {
+          return reject(error);
         }
-        catch(err) {
-          return reject(err)
-        }
+
         return resolve(categories);
       }
-    })
+    });
   });
 }
 
-
-
 export function parseResults(resultsHTML) {
-  var $, rawResults, results;
-  $ = cheerio.load(resultsHTML);
-  rawResults = $('table#searchResult tr:has(a.detLink)');
-  results = rawResults.map(function(elem) {
-    var id, category, leechers, link, magnetLink, name, result, seeders, size, subcategory, torrentLink, uploadDate, relativeLink;
-    name = $(this).find('a.detLink').text();
-    uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
-    size = $(this).find('font').text().match(/Size (.+?),/)[1];
-    seeders = $(this).find('td[align="right"]').first().text();
-    leechers = $(this).find('td[align="right"]').next().text();
-    relativeLink = $(this).find('div.detName a').attr('href');
-    link = baseUrl + relativeLink;
-    id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1]);
-    magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
-    torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
-    uploader = $(this).find('font .detDesc').text();
-    uploaderLink = baseUrl + $(this).find('font a').attr('href');
+  const $ = cheerio.load(resultsHTML);
+  const rawResults = $('table#searchResult tr:has(a.detLink)');
+
+  const results = rawResults.map(function getRawResults(elem) {
+    const name = $(this).find('a.detLink').text();
+    const uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
+    const size = $(this).find('font').text().match(/Size (.+?),/)[1];
+    const seeders = $(this).find('td[align="right"]').first().text();
+    const leechers = $(this).find('td[align="right"]').next().text();
+    const relativeLink = $(this).find('div.detName a').attr('href');
+    const link = baseUrl + relativeLink;
+    const id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1]);
+    const magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
+    const torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
+    const uploader = $(this).find('font .detDesc').text();
+    const uploaderLink = baseUrl + $(this).find('font a').attr('href');
     category = {
       id: $(this).find('center a').first().attr('href').match(/\/browse\/(\d+)/)[1],
       name: $(this).find('center a').first().text()
     };
-    subcategory = {
+
+    const subcategory = {
       id: $(this).find('center a').last().attr('href').match(/\/browse\/(\d+)/)[1],
       name: $(this).find('center a').last().text()
     };
+
     return result = {
       id,
       name,
@@ -79,10 +72,10 @@ export function parseResults(resultsHTML) {
     };
   });
   return results.get();
-};
+}
 
 export function parseTvShow(tvShowPage) {
-  var $, rawResults, results = [], seasons = [], torrents = [];
+  let $, rawResults, results = [], seasons = [], torrents = [];
   $ = cheerio.load(tvShowPage);
 
   seasons = $('dt a').map(function(elem) {
@@ -112,7 +105,7 @@ export function parseTvShow(tvShowPage) {
 }
 
 export function parseTorrentPage(torrentPage) {
-  var $, filesCount, leechers, name, seeders, size, torrent, uploadDate;
+  let $, filesCount, leechers, name, seeders, size, torrent, uploadDate;
   $ = cheerio.load(torrentPage);
   name = $('#title').text().trim();
   // filesCount = parseInt($('a[title="Files"]').text());
@@ -133,10 +126,10 @@ export function parseTorrentPage(torrentPage) {
     name, size, seeders, leechers, uploadDate, torrentLink, magnetLink, link,
     id, description, picture, uploader, uploaderLink
   };
-};
+}
 
 export function parseTvShows(tvShowsPage) {
-  var $, rawResults, results = [];
+  let $, rawResults, results = [];
   $ = cheerio.load(tvShowsPage);
   rawTitles = $('dt a');
   series = rawTitles.map(function(elem) {
@@ -147,7 +140,7 @@ export function parseTvShows(tvShowsPage) {
   }).get();
 
   rawSeasons = $('dd');
-  var seasons = []
+  let seasons = []
 
   rawSeasons.each(function(elem) {
     seasons.push($(this).find('a')
@@ -167,12 +160,12 @@ export function parseTvShows(tvShowsPage) {
 }
 
 export function parseCategories(categoriesHTML) {
-  var $, categories, categoriesContainer, currentCategoryId;
+  let $, categories, categoriesContainer, currentCategoryId;
   $ = cheerio.load(categoriesHTML);
   categoriesContainer = $('select#category optgroup');
   currentCategoryId = 0;
   categories = categoriesContainer.map(function(elem) {
-    var category;
+    let category;
     currentCategoryId += 100;
     category = {
       name: $(this).attr('label'),
@@ -180,14 +173,48 @@ export function parseCategories(categoriesHTML) {
       subcategories: []
     };
     $(this).find('option').each(function(opt) {
-      var subcategory;
-      subcategory = {
+      const subcategory = {
         id: $(this).attr('value'),
         name: $(this).text()
       };
+
       return category.subcategories.push(subcategory);
     });
+
     return category;
   });
+
   return categories.get();
+}
+
+export function requestWithEncoding(options, callback) {
+  const req = request(options);
+
+  req.on('response', (res) => {
+    const chunks = [];
+
+    res.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+
+    res.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      const encoding = res.headers['content-encoding'];
+      if (encoding === 'gzip') {
+        zlib.gunzip(buffer, (err, decoded) => {
+          callback(err, decoded && decoded.toString());
+        });
+      } else if (encoding === 'deflate') {
+        zlib.inflate(buffer, (err, decoded) => {
+          callback(err, decoded && decoded.toString());
+        });
+      } else {
+        callback(null, buffer.toString());
+      }
+    });
+  });
+
+  req.on('error', (err) => {
+    callback(err);
+  });
 }

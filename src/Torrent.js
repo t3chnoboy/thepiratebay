@@ -1,10 +1,6 @@
 /**
- * @todo: callbackify support
- */
-
-import request from 'request';
-import cheerio from 'cheerio';
-import zlib from 'zlib';
+* @todo: callbackify support
+*/
 import {
   parsePage,
   parseResults,
@@ -16,8 +12,9 @@ import {
 
 export const baseUrl = 'http://thepiratebay.se';
 
+
 /*
-*opts:
+* opts:
 *  category
 *    0   - all
 *    101 - 699
@@ -58,8 +55,8 @@ export function search(title = '*', opts = {}) {
 
 export function getTorrent(id) {
   const url = (typeof id === Number) || /^\d+$/.test(id)
-    ? `${baseUrl}/torrent/${id}`
-    : id.link || id;
+  ? `${baseUrl}/torrent/${id}`
+  : id.link || id;
 
   return parsePage({ url }, parseTorrentPage);
 }
@@ -68,7 +65,7 @@ export function topTorrents(category = 'all') {
   return parsePage(`${baseUrl}'/top/'${category}`, parseResults);
 }
 
-export function recentTorrents(cb) {
+export function recentTorrents() {
   return parsePage(baseUrl + '/recent', parseResults);
 }
 
@@ -84,7 +81,7 @@ export function userTorrents(username, opts = {}) {
   return parsePage(query, parseResults);
 }
 
-export function tvShows(cb) {
+export function tvShows() {
   return parsePage(baseUrl + '/tv/all', parseTvShows);
 }
 
@@ -92,37 +89,6 @@ export function getTvShow(id) {
   return parsePage(baseUrl + '/tv/' + id, parseTvShow);
 }
 
-export function getCategories(cb) {
+export function getCategories() {
   return parsePage(baseUrl + '/recent', parseCategories);
-};
-
-export function requestWithEncoding(options, callback) {
-  var req = request(options);
-
-  req.on('response', function(res) {
-    var chunks = [];
-    res.on('data', function(chunk) {
-      chunks.push(chunk);
-    });
-
-    res.on('end', function() {
-      var buffer = Buffer.concat(chunks);
-      var encoding = res.headers['content-encoding'];
-      if (encoding == 'gzip') {
-        zlib.gunzip(buffer, function(err, decoded) {
-          callback(err, decoded && decoded.toString());
-        });
-      } else if (encoding == 'deflate') {
-        zlib.inflate(buffer, function(err, decoded) {
-          callback(err, decoded && decoded.toString());
-        })
-      } else {
-        callback(null, buffer.toString());
-      }
-    });
-  });
-
-  req.on('error', function(err) {
-    callback(err);
-  });
 }

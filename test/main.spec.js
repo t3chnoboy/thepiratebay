@@ -8,10 +8,15 @@ import Parser from '../src/Parser';
 import Torrent, { baseUrl } from '../src/Torrent';
 
 
-describe('Torrent', () => {
-  describe('Torrent.getTorrent(id)', async () => {
-    const torrent = await Torrent.getTorrent(10676856);
+async function torrentFactory() {
+  const torrent = await Torrent.getTorrent(10676856);
+  return torrent;
+}
 
+const torrent = torrentFactory();
+
+describe('Torrent', () => {
+  describe('Torrent.getTorrent(id)', () => {
     it('shold have a name', (done) => {
       torrent.should.have.property('name');
       torrent.name.should.equal('The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY');
