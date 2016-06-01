@@ -1,14 +1,25 @@
-var zlib, Promise, baseUrl, cheerio, getCategories, parseCategories, parsePage, parseResults, recentTorrents, userTorrents, request, search, topTorrents, setUrl;
+let
+  zlib,
+  Promise,
+  baseUrl,
+  cheerio,
+  getCategories,
+  parseCategories,
+  parsePage,
+  parseResults,
+  recentTorrents,
+  userTorrents,
+  request,
+  search,
+  topTorrents,
+  setUrl;
 
-request = require('request');
+import request from 'request';
+import cheerio from 'cheerio';
+import { Promise } from 'es6-promise';
+import zlib from 'zlib';
 
-cheerio = require('cheerio');
-
-Promise = require('es6-promise').Promise;
-
-baseUrl = 'http://thepiratebay.se';
-
-zlib = require('zlib');
+const baseUrl = 'http://thepiratebay.se';
 
 /*
  *opts:
@@ -30,12 +41,8 @@ zlib = require('zlib');
  *     10 - leeches asc
  */
 
-search = function(title, opts, cb) {
-    var query;
-    if (opts == null) {
-        opts = {};
-    }
-    query = {
+export search function (title = '*', opts = {}, cb) {
+    const query = {
         url: baseUrl + '/s/',
         qs: {
             q: title || '*',
@@ -44,28 +51,29 @@ search = function(title, opts, cb) {
             orderby: opts.orderBy || '99'
         }
     };
+
     return parsePage(query, parseResults, cb);
 };
 
-getTorrent = function(id, cb) {
+export function getTorrent(id, cb) {
   var url = (typeof id === Number) || /^\d+$/.test(id) ? "" + baseUrl + "/torrent/" + id : id.link || id;
   return parsePage({
     url: url
   }, parseTorrentPage, cb);
 };
 
-topTorrents = function(category, cb) {
+export function topTorrents(category, cb) {
     if (category == null) {
         category = 'all';
     }
     return parsePage(baseUrl + '/top/' + category, parseResults, cb);
 };
 
-recentTorrents = function(cb) {
+export function recentTorrents(cb) {
     return parsePage(baseUrl + '/recent', parseResults, cb);
 };
 
-userTorrents = function(userName, opts, cb) {
+export function userTorrents(userName, opts, cb) {
     var query;
     if (opts == null) {
         opts = {};
@@ -80,19 +88,19 @@ userTorrents = function(userName, opts, cb) {
     return parsePage(query, parseResults, cb);
 };
 
-tvShows = function(cb) {
+export function tvShows(cb) {
     return parsePage(baseUrl + '/tv/all', parseTvShows, cb);
 };
 
-getTvShow = function(id, cb) {
+export function getTvShow(id, cb) {
     return parsePage(baseUrl + '/tv/' + id, parseTvShow, cb);
 };
 
-getCategories = function(cb) {
+export function getCategories(cb) {
     return parsePage(baseUrl + '/recent', parseCategories, cb);
 };
 
-parsePage = function(url, parse, cb) {
+export function parsePage(url, parse, cb) {
     if (typeof cb === 'function') {
         requestWithEncoding(url, function(err, data) {
             var categories;
@@ -127,7 +135,7 @@ parsePage = function(url, parse, cb) {
     });
 };
 
-var requestWithEncoding = function(options, callback) {
+export var function requestWithEncoding(options, callback) {
     var req = request(options);
 
     req.on('response', function(res) {
@@ -158,7 +166,7 @@ var requestWithEncoding = function(options, callback) {
     });
 }
 
-parseCategories = function(categoriesHTML) {
+export function parseCategories(categoriesHTML) {
     var $, categories, categoriesContainer, currentCategoryId;
     $ = cheerio.load(categoriesHTML);
     categoriesContainer = $('select#category optgroup');
@@ -185,7 +193,7 @@ parseCategories = function(categoriesHTML) {
 };
 
 
-parseTvShows = function(tvShowsPage) {
+export function parseTvShows(tvShowsPage) {
     var $, rawResults, results = [];
     $ = cheerio.load(tvShowsPage);
     rawTitles = $('dt a');
@@ -217,7 +225,7 @@ parseTvShows = function(tvShowsPage) {
 };
 
 
-parseTvShow = function(tvShowPage) {
+export function parseTvShow(tvShowPage) {
     var $, rawResults, results = [], seasons = [], torrents = [];
     $ = cheerio.load(tvShowPage);
 
@@ -247,7 +255,7 @@ parseTvShow = function(tvShowPage) {
     return results;
 };
 
-parseTorrentPage = function(torrentPage) {
+export function parseTorrentPage(torrentPage) {
   var $, filesCount, leechers, name, seeders, size, torrent, uploadDate;
   $ = cheerio.load(torrentPage);
   name = $('#title').text().trim();
@@ -283,7 +291,7 @@ parseTorrentPage = function(torrentPage) {
 };
 
 
-parseResults = function(resultsHTML) {
+export function parseResults(resultsHTML) {
     var $, rawResults, results;
     $ = cheerio.load(resultsHTML);
     rawResults = $('table#searchResult tr:has(a.detLink)');
@@ -310,34 +318,24 @@ parseResults = function(resultsHTML) {
             name: $(this).find('center a').last().text()
         };
         return result = {
-            id: id,
-            name: name,
-            size: size,
-            link: link,
-            category: category,
-            seeders: seeders,
-            leechers: leechers,
-            uploadDate: uploadDate,
-            magnetLink: magnetLink,
-            subcategory: subcategory,
-            torrentLink: torrentLink,
-            uploader: uploader,
-            uploaderLink: uploaderLink
+          id,
+          name,
+          size,
+          link,
+          category,
+          seeders,
+          leechers,
+          uploadDate,
+          magnetLink,
+          subcategory,
+          torrentLink,
+          uploader,
+          uploaderLinkk
         };
     });
     return results.get();
 };
 
-setUrl = function(url) {
+export function setUrl(url) {
   baseUrl = url;
 };
-
-exports.search         = search;
-exports.topTorrents    = topTorrents;
-exports.recentTorrents = recentTorrents;
-exports.userTorrents   = userTorrents;
-exports.getCategories  = getCategories;
-exports.tvShows        = tvShows;
-exports.getTvShow      = getTvShow;
-exports.getTorrent     = getTorrent;
-exports.setUrl         = setUrl;

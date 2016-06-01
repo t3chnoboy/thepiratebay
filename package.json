@@ -14,22 +14,22 @@
     "scraper"
   ],
   "scripts": {
-    "test": "mocha --harmony",
+    "test": "cross-env NODE_ENV=test mocha --timeout 10000 --inline-diffs --compilers js:babel-register --recursive --require ./test/setup.js ./test/*.spec.js",
     "debug": "mocha debug --harmony"
   },
   "devDependencies": {
-    "co": "^3.1.0",
-    "co-mocha": "0.0.4",
-    "coffee-script": "git://github.com/xixixao/coffee-script.git#35ca45d13a784af508095214547b8bd57b33a40c",
-    "mocha": "^1.21.4",
-    "should": "^4.0.4"
+    "co": "^4.6.0",
+    "co-mocha": "1.1.2",
+    "cross-env": "^1.0.8",
+    "mocha": "^2.5.3",
+    "should": "^9.0.0"
   },
   "dependencies": {
-    "cheerio": "^0.19.0",
-    "es6-promise": "3.0.2",
-    "request": "^2.67.0"
+    "cheerio": "^0.20.0",
+    "es6-promise": "3.2.1",
+    "request": "^2.72.0"
   },
   "engines": {
-    "node": ">= 0.9.0"
+    "node": ">= 4.0.0"
   }
 }
