@@ -14,7 +14,7 @@
     "scraper"
   ],
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha --timeout 10000 --inline-diffs --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
+    "test": "cross-env NODE_ENV=test mocha --timeout 20000 --inline-diffs --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
     "debug": "mocha debug --harmony"
   },
   "devDependencies": {

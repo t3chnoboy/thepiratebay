@@ -6,6 +6,7 @@
 import cheerio from 'cheerio';
 import zlib from 'zlib';
 import request from 'request';
+import { baseUrl } from './Torrent';
 
 
 export function parsePage(url, parse) {
@@ -40,12 +41,13 @@ export function parseResults(resultsHTML) {
     const leechers = $(this).find('td[align="right"]').next().text();
     const relativeLink = $(this).find('div.detName a').attr('href');
     const link = baseUrl + relativeLink;
-    const id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1]);
+    const id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10);
     const magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
     const torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
     const uploader = $(this).find('font .detDesc').text();
     const uploaderLink = baseUrl + $(this).find('font a').attr('href');
-    category = {
+
+    const category = {
       id: $(this).find('center a').first().attr('href').match(/\/browse\/(\d+)/)[1],
       name: $(this).find('center a').first().text()
     };
@@ -55,20 +57,9 @@ export function parseResults(resultsHTML) {
       name: $(this).find('center a').last().text()
     };
 
-    return result = {
-      id,
-      name,
-      size,
-      link,
-      category,
-      seeders,
-      leechers,
-      uploadDate,
-      magnetLink,
-      subcategory,
-      torrentLink,
-      uploader,
-      uploaderLinkk
+    return {
+      id, name, size, link, category, seeders, leechers, uploadDate, magnetLink,
+      subcategory, torrentLink, uploader, uploaderLink
     };
   });
   return results.get();
@@ -105,22 +96,22 @@ export function parseTvShow(tvShowPage) {
 }
 
 export function parseTorrentPage(torrentPage) {
-  let $, filesCount, leechers, name, seeders, size, torrent, uploadDate;
-  $ = cheerio.load(torrentPage);
-  name = $('#title').text().trim();
+  const $ = cheerio.load(torrentPage);
+  const name = $('#title').text().trim();
+
   // filesCount = parseInt($('a[title="Files"]').text());
-  size = $('dt:contains(Size:) + dd').text().trim();
-  uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
-  uploader = $('dt:contains(By:) + dd').text().trim();
-  uploaderLink = baseUrl + $('dt:contains(By:) + dd a').attr('href');
-  seeders = $('dt:contains(Seeders:) + dd').text().trim();
-  leechers = $('dt:contains(Leechers:) + dd').text().trim();
-  id = $('input[name=id]').attr('value');
-  link = baseUrl + '/torrent/' + id
-  magnetLink = $('a[title="Get this torrent"]').attr('href');
-  torrentLink = $('a[title="Torrent File"]').attr('href');
-  description = $('div.nfo').text().trim();
-  picture = 'http:' + $('img[title="picture"]').attr('src');
+  const size = $('dt:contains(Size:) + dd').text().trim();
+  const uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
+  const uploader = $('dt:contains(By:) + dd').text().trim();
+  const uploaderLink = baseUrl + $('dt:contains(By:) + dd a').attr('href');
+  const seeders = $('dt:contains(Seeders:) + dd').text().trim();
+  const leechers = $('dt:contains(Leechers:) + dd').text().trim();
+  const id = $('input[name=id]').attr('value');
+  const link = `${baseUrl}/torrent/${id}`;
+  const magnetLink = $('a[title="Get this torrent"]').attr('href');
+  const torrentLink = $('a[title="Torrent File"]').attr('href');
+  const description = $('div.nfo').text().trim();
+  const picture = 'http:' + $('img[title="picture"]').attr('src');
 
   return {
     name, size, seeders, leechers, uploadDate, torrentLink, magnetLink, link,
@@ -129,18 +120,18 @@ export function parseTorrentPage(torrentPage) {
 }
 
 export function parseTvShows(tvShowsPage) {
-  let $, rawResults, results = [];
-  $ = cheerio.load(tvShowsPage);
-  rawTitles = $('dt a');
-  series = rawTitles.map(function(elem) {
+  const $ = cheerio.load(tvShowsPage);
+  const rawTitles = $('dt a');
+
+  const series = rawTitles.map(function(elem) {
     return {
       title: $(this).text(),
       id: $(this).attr('href').match(/\/tv\/(\d+)/)[1]
     };
   }).get();
 
-  rawSeasons = $('dd');
-  let seasons = []
+  const rawSeasons = $('dd');
+  const seasons = [];
 
   rawSeasons.each(function(elem) {
     seasons.push($(this).find('a')
@@ -160,18 +151,17 @@ export function parseTvShows(tvShowsPage) {
 }
 
 export function parseCategories(categoriesHTML) {
-  let $, categories, categoriesContainer, currentCategoryId;
-  $ = cheerio.load(categoriesHTML);
-  categoriesContainer = $('select#category optgroup');
-  currentCategoryId = 0;
-  categories = categoriesContainer.map(function(elem) {
-    let category;
+  const $ = cheerio.load(categoriesHTML);
+  const categoriesContainer = $('select#category optgroup');
+  let currentCategoryId = 0;
+  const categories = categoriesContainer.map(function getElements(elem) {
     currentCategoryId += 100;
-    category = {
+    const category = {
       name: $(this).attr('label'),
-      id: currentCategoryId + '',
+      id: `${currentCategoryId}`,
       subcategories: []
     };
+
     $(this).find('option').each(function(opt) {
       const subcategory = {
         id: $(this).attr('value'),

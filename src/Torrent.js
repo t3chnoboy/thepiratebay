@@ -1,6 +1,6 @@
 /**
-* @todo: callbackify support
-*/
+ * @todo: callbackify support
+ */
 import {
   parsePage,
   parseResults,
@@ -34,11 +34,12 @@ export const baseUrl = 'http://thepiratebay.se';
 */
 
 export function search(title = '*', opts = {}) {
-  const { config, page, orderBy, category, orderby } = Object.assign({}, {
+  const defaults = {
     category: '0',
     page: '0',
     orderby: '99',
-  }, opts);
+  };
+  const { config, page, orderBy, category, orderby } = Object.assign({}, defaults, opts);
 
   const query = {
     url: `${baseUrl}/s/`,
@@ -55,18 +56,18 @@ export function search(title = '*', opts = {}) {
 
 export function getTorrent(id) {
   const url = (typeof id === Number) || /^\d+$/.test(id)
-  ? `${baseUrl}/torrent/${id}`
-  : id.link || id;
+    ? `${baseUrl}/torrent/${id}`
+    : id.link || id;
 
   return parsePage({ url }, parseTorrentPage);
 }
 
 export function topTorrents(category = 'all') {
-  return parsePage(`${baseUrl}'/top/'${category}`, parseResults);
+  return parsePage(`${baseUrl}/top/${category}`, parseResults);
 }
 
 export function recentTorrents() {
-  return parsePage(baseUrl + '/recent', parseResults);
+  return parsePage(`${baseUrl}/recent`, parseResults);
 }
 
 export function userTorrents(username, opts = {}) {
@@ -82,13 +83,18 @@ export function userTorrents(username, opts = {}) {
 }
 
 export function tvShows() {
-  return parsePage(baseUrl + '/tv/all', parseTvShows);
+  return parsePage(`${baseUrl}'/tv/all`, parseTvShows);
 }
 
 export function getTvShow(id) {
-  return parsePage(baseUrl + '/tv/' + id, parseTvShow);
+  return parsePage(`${baseUrl}/tv/id`, parseTvShow);
 }
 
 export function getCategories() {
-  return parsePage(baseUrl + '/recent', parseCategories);
+  return parsePage(`${baseUrl}/recent`, parseCategories);
 }
+
+export default {
+  search, getTorrent, topTorrents, recentTorrents, userTorrents, tvShows,
+  getTvShow, getCategories
+};

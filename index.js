@@ -1,4 +1,2 @@
-import Torrent from './src/Torrent';
-import Parser from './src/Parser';
-
-export default Torrent;
+module.exports = require('./src/Torrent');
+module.exports.parser = require('./src/Parser');
