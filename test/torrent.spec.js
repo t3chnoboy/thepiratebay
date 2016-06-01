@@ -1,5 +1,9 @@
 /**
  * Test all high level methods
+ *
+ * @todo: reduced the number of api calls by querying once and running multiple
+ *        tests against that query. ideally, this would be done in a 'before'
+ *        function
  */
 
 /* eslint no-unused-expressions: 0 */
@@ -42,14 +46,15 @@ function assertHasNecessaryProperties(torrent) {
   }
 }
 
-const torrent = torrentFactory();
-
 describe('Torrent', () => {
-  describe('categories', () => {
+  describe('categories', function () {
+    before(async () => {
+      this.categories = await Torrent.getCategories();
+    });
+
     it('retrieves categories', async (done) => {
       try {
-        const categories = await Torrent.getCategories();
-        expect(categories).to.be.an('array');
+        expect(this.categories).to.be.an('array');
         done();
       } catch (err) {
         console.log(err);
@@ -58,11 +63,10 @@ describe('Torrent', () => {
 
     it('retrieves categories with expected properties', async (done) => {
       try {
-        const categories = await Torrent.getCategories();
         const properties = ['name', 'id', 'subcategories'];
         for (const property of properties) {
-          expect(categories[0]).to.have.property(property);
-          expect(categories[0][property]).to.exist;
+          expect(this.categories[0]).to.have.property(property);
+          expect(this.categories[0][property]).to.exist;
         }
         done();
       } catch (err) {
@@ -71,11 +75,14 @@ describe('Torrent', () => {
     });
   });
 
-  describe('search', () => {
+  describe('search', function () {
+    before(async () => {
+      this.search = await torrentSearchFactory();
+    });
+
     it('searches for items', async (done) => {
       try {
-        const search = await torrentSearchFactory();
-        assertHasArrayOfTorrents(search);
+        assertHasArrayOfTorrents(this.search);
         done();
       } catch (err) {
         console.log(err);
@@ -84,8 +91,7 @@ describe('Torrent', () => {
 
     it('retrieves expected properties', async (done) => {
       try {
-        const search = await torrentSearchFactory();
-        assertHasNecessaryProperties(search[0]);
+        assertHasNecessaryProperties(this.search[0]);
         done();
       } catch (err) {
         console.log(err);
@@ -134,78 +140,119 @@ describe('Torrent', () => {
     });
   });
 
-  // describe('Torrent.getTorrent(id)', () => {
-  //   it('shold have a name', (done) => {
-  //     torrent.should.have.property('name');
-  //     torrent.name.should.equal('The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY');
-  //     done();
-  //   });
   //
-  //   it('should have uploader', (done) => {
-  //     torrent.should.have.property('uploader');
-  //     torrent.uploader.should.equal('YIFY');
-  //     done();
-  //   });
+  // Original tests
   //
-  //   it('should have uploader link', (done) => {
-  //     torrent.should.have.property('uploaderLink');
-  //     torrent.uploaderLink.should.equal(`${baseUrl}/user/YIFY/`);
-  //     done();
-  //   });
-  //
-  //   it.skip('should have an info hash', (done) => {
-  //     torrent.should.have.property('uploader');
-  //     torrent.infoHash.should.equal('0259F6B98A7CA160A36F13457C89344C7DD34000');
-  //     done();
-  //   });
-  //
-  //   it('should have an id', (done) => {
-  //     torrent.should.have.property('id');
-  //     torrent.id.should.equal('10676856');
-  //     done();
-  //   });
-  //
-  //   it('should have upload date', (done) => {
-  //     torrent.should.have.property('uploadDate');
-  //     torrent.uploadDate.should.equal('2014-08-02 08:15:25 GMT');
-  //     done();
-  //   });
-  //
-  //   it('should have size', (done) => {
-  //     torrent.should.have.property('size');
-  //     torrent.size.should.match(/\d+\.\d+\s(G|M|K)iB/);
-  //     done();
-  //   });
-  //
-  //   it('should have seeders and leechers count', (done) => {
-  //     torrent.should.have.property('seeders');
-  //     torrent.should.have.property('leechers');
-  //     (~~torrent.leechers).should.be.within(5, 100000);
-  //     (~~torrent.seeders).should.be.within(5, 100000);
-  //     done();
-  //   });
-  //
-  //   it('should have a link', (done) => {
-  //     torrent.should.have.property('link');
-  //     torrent.link.should.equal(`${baseUrl}/torrent/10676856`);
-  //     done();
-  //   });
-  //
-  //   it('should have a magnet link', (done) => {
-  //     torrent.should.have.property('magnetLink');
-  //     // torrent.magnetLink.should.match('/magnet:\?xt=urn:btih:/');done()
-  //   });
-  //
-  //   it('should have a description', (done) => {
-  //     torrent.should.have.property('description');
-  //     torrent.description.should.be.a.String;
-  //     done();
-  //   });
-  //
-  //   it('should have a picture', (done) => {
-  //     torrent.should.have.property('picture');
-  //     torrent.picture.should.be.a.String;
-  //     done();
-  //   });
-  // });
+
+  describe('Torrent.getTorrent(id)', function () {
+    before(async () => {
+      this.torrent = await torrentFactory();
+    });
+
+    it('should have a name', (done) => {
+      try {
+        expect(this.torrent).to.have.property(
+          'name',
+          'The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY'
+        );
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have uploader', (done) => {
+      try {
+        expect(this.torrent).to.have.property('uploader', 'YIFY');
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have uploader link', (done) => {
+      try {
+        expect(this.torrent).to.have.property('uploaderLink', `${baseUrl}/user/YIFY/`);
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it.skip('should have an info hash', (done) => {
+      try {
+        expect(this.torrent).to.have.property('uploader');
+        expect(this.torrent.infoHash).to.equal('0259F6B98A7CA160A36F13457C89344C7DD34000');
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have an id', (done) => {
+      try {
+        expect(this.torrent).to.have.property('id', '10676856');
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have upload date', (done) => {
+      try {
+        expect(this.torrent).to.have.property('uploadDate', '2014-08-02 08:15:25 GMT');
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have size', (done) => {
+      try {
+        expect(this.torrent).to.have.property('size');
+        expect(this.torrent.size).to.match(/\d+\.\d+\s(G|M|K)iB/);
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have seeders and leechers count', (done) => {
+      try {
+        expect(this.torrent).to.have.property('seeders');
+        expect(this.torrent).to.have.property('leechers');
+        expect(~~this.torrent.leechers).to.be.within(5, 100000);
+        expect(~~this.torrent.seeders).to.be.within(5, 100000);
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have a link', (done) => {
+      try {
+        expect(this.torrent).to.have.property('link', `${baseUrl}/torrent/10676856`);
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should have a magnet link', (done) => {
+      expect(this.torrent).to.have.property('magnetLink');
+      done();
+    });
+
+    it('should have a description', (done) => {
+      expect(this.torrent).to.have.property('description');
+      expect(this.torrent.description).to.be.a('string');
+      done();
+    });
+
+    it('should have a picture', (done) => {
+      expect(this.torrent).to.have.property('picture');
+      expect(this.torrent.picture).to.be.a('string');
+      done();
+    });
+  });
 });

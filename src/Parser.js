@@ -1,3 +1,5 @@
+/* eslint newline-per-chained-call: 0 */
+
 /**
  * Parse all pages
  *
@@ -35,8 +37,11 @@ export function parseResults(resultsHTML) {
 
   const results = rawResults.map(function getRawResults(elem) {
     const name = $(this).find('a.detLink').text();
-    const uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
-    const size = $(this).find('font').text().match(/Size (.+?),/)[1];
+    const uploadDate = $(this).find('font').text()
+      .match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
+    const size = $(this).find('font').text()
+      .match(/Size (.+?),/)[1];
+
     const seeders = $(this).find('td[align="right"]').first().text();
     const leechers = $(this).find('td[align="right"]').next().text();
     const relativeLink = $(this).find('div.detName a').attr('href');
@@ -66,33 +71,29 @@ export function parseResults(resultsHTML) {
 }
 
 export function parseTvShow(tvShowPage) {
-  let $, rawResults, results = [], seasons = [], torrents = [];
-  $ = cheerio.load(tvShowPage);
+  const torrents = [];
+  const results = [];
+  const $ = cheerio.load(tvShowPage);
 
-  seasons = $('dt a').map(function(elem) {
+  const seasons = $('dt a').map(function () {
     return $(this).text();
   }).get();
 
-  rawLinks = $('dd');
+  const rawLinks = $('dd');
 
-  rawLinks.each(function(elem) {
-    torrents.push($(this).find('a').map(function(link){
+  rawLinks.each(function (elem) {
+    torrents.push($(this).find('a').map(function (link) {
       return {
         title: $(this).text(),
         link: (baseUrl + $(this).attr('href')),
         id: $(this).attr('href').match(/\/torrent\/(\d+)/)[1]
-      }
+      };
     }).get());
   });
 
-  seasons.forEach(function(s, index){
-    results.push({
-      title: s,
-      torrents: torrents[index]
-    });
-  });
-
-  return results;
+  return seasons.map(
+    (season, index) => ({ title: season, torrents: torrents[index] })
+  );
 }
 
 export function parseTorrentPage(torrentPage) {
@@ -162,7 +163,7 @@ export function parseCategories(categoriesHTML) {
       subcategories: []
     };
 
-    $(this).find('option').each(function(opt) {
+    $(this).find('option').each(function getSubcategory(opt) {
       const subcategory = {
         id: $(this).attr('value'),
         name: $(this).text()
