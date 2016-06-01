@@ -11,25 +11,7 @@ import request from 'request';
 import { baseUrl } from './Torrent';
 
 
-export function parsePage(url, parse, cb) {
-  if (typeof cb === 'function') {
-    requestWithEncoding(url, (err, data) => {
-      let categories;
-
-      if (err) {
-        cb(err);
-      } else {
-        try {
-          categories = parse(data);
-        } catch (error) {
-          return cb(error);
-        }
-
-        return cb(null, categories);
-      }
-    });
-  }
-
+export function parsePage(url, parse) {
   return new Promise((resolve, reject) => {
     let categories;
 
@@ -109,9 +91,15 @@ export function parseTvShow(tvShowPage) {
     }).get());
   });
 
-  return seasons.map(
+  console.log('seasons........');
+  console.log(seasons);
+  return torrents;
+
+  const tvShow = seasons.map(
     (season, index) => ({ title: season, torrents: torrents[index] })
   );
+
+  return tvShow;
 }
 
 export function parseTorrentPage(torrentPage) {
@@ -159,13 +147,17 @@ export function parseTvShows(tvShowsPage) {
     .match(/S\d+/g));
   });
 
-  return series.map(
+  const tvShows = series.map(
     (season, index) => ({
       title: season.title,
       id: season.id,
       seasons: seasons[index]
     })
   );
+
+  console.log(tvShows);
+
+  return tvShows;
 }
 
 export function parseCategories(categoriesHTML) {

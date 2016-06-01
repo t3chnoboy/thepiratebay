@@ -91,9 +91,7 @@ export function getTvShow(id) {
 }
 
 export function getCategories() {
-  return new Promise(
-    (resolve, reject) => resolve(parsePage(`${baseUrl}/recent`, parseCategories))
-  );
+  return parsePage(`${baseUrl}/recent`, parseCategories);
 }
 
 export default {
