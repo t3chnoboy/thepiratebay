@@ -8,6 +8,8 @@ import Parser from '../src/Parser';
 import Torrent, { baseUrl } from '../src/Torrent';
 
 
+const testingUsername = 'YIFY';
+
 async function torrentFactory() {
   const torrent = await Torrent.getTorrent(10676856);
   return torrent;
@@ -24,33 +26,75 @@ function assertHasArrayOfTorrents(arrayOfTorrents) {
   expect(arrayOfTorrents[0]).to.be.an('object');
 }
 
+/**
+ * todo: test the 'torrentLink' property, which is undefined in many queries
+ */
 function assertHasNecessaryProperties(torrent) {
   const propertiesToValidate = [
     'id', 'name', 'size', 'link', 'category', 'seeders', 'leechers',
-    'uploadDate', 'magnetLink', 'subcategory', 'torrentLink', 'uploader',
+    'uploadDate', 'magnetLink', 'subcategory', 'uploader',
     'uploaderLink'
   ];
 
   for (const property of propertiesToValidate) {
     expect(torrent).to.have.property(property);
-    expect(torrent).to.exist;
+    expect(torrent[property]).to.exist;
   }
 }
 
 const torrent = torrentFactory();
 
 describe('Torrent', () => {
+  describe('categories', () => {
+    it('retrieves categories', async (done) => {
+      try {
+        const categories = await Torrent.getCategories();
+        expect(categories).to.be.an('array');
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('retrieves categories with expected properties', async (done) => {
+      try {
+        const categories = await Torrent.getCategories();
+        const properties = ['name', 'id', 'subcategories'];
+        for (const property of properties) {
+          expect(categories[0]).to.have.property(property);
+          expect(categories[0][property]).to.exist;
+        }
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+  });
+
   describe('search', () => {
     it('searches for items', async (done) => {
       try {
         const search = await torrentSearchFactory();
         assertHasArrayOfTorrents(search);
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('retrieves expected properties', async (done) => {
+      try {
+        const search = await torrentSearchFactory();
         assertHasNecessaryProperties(search[0]);
         done();
       } catch (err) {
         console.log(err);
       }
     });
+
+    // it('searches by page number', async (done) => {});
+    // it('searches by orderBy', async (done) => {});
+    // it('searches by category', async (done) => {});
   });
 
   describe('torrent types', () => {
@@ -72,6 +116,17 @@ describe('Torrent', () => {
         assertHasArrayOfTorrents(torrents);
         assertHasNecessaryProperties(torrents[0]);
         expect(torrents).to.have.lengthOf(30);
+        done();
+      } catch (err) {
+        console.log(err);
+      }
+    });
+
+    it('should get users torrents', async (done) => {
+      try {
+        const torrents = await Torrent.userTorrents(testingUsername);
+        assertHasArrayOfTorrents(torrents);
+        assertHasNecessaryProperties(torrents[0]);
         done();
       } catch (err) {
         console.log(err);

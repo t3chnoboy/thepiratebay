@@ -15,6 +15,7 @@
   ],
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --timeout 20000 --inline-diffs --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
+    "lint": "eslint src test",
     "debug": "mocha debug --harmony"
   },
   "devDependencies": {

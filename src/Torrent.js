@@ -10,28 +10,28 @@ import {
   parseCategories
 } from './Parser';
 
-export const baseUrl = 'http://thepiratebay.se';
 
+export const baseUrl = 'https://thepiratebay.se';
 
 /*
-* opts:
-*  category
-*    0   - all
-*    101 - 699
-*  page
-*    0 - 99
-*  orderBy
-*     1  - name desc
-*     2  - name asc
-*     3  - date desc
-*     4  - date asc
-*     5  - size desc
-*     6  - size asc
-*     7  - seeds desc
-*     8  - seeds asc
-*     9  - leeches desc
-*     10 - leeches asc
-*/
+ * opts:
+ *  category
+ *    0   - all
+ *    101 - 699
+ *  page
+ *    0 - 99
+ *  orderBy
+ *     1  - name desc
+ *     2  - name asc
+ *     3  - date desc
+ *     4  - date asc
+ *     5  - size desc
+ *     6  - size asc
+ *     7  - seeds desc
+ *     8  - seeds asc
+ *     9  - leeches desc
+ *     10 - leeches asc
+ */
 
 export function search(title = '*', opts = {}) {
   const defaults = {
