@@ -82,12 +82,18 @@ export function userTorrents(username, opts = {}) {
   return parsePage(query, parseResults);
 }
 
+/**
+ * @todo: url not longer returning results
+ */
 export function tvShows() {
   return parsePage(`${baseUrl}'/tv/all`, parseTvShows);
 }
 
+/**
+ * @todo: url not longer returning results
+ */
 export function getTvShow(id) {
-  return parsePage(`${baseUrl}/tv/id`, parseTvShow);
+  return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
 }
 
 export function getCategories() {

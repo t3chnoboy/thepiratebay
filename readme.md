@@ -19,62 +19,45 @@ npm install thepiratebay
 ## Usage
 
 ```javascript
-tpb = require('thepiratebay');
+  const tpb = require('thepiratebay');
 ```
 All methods are asynchronous!
-You can use promises, es6 generators (with co.js) or simply pass a callback
+You can use promises, es6 generators, or async/await
 
-using promises:
+Using promises:
 ```javascript
-tpb.search('Game of Thrones', {
-	category: '205'
-}).then(function(results){
-	console.log(results);
-}).catch(function(err){
-	console.log(err);
-});
+  tpb.search('Game of Thrones', {
+  	category: '205'
+  })
+  .then(function(results){
+  	console.log(results);
+  })
+  .catch(function(err){
+  	console.log(err);
+  });
 ```
 
-using a callback:
+Using ES7 async/await
 ```javascript
-tpb.search('Pulp fiction', {
-  category: '200',
-}, function(err, results) {
-  if (err) {
-    console.log(err);
-  } else {
-    console.log(results);
-  }
-});
-```
-
-using ecmascript6 generators and co
-```javascript
-var co = require('co');
-
-co(function *(){
-
-  pulpFiction   = tpb.search('Pulp fiction', { category: '200'});
-  killBill      = tpb.search('Kill Bill', {category: '200'});
-  reservoirDogs = tpb.search('Reservoir Dogs',{category: '200'});
-
-  movies = yield [pulpFiction, killBill, reservoirDogs];
-  console.log(movies);
-
-})();
+async search() {
+  const searchResults = await tpb.search({
+    category: '205', page: '3', orderBy: '5'
+  })
+}
 ```
 
 ## Methods
 
 ### getTorrent
 ```javascript
-/* takes an id or a link */
-tpb.getTorrent('10676856')
-.then(function(results){
-  console.log(results);
-}).catch(function(err){
-  console.log(err);
-});
+  /* takes an id or a link */
+  tpb.getTorrent('10676856')
+  .then(function(results){
+    console.log(results);
+  })
+  .catch(function(err){
+    console.log(err);
+  });
 
 /*
 output:
@@ -111,57 +94,12 @@ http://thepiratebay.se/recent
 ### userTorrents
 http://thepiratebay.se/user/YIFY/3/5/0
 ```javascript
-tpb.userTorrents('YIFY', { page: '3', orderBy: '5' })
-```
-
-### tvShows
-http://thepiratebay.se/tv
-```javascript
-  tpb.tvShows() // returns an array of all tv shows
-  /*
-  [
-    ...
-
-     { title: 'Outsiders', id: '2675', seasons: [ 'S01', 'S04', 'S05', 'S06', 'S07', 'S09' ] },
-     { title: 'Over The Rainbow', id: '71119', seasons: [ 'S01' ] },
-     { title: 'Over The Rainbow 2010', id: '75789', seasons: [ 'S01' ] },
-     { title: 'Over There', id: '1087', seasons: [ 'S01' ] },
-
-    ...
-    ]
-  */
-```
-
-### getTvShow
-http://thepiratebay.se/tv/9619/
-```javascript
-  tpb.getTvShow('2') // returns array of all seasons and links for tv show with id '2'
-  /*
-   [
-     { title: 'S01',
-     torrents:[
-       { title: 'South.Park.s01e01.Cartman.Gets.an.Anal.Probe.DVDRip.DivX-sli',
-       link: 'http://thepiratebay.se/torrent/3302063/South.Park.s01e01.Cartman.Gets.an.Anal.Probe.DVDRip.DivX-sli',
-       id: '3302063' },
-       { title: 'South.Park.S01E01.SWESUB.inXz.mkv',
-       link: 'http://thepiratebay.se/torrent/4297449/South.Park.S01E01.SWESUB.inXz.mkv',
-       id: '4297449' },
-       { title: 'South.Park.S01E01.SWESUB.DVDRiP.XviD-TOMTEN',
-       link: 'http://thepiratebay.se/torrent/4627911/South.Park.S01E01.SWESUB.DVDRiP.XviD-TOMTEN',
-       id: '4627911' }
-     ]},
-     { title: 'S02',
-       torrents: [...]
-     },
-     ...
-  ]
-  */
+  tpb.userTorrents('YIFY', { page: '3', orderBy: '5' })
 ```
 
 ### getCategories
 ```javascript
-// takes a single callback function as argument
-tpb.getCategories(cb);
+  tpb.getCategories();
 
 /* returns an array of categories
 [
@@ -185,8 +123,8 @@ tpb.getCategories(cb);
 ```
 ### search
 ```javascript
-// takes a search query and options
-tpb.search('Game of Thrones', { category: '205', page: '3', orderBy: '5' })
+  // takes a search query and options
+  tpb.search('Game of Thrones', { category: '205', page: '3', orderBy: '5' })
 
 /* returns an array of search results:
 [

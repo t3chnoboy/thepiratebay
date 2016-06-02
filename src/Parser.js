@@ -81,7 +81,7 @@ export function parseTvShow(tvShowPage) {
 
   const rawLinks = $('dd');
 
-  rawLinks.each(function (elem) {
+  rawLinks.each(function foramtTorrents(elem) {
     torrents.push($(this).find('a').map(function (link) {
       return {
         title: $(this).text(),
@@ -91,15 +91,14 @@ export function parseTvShow(tvShowPage) {
     }).get());
   });
 
-  console.log('seasons........');
-  console.log(seasons);
-  return torrents;
+  seasons.forEach((s, index) => {
+    results.push({
+      title: s,
+      torrents: torrents[index]
+    });
+  });
 
-  const tvShow = seasons.map(
-    (season, index) => ({ title: season, torrents: torrents[index] })
-  );
-
-  return tvShow;
+  return results;
 }
 
 export function parseTorrentPage(torrentPage) {
@@ -141,23 +140,19 @@ export function parseTvShows(tvShowsPage) {
 
   const rawSeasons = $('dd');
 
-  rawSeasons.each(function (elem) {
-    seasons.push($(this).find('a')
-    .text()
-    .match(/S\d+/g));
+  rawSeasons.each(function formatSeasons(elem) {
+    seasons.push($(this).find('a').text().match(/S\d+/g));
   });
 
-  const tvShows = series.map(
-    (season, index) => ({
-      title: season.title,
-      id: season.id,
+  series.forEach((s, index) => {
+    results.push({
+      title: s.title,
+      id: s.id,
       seasons: seasons[index]
-    })
-  );
+    });
+  });
 
-  console.log(tvShows);
-
-  return tvShows;
+  return results;
 }
 
 export function parseCategories(categoriesHTML) {
