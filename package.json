@@ -1,6 +1,6 @@
 {
   "name": "thepiratebay-new",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "The pirate bay client",
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
@@ -21,6 +21,7 @@
     "debug": "cross-env NODE_ENV=test mocha debug --harmony"
   },
   "devDependencies": {
+    "babel-cli": "^6.9.0",
     "babel-core": "^6.9.1",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
