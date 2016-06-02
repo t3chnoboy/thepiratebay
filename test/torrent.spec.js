@@ -9,7 +9,7 @@
 /* eslint no-unused-expressions: 0, no-console: 0, func-names: 0 */
 import { expect } from 'chai';
 import Parser, { parseCategories, parsePage } from '../src/Parser';
-import Torrent, { baseUrl } from '../src/Torrent';
+import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';
 
 
 const testingUsername = 'YIFY';
@@ -27,6 +27,10 @@ async function torrentSearchFactory() {
 
 async function torrentCategoryFactory() {
   return Torrent.getCategories();
+}
+
+function greaterThanOrEqualTo(first, second) {
+  return (first > second || first === second);
 }
 
 function assertHasArrayOfTorrents(arrayOfTorrents) {
@@ -51,6 +55,32 @@ function assertHasNecessaryProperties(torrent) {
 }
 
 describe('Torrent', () => {
+  describe('order object to number converter', () => {
+    it('should convert orderBy and sortBy', (done) => {
+      try {
+        const searchNumber = convertOrderByObject({
+          orderBy: 'name', sortBy: 'asc'
+        });
+        expect(searchNumber).to.equal(2);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('should convert orderBy and sortBy', (done) => {
+      try {
+        const searchNumber = convertOrderByObject({
+          orderBy: 'leeches', sortBy: 'desc'
+        });
+        expect(searchNumber).to.equal(9);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+  });
+
   describe('categories', function () {
     before(async () => {
       try {
@@ -83,6 +113,12 @@ describe('Torrent', () => {
     });
   });
 
+  /**
+   * @todo
+   *
+   * it('searches by page number', async (done) => {});
+   * it('searches by category', async (done) => {});
+   */
   describe('search', function () {
     before(async () => {
       try {
@@ -110,9 +146,22 @@ describe('Torrent', () => {
       }
     });
 
-    // it('searches by page number', async (done) => {});
-    // it('searches by orderBy', async (done) => {});
-    // it('searches by category', async (done) => {});
+    it('searches by orderBy and sortBy', async (done) => {
+      try {
+        const searchResults = await Torrent.search('Game of Thrones', {
+          category: '205',
+          orderBy: 'seeds',
+          sortBy: 'desc'
+        });
+
+        greaterThanOrEqualTo(searchResults[0].seeders, searchResults[1].seeders);
+        greaterThanOrEqualTo(searchResults[1].seeders, searchResults[2].seeders);
+        greaterThanOrEqualTo(searchResults[3].seeders, searchResults[3].seeders);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
   });
 
   /**

@@ -43,6 +43,7 @@ async search() {
   const searchResults = await tpb.search({
     category: '205', page: '3', orderBy: '5'
   })
+  console.log(searchResults);
 }
 ```
 

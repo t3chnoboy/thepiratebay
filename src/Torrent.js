@@ -33,13 +33,52 @@ export const baseUrl = 'https://thepiratebay.se';
  *     10 - leeches asc
  */
 
+/**
+ * Take a orderBy object and convert it to its according number
+ *
+ * @example: { orderBy: 'leeches', sortBy: 'asc' }
+ * @example: { orderBy: 'name', sortBy: 'desc' }
+ */
+export function convertOrderByObject(orderByObject) {
+  let searchNumber;
+
+  const options = [
+    ['name', 'desc'],
+    ['name', 'asc'],
+    ['date', 'desc'],
+    ['date', 'asc'],
+    ['size', 'desc'],
+    ['size', 'asc'],
+    ['seeds', 'desc'],
+    ['seeds', 'asc'],
+    ['leeches', 'desc'],
+    ['leeches', 'asc'],
+  ];
+
+  for (const option of options) {
+    if (
+      option.includes(orderByObject.orderBy) &&
+      option.includes(orderByObject.sortBy)
+    ) {
+      searchNumber = options.indexOf(option) + 1;
+      break;
+    }
+  }
+
+  if (!searchNumber) throw Error("Can't find option");
+
+  return searchNumber;
+}
+
 export function search(title = '*', opts = {}) {
   const defaults = {
     category: '0',
     page: '0',
-    orderby: '99',
+    orderBy: 'seeds',
+    sortBy: 'desc',
   };
-  const { config, page, orderBy, category, orderby } = Object.assign({}, defaults, opts);
+  const { config, page, category, orderBy, sortBy } = Object.assign({}, defaults, opts);
+  const orderingNumber = convertOrderByObject({ orderBy, sortBy });
 
   const query = {
     url: `${baseUrl}/s/`,
@@ -47,7 +86,7 @@ export function search(title = '*', opts = {}) {
       q: title,
       category,
       page,
-      orderby
+      orderby: orderingNumber
     }
   };
 
@@ -71,11 +110,20 @@ export function recentTorrents() {
 }
 
 export function userTorrents(username, opts = {}) {
+  let { orderby } = opts;
+
+  if (opts.sortBy && opts.orderBy) {
+    orderby = convertOrderByObject({
+      sortBy: opts.sortBy,
+      orderBy: opts.orderBy
+    });
+  }
+
   const query = {
     url: `${baseUrl}/user/${username}`,
     qs: {
       page: opts.page || '0',
-      orderby: opts.orderBy || '99'
+      orderby: orderby || '99'
     }
   };
 
