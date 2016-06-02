@@ -1,2 +1,2 @@
-module.exports = require('./src/Torrent');
-module.exports.parser = require('./src/Parser');
+module.exports = require('./dist/Torrent');
+module.exports.parser = require('./dist/Parser');

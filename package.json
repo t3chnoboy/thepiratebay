@@ -5,7 +5,7 @@
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
   "author": "Dmitry Mazuro <dmitry.mazuro@icloud.com>",
-  "main": "./index.js",
+  "main": "./dist/index.js",
   "keywords": [
     "thepiratebay",
     "pirate bay",
@@ -15,8 +15,10 @@
   ],
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --timeout 20000 --inline-diffs --async-only --growl --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
-    "lint": "eslint src test",
-    "debug": "mocha debug --harmony"
+    "build": "cross-env NODE_ENV=dev babel src --out-dir dist",
+    "lint": "cross-env NODE_ENV=test eslint src test",
+    "prepublish": "npm run build",
+    "debug": "cross-env NODE_ENV=test mocha debug --harmony"
   },
   "devDependencies": {
     "babel-core": "^6.9.1",
@@ -36,8 +38,7 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.2.2",
     "eslint-plugin-react": "^5.1.1",
-    "mocha": "^2.5.3",
-    "should": "^9.0.0"
+    "mocha": "^2.5.3"
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
