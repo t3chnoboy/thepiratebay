@@ -43,7 +43,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
-    "cheerio": "^0.20.0",
+    "cheerio": "github:cheeriojs/cheerio",
     "request": "^2.72.0"
   },
   "engines": {
