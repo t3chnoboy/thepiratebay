@@ -50,14 +50,15 @@ async search() {
 
 ### getTorrent
 ```javascript
-  /* takes an id or a link */
-  tpb.getTorrent('10676856')
-  .then(function(results){
-    console.log(results);
-  })
-  .catch(function(err){
-    console.log(err);
-  });
+  // takes an id or a link
+  tpb
+    .getTorrent('10676856')
+    .then(function(results){
+      console.log(results);
+    })
+    .catch(function(err){
+      console.log(err);
+    });
 
 /*
 output:
@@ -69,11 +70,11 @@ output:
     leechers: '3140',
     uploadDate: '2014-08-02 08:15:25 GMT',
     torrentLink: undefined,
-    magnetLink: 'magnet:?xt=urn:btih:0259f6b98a7ca160a36f13457c89344c7dd34000&dn=The+Amazing+Spider-Man+2+%282014%29+1080p+BrRip+x264+-+YIFY&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A6969&tr=udp%3A%2F%2Fopen.demonii.com%3A1337',
+    magnetLink: 'magnet:?xt=urn:btih:025....
     link: 'http://thepiratebay.se/torrent/10676856/',
     id: '10676856',
-    description: '-------------------------------------------------------------------------------\n\n-------------------------------------------------------------------------------\n\n\nGet all YIFYs newest releases first at \n\nAlso there you will find a list of upcoming uploads, instant chat, account registration and an effective movie search.\n\n\n-------------------------------------------------------------------------------\n\n-------------------------------------------------------------------------------\t\n\n \nhttp://www.imdb.com/title/tt1872181/\n\n\nIMDB RATING: 7.3\n\nFORMAT.......................: MP4\nCODEC........................: X264\nGENRE........................: Action\nFILE SIZE....................: 2.06 GB\nRESOLUTION...................: 1920*800\nFRAME RATE...................: 23.976 fps\nLANGUAGE.....................: English\nSUBTITLES....................: NONE\nRUNTIME......................: 141 mins\n\n\n\nWe\'ve always known that Spider-Man\'s most important conflict has been within himself: the struggle between the ordinary obligations of Peter Parker and the extraordinary responsibilities of Spider-Man. But in The Amazing Spider-Man 2, Peter Parker finds that his greatest battle is about to begin. It\'s great to be Spider-Man (Andrew Garfield). For Peter Parker, there\'s no feeling quite like swinging between skyscrapers, embracing being the hero, and spending time with Gwen (Emma Stone). But being Spider-Man comes at a price: only Spider-Man can protect his fellow New Yorkers from the formidable villains that threaten the city. With the emergence of Electro (Jamie Foxx), Peter must confront a foe far more powerful than he. And as his old friend, Harry Osborn (Dane DeHaan), returns, Peter comes to realize that all of his enemies have one thing in common: Oscorp. Directed by Marc Webb. Produced by Avi Arad and Matt Tolmach. Screenplay by Alex Kurtzman & Roberto Orci & Jeff Pinkner. Screen Story by Alex Kurtzman & Roberto Orci & Jeff Pinkner and James Vanderbilt. Based on the Marvel comic book by Stan Lee and Steve Ditko.\n \nhttp://istoreimg.com/i/53dc81f88e33e.html \n \nhttp://istoreimg.com/i/53dc81f8c0913.html \n \nhttp://istoreimg.com/i/53dc81f8f1e0f.html',
-    picture: 'http://image.bayimg.com/bdca01a243abf68d192fe74aa14ad35fa1a99add.jpg'
+    description: 'I've always known that Spider-Man...',
+    picture: 'http://image.bayimg.com/bdca01a243abf68...'
   }
 */
 ```
@@ -81,29 +82,34 @@ output:
 ### topTorrents
 http://thepiratebay.se/top
 ```javascript
-  tpb.topTorrents() // returns top 100 torrents
-  tpb.topTorrents('400') // returns top 100 torrents for the category '400' aka Games
+  // returns top 100 torrents
+  tpb.topTorrents()
+
+  // returns top 100 torrents for the category '400' aka Games
+  tpb.topTorrents('400')
 ```
 
 ### recentTorrents
 http://thepiratebay.se/recent
 ```javascript
-  tpb.recentTorrents() // returns the most recent torrents
+  // returns the most recent torrents
+  tpb.recentTorrents()
 ```
 
 ### userTorrents
 http://thepiratebay.se/user/YIFY/3/5/0
 ```javascript
+  // Gets a specific user's torrents
   tpb.userTorrents('YIFY', { page: '3', orderBy: '5' })
 ```
 
 ### getCategories
 ```javascript
+  // Gets all available categories on piratebay
   tpb.getCategories();
 
-/* returns an array of categories
+/*
 [
-  ...
   { name: 'Video',
     id: '200',
     subcategories:
@@ -119,7 +125,8 @@ http://thepiratebay.se/user/YIFY/3/5/0
        { id: '299', name: 'Other' } ]
      }
   ...
-] */
+]
+*/
 ```
 ### search
 ```javascript
@@ -131,14 +138,14 @@ http://thepiratebay.se/user/YIFY/3/5/0
   {
     name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
     size: '4.17 GiB',
-    link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thrones_(2014)(dvd5)_Season_4_DVD_1_SAM_TBS',
+    link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thron...
     category: { id: '200', name: 'Video' },
     seeders: '125',
     leechers: '552',
     uploadDate: 'Today 00:57',
-    magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0bac5c67973acab&dn=Game+of+Thrones+%282014%29%28dvd5%29+Season+4+DVD+1+SAM+TBS&tr=udp%3A%2F%2Ftracker.openbittorrent.com%3A80&tr=udp%3A%2F%2Ftracker.publicbt.com%3A80&tr=udp%3A%2F%2Ftracker.istole.it%3A6969&tr=udp%3A%2F%2Ftracker.ccc.de%3A80&tr=udp%3A%2F%2Fopen.demonii.com%3A1337',
+    magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0ba...
     subcategory: { id: '202', name: 'Movies DVDR' },
-    torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thrones_(2014)(dvd5)_Season_4_DVD_1_SAM_TBS.10013794.TPB.torrent'
+    torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thron...
   },
   ...
 ]
