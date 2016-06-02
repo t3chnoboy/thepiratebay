@@ -2,6 +2,7 @@
   "presets": ["es2015", "stage-0"],
   "plugins": [
 		"add-module-exports",
-		"transform-runtime"
+		"transform-runtime",
+    "transform-es2015-modules-umd"
 	]
 }
