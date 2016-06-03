@@ -1,6 +1,6 @@
 {
   "name": "thepiratebay-new",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "The pirate bay client",
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
@@ -45,7 +45,7 @@
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
-    "cheerio": "github:cheeriojs/cheerio",
+    "cheerio": "github:cheeriojs/cheerio#e65ad72",
     "request": "^2.72.0"
   },
   "engines": {
