@@ -48,7 +48,7 @@ function assertHasArrayOfTorrents(arrayOfTorrents) {
 function assertHasNecessaryProperties(torrent) {
   const propertiesToValidate = [
     'id', 'name', 'size', 'link', 'category', 'seeders', 'leechers',
-    'uploadDate', 'magnetLink', 'subcategory', 'uploader',
+    'uploadDate', 'magnetLink', 'subcategory', 'uploader', 'verified',
     'uploaderLink'
   ];
 
@@ -135,6 +135,47 @@ describe('Torrent', () => {
     it('searches for items', async (done) => {
       try {
         assertHasArrayOfTorrents(this.search);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('should have verified property', (done) => {
+      try {
+        expect(this.search[0]).to.have.property('verified');
+        expect(this.search[0].verified).to.be.a('boolean');
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('should filter verified by default', (done) => {
+      try {
+        for (const result of this.search) {
+          expect(result).to.have.property('verified');
+          expect(result.verified).to.equal(true);
+        }
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('should search un-verified', async (done) => {
+      const searchResults = await Torrent.search('Game of Thrones', {
+        category: '205',
+        filter: {
+          verified: false
+        }
+      });
+
+      try {
+        for (const result of searchResults) {
+          expect(result).to.have.property('verified');
+          expect(result.verified).to.be.oneOf([true, false]);
+        }
         done();
       } catch (err) {
         done(err);

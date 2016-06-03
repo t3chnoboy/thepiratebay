@@ -43,7 +43,23 @@ export function requestWithEncoding(options, callback) {
   });
 }
 
-export function parsePage(url, parse) {
+export function _parseTorrentIsVIP(element) {
+  return (
+    element.find('img[title="VIP"]').attr('title') === 'VIP'
+  );
+}
+
+export function _parseTorrentIsTrusted(element) {
+  return (
+    element.find('img[title="Trusted"]').attr('title') === 'Trusted'
+  );
+}
+
+export function isTorrentVerified(element) {
+  return _parseTorrentIsVIP(element) || _parseTorrentIsTrusted(element);
+}
+
+export function parsePage(url, parse, filter = {}) {
   return new Promise((resolve, reject) => {
     let categories;
 
@@ -52,7 +68,7 @@ export function parsePage(url, parse) {
         reject(err);
       } else {
         try {
-          categories = parse(data);
+          categories = parse(data, filter);
         } catch (error) {
           return reject(error);
         }
@@ -63,7 +79,7 @@ export function parsePage(url, parse) {
   });
 }
 
-export function parseResults(resultsHTML) {
+export function parseResults(resultsHTML, filter = {}) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
@@ -83,6 +99,7 @@ export function parseResults(resultsHTML) {
     const torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
     const uploader = $(this).find('font .detDesc').text();
     const uploaderLink = baseUrl + $(this).find('font a').attr('href');
+    const verified = isTorrentVerified($(this));
 
     const category = {
       id: $(this).find('center a').first().attr('href').match(/\/browse\/(\d+)/)[1],
@@ -96,10 +113,17 @@ export function parseResults(resultsHTML) {
 
     return {
       id, name, size, link, category, seeders, leechers, uploadDate, magnetLink,
-      subcategory, torrentLink, uploader, uploaderLink
+      subcategory, torrentLink, uploader, verified, uploaderLink
     };
   });
-  return results.get();
+
+  const parsedResultsArray = results.get();
+
+  if (filter.verified === true) {
+    return parsedResultsArray.filter(result => result.verified === true);
+  }
+
+  return parsedResultsArray;
 }
 
 export function parseTvShow(tvShowPage) {
