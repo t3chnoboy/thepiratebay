@@ -8,7 +8,7 @@
 
 /* eslint no-unused-expressions: 0, no-console: 0, func-names: 0 */
 import { expect } from 'chai';
-import Parser, { parseCategories, parsePage } from '../src/Parser';
+import { parseCategories, parsePage } from '../src/Parser';
 import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';
 
 
@@ -31,6 +31,10 @@ async function torrentCategoryFactory() {
 
 function greaterThanOrEqualTo(first, second) {
   return (first > second || first === second);
+}
+
+function lessThanOrEqualToZero(first, second) {
+  return (first < second || first === 0);
 }
 
 function assertHasArrayOfTorrents(arrayOfTorrents) {
@@ -137,6 +141,50 @@ describe('Torrent', () => {
       }
     });
 
+    it('should handle numerical values', async (done) => {
+      try {
+        const searchResults = await Torrent.search('Game of Thrones', {
+          page: 1,
+          orderBy: 'seeds',
+          sortBy: 'asc'
+        });
+        assertHasNecessaryProperties(searchResults[0]);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('should handle non-numerical values', async (done) => {
+      try {
+        const searchResults = await Torrent.search('Game of Thrones', {
+          category: 'all',
+          page: '1',
+          orderBy: 'seeds',
+          sortBy: 'asc'
+        });
+        assertHasNecessaryProperties(searchResults[0]);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('should search with backwards compatible method', async (done) => {
+      try {
+        const searchResults = await Torrent.search('Game of Thrones', {
+          orderby: '8' // Search orderby seeds, asc
+        });
+        assertHasNecessaryProperties(searchResults[0]);
+        lessThanOrEqualToZero(searchResults[0].seeders, searchResults[1].seeders);
+        lessThanOrEqualToZero(searchResults[1].seeders, searchResults[2].seeders);
+        lessThanOrEqualToZero(searchResults[3].seeders, searchResults[3].seeders);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
     it('retrieves expected properties', async (done) => {
       try {
         assertHasNecessaryProperties(this.search[0]);
@@ -146,7 +194,7 @@ describe('Torrent', () => {
       }
     });
 
-    it('searches by orderBy and sortBy', async (done) => {
+    it('searches by sortBy: desc', async (done) => {
       try {
         const searchResults = await Torrent.search('Game of Thrones', {
           category: '205',
@@ -157,6 +205,23 @@ describe('Torrent', () => {
         greaterThanOrEqualTo(searchResults[0].seeders, searchResults[1].seeders);
         greaterThanOrEqualTo(searchResults[1].seeders, searchResults[2].seeders);
         greaterThanOrEqualTo(searchResults[3].seeders, searchResults[3].seeders);
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it('searches by sortBy: asc', async (done) => {
+      try {
+        const searchResults = await Torrent.search('Game of Thrones', {
+          category: '205',
+          orderBy: 'seeds',
+          sortBy: 'asc'
+        });
+
+        lessThanOrEqualToZero(searchResults[0].seeders, searchResults[1].seeders);
+        lessThanOrEqualToZero(searchResults[1].seeders, searchResults[2].seeders);
+        lessThanOrEqualToZero(searchResults[3].seeders, searchResults[3].seeders);
         done();
       } catch (err) {
         done(err);
@@ -217,6 +282,15 @@ describe('Torrent', () => {
         this.torrent = await torrentFactory();
       } catch (err) {
         console.log(err);
+      }
+    });
+
+    it('should return a promise', (done) => {
+      try {
+        expect(torrentFactory()).to.be.a('promise');
+        done();
+      } catch (err) {
+        done(err);
       }
     });
 
@@ -349,6 +423,15 @@ describe('Torrent', () => {
         this.fistSearchResult = this.searchResults[0];
       } catch (err) {
         console.log(err);
+      }
+    });
+
+    it('should return a promise', (done) => {
+      try {
+        expect(Torrent.search('Game of Thrones')).to.be.a('promise');
+        done();
+      } catch (err) {
+        done(err);
       }
     });
 
@@ -522,6 +605,18 @@ describe('Torrent', () => {
       }
     });
 
+    it('should handle numeric input', async (done) => {
+      try {
+        const topTorrents = await Torrent.topTorrents(205);
+        expect(topTorrents).to.be.an('array');
+        expect(topTorrents[0].category.name).to.be.equal('Video');
+        expect(topTorrents[0].subcategory.name).to.be.equal('TV shows');
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
     it('should return an array of top torrents of the selected category', (done) => {
       try {
         expect(this.topTorrents).to.be.an('array');
@@ -550,6 +645,15 @@ describe('Torrent', () => {
         this.recentTorrents = await Torrent.recentTorrents();
       } catch (err) {
         console.log(err);
+      }
+    });
+
+    it('should return a promise', (done) => {
+      try {
+        expect(Torrent.recentTorrents()).to.be.a('promise');
+        done();
+      } catch (err) {
+        done(err);
       }
     });
 
@@ -677,6 +781,15 @@ describe('Torrent', () => {
         this.userTorrents = await Torrent.userTorrents('YIFY');
       } catch (err) {
         console.log(err);
+      }
+    });
+
+    it('should return a promise', (done) => {
+      try {
+        expect(Torrent.userTorrents('YIFY')).to.be.a('promise');
+        done();
+      } catch (err) {
+        done(err);
       }
     });
 
@@ -819,7 +932,16 @@ describe('Torrent', () => {
       }
     });
 
-    it.skip('should return an array', (done) => {
+    it('should return a promise', (done) => {
+      try {
+        expect(Torrent.tvShows()).to.be.a('promise');
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    it.skip('should yield an array', (done) => {
       try {
         expect(this.tvShows).to.be.an('array');
         done();
@@ -877,6 +999,15 @@ describe('Torrent', () => {
         this.tvShow = await Torrent.getTvShow('2');
       } catch (err) {
         console.log(err);
+      }
+    });
+
+    it('should return a promise', (done) => {
+      try {
+        expect(Torrent.getTvShow('2')).to.be.a('promise');
+        done();
+      } catch (err) {
+        done(err);
       }
     });
 

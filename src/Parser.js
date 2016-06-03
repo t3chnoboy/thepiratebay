@@ -11,6 +11,38 @@ import request from 'request';
 import { baseUrl } from './Torrent';
 
 
+export function requestWithEncoding(options, callback) {
+  const req = request(options);
+
+  req.on('response', (res) => {
+    const chunks = [];
+
+    res.on('data', (chunk) => {
+      chunks.push(chunk);
+    });
+
+    res.on('end', () => {
+      const buffer = Buffer.concat(chunks);
+      const encoding = res.headers['content-encoding'];
+      if (encoding === 'gzip') {
+        zlib.gunzip(buffer, (err, decoded) => {
+          callback(err, decoded && decoded.toString());
+        });
+      } else if (encoding === 'deflate') {
+        zlib.inflate(buffer, (err, decoded) => {
+          callback(err, decoded && decoded.toString());
+        });
+      } else {
+        callback(null, buffer.toString());
+      }
+    });
+  });
+
+  req.on('error', (err) => {
+    callback(err);
+  });
+}
+
 export function parsePage(url, parse) {
   return new Promise((resolve, reject) => {
     let categories;
@@ -35,7 +67,7 @@ export function parseResults(resultsHTML) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
-  const results = rawResults.map(function getRawResults(elem) {
+  const results = rawResults.map(function getRawResults() {
     const name = $(this).find('a.detLink').text();
     const uploadDate = $(this).find('font').text()
       .match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
@@ -71,34 +103,24 @@ export function parseResults(resultsHTML) {
 }
 
 export function parseTvShow(tvShowPage) {
-  const torrents = [];
-  const results = [];
   const $ = cheerio.load(tvShowPage);
 
-  const seasons = $('dt a').map(function () {
-    return $(this).text();
-  }).get();
+  const seasons = $('dt a').map(() => $(this).text()).get();
 
   const rawLinks = $('dd');
 
-  rawLinks.each(function foramtTorrents(elem) {
-    torrents.push($(this).find('a').map(function (link) {
-      return {
-        title: $(this).text(),
-        link: (baseUrl + $(this).attr('href')),
-        id: $(this).attr('href').match(/\/torrent\/(\d+)/)[1]
-      };
-    }).get());
-  });
+  const torrents = rawLinks.map(element =>
+    $(this).find('a').map(() => ({
+      title: element.text(),
+      link: baseUrl + element.attr('href'),
+      id: element.attr('href').match(/\/torrent\/(\d+)/)[1]
+    }))
+    .get()
+  );
 
-  seasons.forEach((s, index) => {
-    results.push({
-      title: s,
-      torrents: torrents[index]
-    });
-  });
-
-  return results;
+  return seasons.map(
+    (season, index) => ({ title: season, torrents: torrents[index] })
+  );
 }
 
 export function parseTorrentPage(torrentPage) {
@@ -128,31 +150,23 @@ export function parseTorrentPage(torrentPage) {
 export function parseTvShows(tvShowsPage) {
   const $ = cheerio.load(tvShowsPage);
   const rawTitles = $('dt a');
-  const seasons = [];
-  const results = [];
 
-  const series = rawTitles.map(function (elem) {
-    return {
-      title: $(this).text(),
-      id: $(this).attr('href').match(/\/tv\/(\d+)/)[1]
-    };
-  }).get();
+  const series = rawTitles.map(
+    (element) => ({
+      title: element.text(),
+      id: element.attr('href').match(/\/tv\/(\d+)/)[1]
+    }))
+    .get();
 
   const rawSeasons = $('dd');
 
-  rawSeasons.each(function formatSeasons(elem) {
-    seasons.push($(this).find('a').text().match(/S\d+/g));
-  });
+  const seasons = rawSeasons.map(
+    element => element.find('a').text().match(/S\d+/g)
+  );
 
-  series.forEach((s, index) => {
-    results.push({
-      title: s.title,
-      id: s.id,
-      seasons: seasons[index]
-    });
-  });
-
-  return results;
+  return series.map(
+    (s, index) => ({ title: s.title, id: s.id, seasons: seasons[index] })
+  );
 }
 
 export function parseCategories(categoriesHTML) {
@@ -160,7 +174,7 @@ export function parseCategories(categoriesHTML) {
   const categoriesContainer = $('select#category optgroup');
   let currentCategoryId = 0;
 
-  const categories = categoriesContainer.map(function getElements(elem) {
+  const categories = categoriesContainer.map(function getElements() {
     currentCategoryId += 100;
     const category = {
       name: $(this).attr('label'),
@@ -168,7 +182,7 @@ export function parseCategories(categoriesHTML) {
       subcategories: []
     };
 
-    $(this).find('option').each(function getSubcategory(opt) {
+    $(this).find('option').each(function getSubcategory() {
       const subcategory = {
         id: $(this).attr('value'),
         name: $(this).text()
@@ -181,36 +195,4 @@ export function parseCategories(categoriesHTML) {
   });
 
   return categories.get();
-}
-
-export function requestWithEncoding(options, callback) {
-  const req = request(options);
-
-  req.on('response', (res) => {
-    const chunks = [];
-
-    res.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-
-    res.on('end', () => {
-      const buffer = Buffer.concat(chunks);
-      const encoding = res.headers['content-encoding'];
-      if (encoding === 'gzip') {
-        zlib.gunzip(buffer, (err, decoded) => {
-          callback(err, decoded && decoded.toString());
-        });
-      } else if (encoding === 'deflate') {
-        zlib.inflate(buffer, (err, decoded) => {
-          callback(err, decoded && decoded.toString());
-        });
-      } else {
-        callback(null, buffer.toString());
-      }
-    });
-  });
-
-  req.on('error', (err) => {
-    callback(err);
-  });
 }

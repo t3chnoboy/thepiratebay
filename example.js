@@ -1,12 +1,20 @@
-var tpb = require('./');
+const PirateBay = require('./');
 
-//callback
-tpb.search('game of thrones', null, function(err, response){
-  console.log(response);
-});
 
-//promise
-tpb.search('game of thrones')
-.then(function(resp){
-  console.log(resp);
-});
+// Promise
+PirateBay
+  .search('game of thrones')
+  .then(response => {
+    console.log(response);
+  });
+
+// Async/Await
+async function searchPirateBay() {
+  const searchResults = await PirateBay
+    .search('game of thrones')
+    .then(response => {
+      console.log(response);
+    });
+
+  console.log(searchResults);
+}
