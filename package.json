@@ -1,11 +1,11 @@
 {
   "name": "thepiratebay",
-  "version": "0.2.6",
+  "version": "1.0.0",
   "description": "The pirate bay client",
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
   "author": "Dmitry Mazuro <dmitry.mazuro@icloud.com>",
-  "main": "./index.js",
+  "main": "index.js",
   "keywords": [
     "thepiratebay",
     "pirate bay",
@@ -14,22 +14,47 @@
     "scraper"
   ],
   "scripts": {
-    "test": "mocha --harmony",
-    "debug": "mocha debug --harmony"
+    "test": "cross-env NODE_ENV=test mocha --timeout 20000 --inline-diffs --async-only --growl --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
+    "test-all": "cross-env NODE_ENV=test npm run lint && npm run test && npm run build",
+    "build": "cross-env NODE_ENV=dev babel src --out-dir lib",
+    "lint": "cross-env NODE_ENV=test eslint src test",
+    "version": "npm run build",
+    "debug": "cross-env NODE_ENV=test mocha debug --harmony"
   },
   "devDependencies": {
-    "co": "^3.1.0",
-    "co-mocha": "0.0.4",
-    "coffee-script": "git://github.com/xixixao/coffee-script.git#35ca45d13a784af508095214547b8bd57b33a40c",
-    "mocha": "^1.21.4",
-    "should": "^4.0.4"
+    "babel-cli": "^6.9.0",
+    "babel-core": "^6.9.1",
+    "babel-eslint": "^6.0.4",
+    "babel-loader": "^6.2.4",
+    "babel-plugin-add-module-exports": "^0.2.1",
+    "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
+    "babel-plugin-transform-runtime": "^6.9.0",
+    "babel-polyfill": "^6.9.1",
+    "babel-preset-es2015": "^6.9.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "babel-register": "^6.9.0",
+    "chai": "^3.5.0",
+    "cross-env": "^1.0.8",
+    "eslint": "^2.11.0",
+    "eslint-config-airbnb": "^9.0.1",
+    "eslint-plugin-immutable": "^1.0.0",
+    "eslint-plugin-import": "^1.8.1",
+    "eslint-plugin-jsx-a11y": "^1.2.2",
+    "eslint-plugin-react": "^5.1.1",
+    "mocha": "^2.5.3",
+    "webpack": "^1.13.1"
   },
   "dependencies": {
-    "cheerio": "^0.19.0",
-    "es6-promise": "3.0.2",
-    "request": "^2.67.0"
+    "babel-runtime": "^6.9.2",
+    "cheerio": "github:cheeriojs/cheerio#e65ad72",
+    "request": "github:request/request#2351a8c"
   },
   "engines": {
-    "node": ">= 0.9.0"
+    "node": "4.x || 6.x",
+    "npm": "2.x || 3.x"
+  },
+  "devEngines": {
+    "node": "4.x || 6.x",
+    "npm": "2.x || 3.x"
   }
 }
