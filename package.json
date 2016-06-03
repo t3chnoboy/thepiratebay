@@ -41,12 +41,13 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.2.2",
     "eslint-plugin-react": "^5.1.1",
-    "mocha": "^2.5.3"
+    "mocha": "^2.5.3",
+    "webpack": "^1.13.1"
   },
   "dependencies": {
     "babel-runtime": "^6.9.2",
     "cheerio": "github:cheeriojs/cheerio#e65ad72",
-    "request": "^2.65.0"
+    "request": "github:request/request#2351a8c"
   },
   "engines": {
     "node": "4.x || 6.x",
