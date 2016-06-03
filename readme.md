@@ -19,15 +19,15 @@ npm install thepiratebay
 ## Usage
 
 ```javascript
-  const tpb = require('thepiratebay');
+  const PirateBay = require('thepiratebay');
 ```
 All methods are asynchronous!
-You can use promises, es6 generators, or async/await
+You can use promises, ES6 generators, or async/await
 
 Using promises:
 ```javascript
-  tpb.search('Game of Thrones', {
-  	category: '205'
+  PirateBay.search('Game of Thrones', {
+  	category: 205
   })
   .then(function(results){
   	console.log(results);
@@ -40,8 +40,11 @@ Using promises:
 Using ES7 async/await
 ```javascript
 async search() {
-  const searchResults = await tpb.search({
-    category: '205', page: '3', orderBy: '5'
+  const searchResults = await PirateBay.search({
+    category: 205,
+    page: 3,
+    orderBy: 'seeds',
+    sortBy: 'desc',
   })
   console.log(searchResults);
 }
@@ -49,16 +52,45 @@ async search() {
 
 ## Methods
 
+### search
+```javascript
+  // takes a search query and options
+  PirateBay.search('Game of Thrones', {
+    category: 205,
+    page: 3,            // 0 - 99
+    orderBy: 'leeches', // name, date, size, seeds, leeches
+    sortBy: 'desc'      // desc, asc
+  })
+
+/* returns an array of search results:
+[
+  {
+    name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
+    size: '4.17 GiB',
+    link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thron...
+    category: { id: '200', name: 'Video' },
+    seeders: '125',
+    leechers: '552',
+    uploadDate: 'Today 00:57',
+    magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0ba...
+    subcategory: { id: '202', name: 'Movies DVDR' },
+    torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thron...
+  },
+  ...
+]
+*/
+```
+
 ### getTorrent
 ```javascript
   // takes an id or a link
-  tpb
+  PirateBay
     .getTorrent('10676856')
-    .then(function(results){
+    .then(function(results) {
       console.log(results);
     })
-    .catch(function(err){
-      console.log(err);
+    .catch(function(error) {
+      console.log(error);
     });
 
 /*
@@ -84,30 +116,34 @@ output:
 http://thepiratebay.se/top
 ```javascript
   // returns top 100 torrents
-  tpb.topTorrents()
+  PirateBay.topTorrents()
 
   // returns top 100 torrents for the category '400' aka Games
-  tpb.topTorrents('400')
+  PirateBay.topTorrents(400)
 ```
 
 ### recentTorrents
 http://thepiratebay.se/recent
 ```javascript
   // returns the most recent torrents
-  tpb.recentTorrents()
+  PirateBay.recentTorrents()
 ```
 
 ### userTorrents
 http://thepiratebay.se/user/YIFY/3/5/0
 ```javascript
   // Gets a specific user's torrents
-  tpb.userTorrents('YIFY', { page: '3', orderBy: '5' })
+  PirateBay.userTorrents('YIFY', {
+    page: 3,
+    orderBy: 'name',
+    sortBy: 'asc'
+  })
 ```
 
 ### getCategories
 ```javascript
   // Gets all available categories on piratebay
-  tpb.getCategories();
+  PirateBay.getCategories();
 
 /*
 [
@@ -129,44 +165,3 @@ http://thepiratebay.se/user/YIFY/3/5/0
 ]
 */
 ```
-### search
-```javascript
-  // takes a search query and options
-  tpb.search('Game of Thrones', { category: '205', page: '3', orderBy: '5' })
-
-/* returns an array of search results:
-[
-  {
-    name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
-    size: '4.17 GiB',
-    link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thron...
-    category: { id: '200', name: 'Video' },
-    seeders: '125',
-    leechers: '552',
-    uploadDate: 'Today 00:57',
-    magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0ba...
-    subcategory: { id: '202', name: 'Movies DVDR' },
-    torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thron...
-  },
-  ...
-]
-*/
-```
-#### Search query options:
-
-* category
-  * 0   - all
-  * 101 - 699
-* page
-  * 0 - 99
-* orderBy
-  * 1  - name desc
-  * 2  - name asc
-  * 3  - date desc
-  * 4  - date asc
-  * 5  - size desc
-  * 6  - size asc
-  * 7  - seeds desc
-  * 8  - seeds asc
-  * 9  - leeches desc
-  * 10 - leeches asc

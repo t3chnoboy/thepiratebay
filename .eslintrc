@@ -2,16 +2,12 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "env": {
-    "browser": true,
     "mocha": true,
     "node": true
   },
   "rules": {
-    "global-require": 0,
-    "no-use-before-define": 0,
     "no-underscore-dangle": 0,
-    "no-unused-vars": 0,
-    "comma-dangle": 0,
+    comma-dangle: ["error", "never"],
     "consistent-return": 0,
     "immutable/no-let": 1,
     "immutable/no-this": 0,

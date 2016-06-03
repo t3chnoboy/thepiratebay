@@ -1,8 +1,8 @@
 {
   "presets": ["es2015", "stage-0"],
   "plugins": [
-		"add-module-exports",
 		"transform-runtime",
+    "add-module-exports",
     "transform-es2015-modules-umd"
 	]
 }
