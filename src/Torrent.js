@@ -100,6 +100,9 @@ export function search(title = '*', opts = {}) {
   const defaults = {
     category: '0',
     page: '0',
+    filter: {
+      verified: true
+    },
     orderBy: 'seeds',
     sortBy: 'desc'
   };
@@ -111,7 +114,14 @@ export function search(title = '*', opts = {}) {
     orderby: opts.orderby ? castNumberToString(opts.orderby) : defaults.orderby
   };
 
-  const { page, category, orderBy, sortBy } = { ...defaults, ...castedOptions };
+  const {
+    page,
+    category,
+    orderBy,
+    sortBy,
+    ...rest
+  } = { ...defaults, ...castedOptions };
+
   const orderingNumber = convertOrderByObject({ orderBy, sortBy });
 
   const query = {
@@ -124,7 +134,7 @@ export function search(title = '*', opts = {}) {
     }
   };
 
-  return parsePage(query, parseResults);
+  return parsePage(query, parseResults, rest.filter);
 }
 
 export function getTorrent(id) {

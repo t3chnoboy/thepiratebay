@@ -54,12 +54,15 @@ async search() {
 
 ### search
 ```javascript
-  // takes a search query and options
+  // Takes a search query and options
   PirateBay.search('Game of Thrones', {
-    category: 205,
-    page: 3,            // 0 - 99
-    orderBy: 'leeches', // name, date, size, seeds, leeches
-    sortBy: 'desc'      // desc, asc
+    category: 0,        // default - `/search/0/99/{category}`
+    filter: {
+      verified: true    // default - Filter all VIP or trusted torrents
+    },
+    page: 0,            // default - 0 - 99
+    orderBy: 'leeches', // default - name, date, size, seeds, leeches
+    sortBy: 'desc'      // default - desc, asc
   })
 
 /* returns an array of search results:
@@ -67,7 +70,7 @@ async search() {
   {
     name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
     size: '4.17 GiB',
-    link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thron...
+    link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thron...'
     category: { id: '200', name: 'Video' },
     seeders: '125',
     leechers: '552',
