@@ -189,12 +189,34 @@ describe('Torrent', () => {
      * Assert by searching wrong
      */
     it('should search using primary category names', async (done) => {
-      const searchResults = await Torrent.search('Game of Thrones', {
-        category: 'applications'
-      });
+      const searchResults = await Promise.all([
+        Torrent.search('Game of Thrones', {
+          category: 'applications'
+        }),
+        Torrent.search('Game of Thrones', {
+          category: 'audio'
+        }),
+        Torrent.search('Game of Thrones', {
+          category: 'video'
+        }),
+        Torrent.search('Game of Thrones', {
+          category: 'games'
+        }),
+        Torrent.search('Game of Thrones', {
+          category: 'xxx'
+        }),
+        Torrent.search('Game of Thrones', {
+          category: 'other'
+        })
+      ]);
 
       try {
-        expect(searchResults[0].category.name).to.equal('Applications');
+        expect(searchResults[0][0].category.name).to.equal('Applications');
+        expect(searchResults[1][0].category.name).to.equal('Audio');
+        expect(searchResults[2][0].category.name).to.equal('Video');
+        expect(searchResults[3][0].category.name).to.equal('Games');
+        expect(searchResults[4][0].category.name).to.equal('Porn');
+        expect(searchResults[5][0].category.name).to.equal('Other');
         done();
       } catch (err) {
         done(err);
@@ -603,21 +625,6 @@ describe('Torrent', () => {
         }
       });
 
-      it('may have a torrent link', (done) => {
-        try {
-          expect(this.fistSearchResult).to.have.property('torrentLink');
-
-          if (this.fistSearchResult.torrentLink === '') {
-            expect(this.fistSearchResult.torrentLink)
-              .to
-              .match(/\/\/piratebaytorrents\.info\/\d+\/.+\.torrent/);
-          }
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
       it('should have a category', (done) => {
         try {
           expect(this.fistSearchResult).to.have.property('category');
@@ -941,20 +948,6 @@ describe('Torrent', () => {
         try {
           expect(this.userTorrents[0]).to.have.property('magnetLink');
           expect(this.userTorrents[0].magnetLink).to.match(/magnet:\?xt=.+/);
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
-      it('may have a torrent link', (done) => {
-        try {
-          expect(this.userTorrents[0]).to.have.property('torrentLink');
-          if (this.userTorrents[0].torrentLink === '') {
-            expect(this.userTorrents[0].torrentLink)
-              .to
-              .match(/\/\/piratebaytorrents\.info\/\d+\/.+\.torrent/);
-          }
           done();
         } catch (err) {
           done(err);

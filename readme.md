@@ -76,8 +76,7 @@ async search() {
     leechers: '552',
     uploadDate: 'Today 00:57',
     magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0ba...
-    subcategory: { id: '202', name: 'Movies DVDR' },
-    torrentLink: '//piratebaytorrents.info/10013794/Game_of_Thron...
+    subcategory: { id: '202', name: 'Movies DVDR' }
   },
   ...
 ]
@@ -105,12 +104,10 @@ output:
     seeders: '14142',
     leechers: '3140',
     uploadDate: '2014-08-02 08:15:25 GMT',
-    torrentLink: undefined,
     magnetLink: 'magnet:?xt=urn:btih:025....
     link: 'http://thepiratebay.se/torrent/10676856/',
     id: '10676856',
-    description: 'I've always known that Spider-Man...',
-    picture: 'http://image.bayimg.com/bdca01a243abf68...'
+    description: 'I've always known that Spider-Man...'
   }
 */
 ```

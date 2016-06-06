@@ -96,7 +96,6 @@ export function parseResults(resultsHTML, filter = {}) {
     const link = baseUrl + relativeLink;
     const id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10);
     const magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
-    const torrentLink = $(this).find('a[title="Download this torrent"]').attr('href');
     const uploader = $(this).find('font .detDesc').text();
     const uploaderLink = baseUrl + $(this).find('font a').attr('href');
     const verified = isTorrentVerified($(this));
@@ -113,7 +112,7 @@ export function parseResults(resultsHTML, filter = {}) {
 
     return {
       id, name, size, link, category, seeders, leechers, uploadDate, magnetLink,
-      subcategory, torrentLink, uploader, verified, uploaderLink
+      subcategory, uploader, verified, uploaderLink
     };
   });
 
@@ -161,11 +160,10 @@ export function parseTorrentPage(torrentPage) {
   const id = $('input[name=id]').attr('value');
   const link = `${baseUrl}/torrent/${id}`;
   const magnetLink = $('a[title="Get this torrent"]').attr('href');
-  const torrentLink = $('a[title="Torrent File"]').attr('href');
   const description = $('div.nfo').text().trim();
 
   return {
-    name, size, seeders, leechers, uploadDate, torrentLink, magnetLink, link,
+    name, size, seeders, leechers, uploadDate, magnetLink, link,
     id, description, uploader, uploaderLink
   };
 }
