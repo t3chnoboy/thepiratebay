@@ -6,42 +6,9 @@
  * @todo: support callbacks with callbackify
  */
 import cheerio from 'cheerio';
-import zlib from 'zlib';
-import request from 'request';
+import fetch from 'isomorphic-fetch';
 import { baseUrl } from './Torrent';
 
-
-export function requestWithEncoding(options, callback) {
-  const req = request(options);
-
-  req.on('response', (res) => {
-    const chunks = [];
-
-    res.on('data', (chunk) => {
-      chunks.push(chunk);
-    });
-
-    res.on('end', () => {
-      const buffer = Buffer.concat(chunks);
-      const encoding = res.headers['content-encoding'];
-      if (encoding === 'gzip') {
-        zlib.gunzip(buffer, (err, decoded) => {
-          callback(err, decoded && decoded.toString());
-        });
-      } else if (encoding === 'deflate') {
-        zlib.inflate(buffer, (err, decoded) => {
-          callback(err, decoded && decoded.toString());
-        });
-      } else {
-        callback(null, buffer.toString());
-      }
-    });
-  });
-
-  req.on('error', (err) => {
-    callback(err);
-  });
-}
 
 export function _parseTorrentIsVIP(element) {
   return (
@@ -59,24 +26,11 @@ export function isTorrentVerified(element) {
   return _parseTorrentIsVIP(element) || _parseTorrentIsTrusted(element);
 }
 
-export function parsePage(url, parse, filter = {}) {
-  return new Promise((resolve, reject) => {
-    let categories;
-
-    requestWithEncoding(url, (err, data) => {
-      if (err) {
-        reject(err);
-      } else {
-        try {
-          categories = parse(data, filter);
-        } catch (error) {
-          return reject(error);
-        }
-
-        return resolve(categories);
-      }
-    });
-  });
+export function parsePage(url, parseCallback, filter = {}) {
+  console.log(url);
+  return fetch(url)
+    .then(response => response.text())
+    .then(response => parseCallback(response, filter));
 }
 
 export function parseResults(resultsHTML, filter = {}) {

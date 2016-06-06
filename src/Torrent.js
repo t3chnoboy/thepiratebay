@@ -9,7 +9,7 @@ import {
   parseTvShows,
   parseCategories
 } from './Parser';
-
+import querystring from 'querystring';
 
 export const baseUrl = 'https://thepiratebay.se';
 
@@ -100,7 +100,6 @@ function castNumberToString(pageNumber) {
     typeof pageNumber !== 'string' ||
     typeof pageNumber !== 'number'
   ) {
-    console.log(pageNumber);
     throw new Error('Unexpected page number type');
   }
 }
@@ -152,17 +151,14 @@ export function search(title = '*', opts = {}) {
 
   const orderingNumber = convertOrderByObject({ orderBy, sortBy });
 
-  const query = {
-    url: `${baseUrl}/s/`,
-    qs: {
-      q: title,
-      category,
-      page,
-      orderby: orderingNumber
-    }
-  };
+  const url = `${baseUrl}/s/?${querystring.stringify({
+    q: title,
+    category,
+    page,
+    orderby: orderingNumber
+  })}`;
 
-  return parsePage(query, parseResults, rest.filter);
+  return parsePage(url, parseResults, rest.filter);
 }
 
 export function getTorrent(id) {
@@ -170,7 +166,7 @@ export function getTorrent(id) {
     ? `${baseUrl}/torrent/${id}`
     : id.link || id;
 
-  return parsePage({ url }, parseTorrentPage);
+  return parsePage(url, parseTorrentPage);
 }
 
 export function topTorrents(category = 'all') {
@@ -200,13 +196,10 @@ export function userTorrents(username, opts = {}) {
     });
   }
 
-  const query = {
-    url: `${baseUrl}/user/${username}`,
-    qs: {
-      page: opts.page ? castNumberToString(opts.page) : '0',
-      orderby: orderby || '99'
-    }
-  };
+  const query = `${baseUrl}/user/${username}/?${querystring.stringify({
+    page: opts.page ? castNumberToString(opts.page) : '0',
+    orderby: orderby || '99'
+  })}`;
 
   return parsePage(query, parseResults);
 }
