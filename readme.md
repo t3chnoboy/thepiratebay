@@ -58,8 +58,11 @@ async search() {
   PirateBay.search('Game of Thrones', {
     category: 'all',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
                         //                   'applications', 'games', 'other'
+                        //
+                        // You can also use the category number:
+                        // `/search/0/99/{category_number}`
     filter: {
-      verified: true    // default - Filter all VIP or trusted torrents
+      verified: true    // default - true | Filter all VIP or trusted torrents
     },
     page: 0,            // default - 0 - 99
     orderBy: 'leeches', // default - name, date, size, seeds, leeches
