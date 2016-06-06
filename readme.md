@@ -2,7 +2,7 @@ The Pirate Bay node.js client
 =============================
 [![Build Status](https://travis-ci.org/t3chnoboy/thepiratebay.svg?branch=master)](https://travis-ci.org/t3chnoboy/thepiratebay)
 [![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
-[![Dependency Status](https://gemnasium.com/t3chnoboy/thepiratebay.svg)](https://gemnasium.com/t3chnoboy/thepiratebay)
+[![Dependency Status](https://img.shields.io/david/t3chnoboy/thepiratebay.svg)](https://david-dm.org/t3chnoboy/thepiratebay)
 [![npm](https://img.shields.io/npm/dm/thepiratebay.svg?maxAge=2592000)]()
 
 <p align="center">
