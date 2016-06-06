@@ -56,7 +56,8 @@ async search() {
 ```javascript
   // Takes a search query and options
   PirateBay.search('Game of Thrones', {
-    category: 0,        // default - `/search/0/99/{category}`
+    category: 'all',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
+                        //                   'applications', 'games', 'other'
     filter: {
       verified: true    // default - Filter all VIP or trusted torrents
     },
