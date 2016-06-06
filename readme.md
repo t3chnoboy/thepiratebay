@@ -3,23 +3,23 @@ The Pirate Bay node.js client
 [![Build Status](https://travis-ci.org/t3chnoboy/thepiratebay.svg?branch=master)](https://travis-ci.org/t3chnoboy/thepiratebay)
 [![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
 [![Dependency Status](https://gemnasium.com/t3chnoboy/thepiratebay.svg)](https://gemnasium.com/t3chnoboy/thepiratebay)
+[![npm](https://img.shields.io/npm/dm/thepiratebay.svg?maxAge=2592000)]()
 
 <p align="center">
   <img src="https://i.imgur.com/xP3s8Xum.png"/>
 </p>
 
 ## Installation
-[![NPM](https://nodei.co/npm/thepiratebay.png?downloads=true)](https://nodei.co/npm/thepiratebay/)
 
 Install using npm:
-```sh
-npm install thepiratebay
+```bash
+npm install thepiratebay --save
 ```
 
 ## Usage
 
 ```javascript
-  const PirateBay = require('thepiratebay');
+  const PirateBay = require('thepiratebay')
 ```
 All methods are asynchronous!
 You can use promises, ES6 generators, or async/await
@@ -29,12 +29,12 @@ Using promises:
   PirateBay.search('Game of Thrones', {
   	category: 205
   })
-  .then(function(results){
-  	console.log(results);
+  .then(function(results) {
+  	console.log(results)
   })
-  .catch(function(err){
-  	console.log(err);
-  });
+  .catch(function(err) {
+  	console.log(err)
+  })
 ```
 
 Using ES7 async/await
@@ -46,7 +46,7 @@ async search() {
     orderBy: 'seeds',
     sortBy: 'desc',
   })
-  console.log(searchResults);
+  console.log(searchResults)
 }
 ```
 
@@ -90,11 +90,11 @@ async search() {
   PirateBay
     .getTorrent('10676856')
     .then(function(results) {
-      console.log(results);
+      console.log(results)
     })
     .catch(function(error) {
-      console.log(error);
-    });
+      console.log(error)
+    })
 
 /*
 output:
@@ -116,7 +116,6 @@ output:
 ```
 
 ### topTorrents
-http://thepiratebay.se/top
 ```javascript
   // returns top 100 torrents
   PirateBay.topTorrents()
@@ -126,14 +125,12 @@ http://thepiratebay.se/top
 ```
 
 ### recentTorrents
-http://thepiratebay.se/recent
 ```javascript
   // returns the most recent torrents
   PirateBay.recentTorrents()
 ```
 
 ### userTorrents
-http://thepiratebay.se/user/YIFY/3/5/0
 ```javascript
   // Gets a specific user's torrents
   PirateBay.userTorrents('YIFY', {
@@ -146,7 +143,7 @@ http://thepiratebay.se/user/YIFY/3/5/0
 ### getCategories
 ```javascript
   // Gets all available categories on piratebay
-  PirateBay.getCategories();
+  PirateBay.getCategories()
 
 /*
 [

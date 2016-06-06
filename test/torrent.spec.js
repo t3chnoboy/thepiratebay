@@ -45,16 +45,19 @@ function assertHasArrayOfTorrents(arrayOfTorrents) {
 /**
  * todo: test the 'torrentLink' property, which is undefined in many queries
  */
-function assertHasNecessaryProperties(torrent) {
-  const propertiesToValidate = [
+function assertHasNecessaryProperties(torrent, additionalProperties = []) {
+  const defaultPropertiesToValidate = [
     'id', 'name', 'size', 'link', 'category', 'seeders', 'leechers',
     'uploadDate', 'magnetLink', 'subcategory', 'uploader', 'verified',
-    'uploaderLink'
+    'uploaderLink', ...additionalProperties
   ];
 
-  for (const property of propertiesToValidate) {
+  for (const property of defaultPropertiesToValidate) {
     expect(torrent).to.have.property(property);
     expect(torrent[property]).to.exist;
+    if (typeof torrent[property] === 'string') {
+      expect(torrent[property]).to.not.contain('undefined');
+    }
   }
 }
 
@@ -109,6 +112,7 @@ describe('Torrent', () => {
         for (const property of properties) {
           expect(this.categories[0]).to.have.property(property);
           expect(this.categories[0][property]).to.exist;
+          expect(this.categories[0][property]).to.not.contain('undefined');
         }
         done();
       } catch (err) {
@@ -173,9 +177,24 @@ describe('Torrent', () => {
 
       try {
         for (const result of searchResults) {
-          expect(result).to.have.property('verified');
-          expect(result.verified).to.be.oneOf([true, false]);
+          expect(result).to.have.property('verified').that.is.a('boolean');
         }
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
+    /**
+     * Assert by searching wrong
+     */
+    it('should search using primary category names', async (done) => {
+      const searchResults = await Torrent.search('Game of Thrones', {
+        category: 'applications'
+      });
+
+      try {
+        expect(searchResults[0].category.name).to.equal('Applications');
         done();
       } catch (err) {
         done(err);
@@ -326,6 +345,21 @@ describe('Torrent', () => {
       }
     });
 
+    it('should have no undefined properties', (done) => {
+      try {
+        for (const property in this.torrent) { // eslint-disable-line
+          if (this.torrent.hasOwnProperty(property)) {
+            if (typeof this.torrent[property] === 'string') {
+              expect(this.torrent[property]).to.not.include('undefined');
+            }
+          }
+        }
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+
     it('should return a promise', (done) => {
       try {
         expect(torrentFactory()).to.be.a('promise');
@@ -437,16 +471,6 @@ describe('Torrent', () => {
       try {
         expect(this.torrent).to.have.property('description');
         expect(this.torrent.description).to.be.a('string');
-        done();
-      } catch (err) {
-        done(err);
-      }
-    });
-
-    it('should have a picture', (done) => {
-      try {
-        expect(this.torrent).to.have.property('picture');
-        expect(this.torrent.picture).to.be.a('string');
         done();
       } catch (err) {
         done(err);

@@ -163,11 +163,10 @@ export function parseTorrentPage(torrentPage) {
   const magnetLink = $('a[title="Get this torrent"]').attr('href');
   const torrentLink = $('a[title="Torrent File"]').attr('href');
   const description = $('div.nfo').text().trim();
-  const picture = 'http:' + $('img[title="picture"]').attr('src'); // eslint-disable-line
 
   return {
     name, size, seeders, leechers, uploadDate, torrentLink, magnetLink, link,
-    id, description, picture, uploader, uploaderLink
+    id, description, uploader, uploaderLink
   };
 }
 

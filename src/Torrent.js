@@ -15,6 +15,15 @@ export const baseUrl = 'https://thepiratebay.se';
 
 export const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
 
+export const primaryCategoryNumbers = {
+  audio: 100,
+  video: 200,
+  applications: 300,
+  games: 400,
+  xxx: 500,
+  other: 600
+};
+
 /*
  * opts:
  *  category
@@ -96,6 +105,23 @@ function castNumberToString(pageNumber) {
   }
 }
 
+/**
+ * Determine the category number from an category name ('movies', 'audio', etc)
+ *
+ * @param  {number} || {string}
+ * @return {number}
+ */
+function resolveCategory(categoryParam) {
+  if (
+    typeof categoryParam === 'string' &&
+    categoryParam in primaryCategoryNumbers
+  ) {
+    return primaryCategoryNumbers[categoryParam];
+  }
+
+  return categoryParam;
+}
+
 export function search(title = '*', opts = {}) {
   const defaults = {
     category: '0',
@@ -107,10 +133,12 @@ export function search(title = '*', opts = {}) {
     sortBy: 'desc'
   };
 
+  const convertedCategory = resolveCategory(opts.category);
+
   const castedOptions = {
     ...opts,
     page: opts.page ? castNumberToString(opts.page) : defaults.page,
-    category: opts.category ? castNumberToString(opts.category) : defaults.category,
+    category: opts.category ? castNumberToString(convertedCategory) : defaults.category,
     orderby: opts.orderby ? castNumberToString(opts.orderby) : defaults.orderby
   };
 
