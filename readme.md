@@ -40,8 +40,8 @@ Using promises:
 Using ES7 async/await
 ```javascript
 async search() {
-  const searchResults = await PirateBay.search({
-    category: 205,
+  const searchResults = await PirateBay.search('harry potter', {
+    category: 'video',
     page: 3,
     orderBy: 'seeds',
     sortBy: 'desc',
