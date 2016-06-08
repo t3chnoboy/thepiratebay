@@ -6,7 +6,7 @@ The Pirate Bay node.js client
 [![npm](https://img.shields.io/npm/dm/thepiratebay.svg?maxAge=2592000)]()
 
 <p align="center">
-  <img src="https://i.imgur.com/xP3s8Xum.png"/>
+  <img src="https://upload.wikimedia.org/wikipedia/commons/1/16/The_Pirate_Bay_logo.svg" width="300px"/>
 </p>
 
 ## Installation
