@@ -37,7 +37,7 @@ Using promises:
   })
 ```
 
-Using ES7 async/await
+Using ES7 async/await (requires babel)
 ```javascript
 async search() {
   const searchResults = await PirateBay.search('harry potter', {
