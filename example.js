@@ -1,4 +1,6 @@
-const PirateBay = require('./');
+/* eslint-disable */
+
+const PirateBay = require('thepiratebay');
 
 
 // Promise
