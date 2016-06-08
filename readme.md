@@ -19,22 +19,22 @@ npm install thepiratebay --save
 ## Usage
 
 ```javascript
-  const PirateBay = require('thepiratebay')
+const PirateBay = require('thepiratebay')
 ```
 All methods are asynchronous!
 You can use promises, ES6 generators, or async/await
 
 Using promises:
 ```javascript
-  PirateBay.search('Game of Thrones', {
-  	category: 205
-  })
-  .then(function(results) {
-  	console.log(results)
-  })
-  .catch(function(err) {
-  	console.log(err)
-  })
+PirateBay.search('Game of Thrones', {
+	category: 205
+})
+.then(function(results) {
+	console.log(results)
+})
+.catch(function(err) {
+	console.log(err)
+})
 ```
 
 Using ES7 async/await (requires babel)
@@ -54,20 +54,20 @@ async search() {
 
 ### search
 ```javascript
-  // Takes a search query and options
-  PirateBay.search('Game of Thrones', {
-    category: 'all',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
-                        //                   'applications', 'games', 'other'
-                        //
-                        // You can also use the category number:
-                        // `/search/0/99/{category_number}`
-    filter: {
-      verified: true    // default - true | Filter all VIP or trusted torrents
-    },
-    page: 0,            // default - 0 - 99
-    orderBy: 'leeches', // default - name, date, size, seeds, leeches
-    sortBy: 'desc'      // default - desc, asc
-  })
+// Takes a search query and options
+PirateBay.search('Game of Thrones', {
+  category: 'all',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
+                      //                   'applications', 'games', 'other'
+                      //
+                      // You can also use the category number:
+                      // `/search/0/99/{category_number}`
+  filter: {
+    verified: true    // default - true | Filter all VIP or trusted torrents
+  },
+  page: 0,            // default - 0 - 99
+  orderBy: 'leeches', // default - name, date, size, seeds, leeches
+  sortBy: 'desc'      // default - desc, asc
+})
 
 /* returns an array of search results:
 [
@@ -89,15 +89,15 @@ async search() {
 
 ### getTorrent
 ```javascript
-  // takes an id or a link
-  PirateBay
-    .getTorrent('10676856')
-    .then(function(results) {
-      console.log(results)
-    })
-    .catch(function(error) {
-      console.log(error)
-    })
+// takes an id or a link
+PirateBay
+  .getTorrent('10676856')
+  .then(function(results) {
+    console.log(results)
+  })
+  .catch(function(error) {
+    console.log(error)
+  })
 
 /*
 output:
@@ -118,33 +118,33 @@ output:
 
 ### topTorrents
 ```javascript
-  // returns top 100 torrents
-  PirateBay.topTorrents()
+// returns top 100 torrents
+PirateBay.topTorrents()
 
-  // returns top 100 torrents for the category '400' aka Games
-  PirateBay.topTorrents(400)
+// returns top 100 torrents for the category '400' aka Games
+PirateBay.topTorrents(400)
 ```
 
 ### recentTorrents
 ```javascript
-  // returns the most recent torrents
-  PirateBay.recentTorrents()
+// returns the most recent torrents
+PirateBay.recentTorrents()
 ```
 
 ### userTorrents
 ```javascript
-  // Gets a specific user's torrents
-  PirateBay.userTorrents('YIFY', {
-    page: 3,
-    orderBy: 'name',
-    sortBy: 'asc'
-  })
+// Gets a specific user's torrents
+PirateBay.userTorrents('YIFY', {
+  page: 3,
+  orderBy: 'name',
+  sortBy: 'asc'
+})
 ```
 
 ### getCategories
 ```javascript
-  // Gets all available categories on piratebay
-  PirateBay.getCategories()
+// Gets all available categories on piratebay
+PirateBay.getCategories()
 
 /*
 [
