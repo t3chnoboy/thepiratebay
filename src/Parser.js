@@ -28,7 +28,9 @@ export function isTorrentVerified(element) {
 
 export function parsePage(url, parseCallback, filter = {}) {
   console.log(url);
-  return fetch(url)
+  return fetch(url, {
+      mode: 'no-cors'
+    })
     .then(response => response.text())
     .then(response => parseCallback(response, filter));
 }
