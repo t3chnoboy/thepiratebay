@@ -1,11 +1,14 @@
 {
-  "name": "thepiratebay",
-  "version": "1.1.6",
+  "name": "thepiratebay-new",
+  "version": "1.1.0",
   "description": "The pirate bay client",
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
   "author": "Dmitry Mazuro <dmitry.mazuro@icloud.com>",
   "main": "index.js",
+  "browser": {
+    "index.js": "./lib/thepiratebay.js"
+  },
   "keywords": [
     "thepiratebay",
     "pirate bay",
@@ -16,7 +19,8 @@
   "scripts": {
     "test": "cross-env NODE_ENV=test mocha --bail --timeout 20000 --inline-diffs --async-only --growl --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
     "test-all": "cross-env NODE_ENV=test npm run lint && npm run test && npm run build",
-    "build": "cross-env NODE_ENV=production babel src --out-dir lib",
+    "build": "cross-env NODE_ENV=production babel src --out-dir lib && npm run build-web",
+    "build-web": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.js --progress --profile --colors --display-error-details",
     "clean": "rm -rf lib",
     "lint": "cross-env NODE_ENV=test eslint src test",
     "version": "npm run build",
@@ -25,6 +29,7 @@
   "devDependencies": {
     "babel-cli": "^6.9.0",
     "babel-eslint": "^6.0.4",
+    "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.2.1",
     "babel-plugin-transform-es2015-modules-umd": "^6.8.0",
     "babel-plugin-transform-runtime": "^6.9.0",
@@ -40,6 +45,7 @@
     "eslint-plugin-import": "^1.8.1",
     "eslint-plugin-jsx-a11y": "^1.3.0",
     "eslint-plugin-react": "^5.1.1",
+    "json-loader": "^0.5.4",
     "mocha": "^2.5.3",
     "uglifyify": "^3.0.1",
     "webpack": "^1.13.1"
@@ -48,9 +54,6 @@
     "babel-runtime": "^6.9.2",
     "cheerio": "github:cheeriojs/cheerio#e65ad72",
     "isomorphic-fetch": "^2.2.1"
-  },
-  "browser": {
-    "./index.js": "./lib/bundle.js"
   },
   "engines": {
     "node": "4.x || 6.x",
