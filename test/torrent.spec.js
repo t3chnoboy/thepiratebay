@@ -189,28 +189,28 @@ describe('Torrent', () => {
      * Assert by searching wrong
      */
     it('should search using primary category names', async (done) => {
-      const searchResults = await Promise.all([
-        Torrent.search('Game of Thrones', {
-          category: 'applications'
-        }),
-        Torrent.search('Game of Thrones', {
-          category: 'audio'
-        }),
-        Torrent.search('Game of Thrones', {
-          category: 'video'
-        }),
-        Torrent.search('Game of Thrones', {
-          category: 'games'
-        }),
-        Torrent.search('Game of Thrones', {
-          category: 'xxx'
-        }),
-        Torrent.search('Game of Thrones', {
-          category: 'other'
-        })
-      ]);
-
       try {
+        const searchResults = await Promise.all([
+          Torrent.search('Game of Thrones', {
+            category: 'applications'
+          }),
+          Torrent.search('Game of Thrones', {
+            category: 'audio'
+          }),
+          Torrent.search('Game of Thrones', {
+            category: 'video'
+          }),
+          Torrent.search('Game of Thrones', {
+            category: 'games'
+          }),
+          Torrent.search('Game of Thrones', {
+            category: 'xxx'
+          }),
+          Torrent.search('Game of Thrones', {
+            category: 'other'
+          })
+        ]);
+
         expect(searchResults[0][0].category.name).to.equal('Applications');
         expect(searchResults[1][0].category.name).to.equal('Audio');
         expect(searchResults[2][0].category.name).to.equal('Video');
