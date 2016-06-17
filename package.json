@@ -27,7 +27,7 @@
     "debug": "cross-env NODE_ENV=test mocha debug --harmony"
   },
   "devDependencies": {
-    "babel-cli": "^6.9.0",
+    "babel-cli": "^6.10.1",
     "babel-eslint": "^6.0.4",
     "babel-loader": "^6.2.4",
     "babel-plugin-add-module-exports": "^0.2.1",
@@ -39,15 +39,15 @@
     "babel-register": "^6.9.0",
     "chai": "^3.5.0",
     "cross-env": "^1.0.8",
-    "eslint": "^2.11.1",
+    "eslint": "^2.12.0",
     "eslint-config-airbnb": "^9.0.1",
     "eslint-plugin-immutable": "^1.0.0",
     "eslint-plugin-import": "^1.8.1",
-    "eslint-plugin-jsx-a11y": "^1.3.0",
-    "eslint-plugin-react": "^5.1.1",
+    "eslint-plugin-jsx-a11y": "^1.5.3",
+    "eslint-plugin-react": "^5.2.1",
     "json-loader": "^0.5.4",
     "mocha": "^2.5.3",
-    "uglifyify": "^3.0.1",
+    "uglifyify": "^3.0.2",
     "webpack": "^1.13.1"
   },
   "dependencies": {
