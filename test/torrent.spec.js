@@ -188,7 +188,9 @@ describe('Torrent', () => {
     /**
      * Assert by searching wrong
      */
-    it('should search using primary category names', async (done) => {
+    it('should search using primary category names', async function getCategoryNames(done) {
+      this.timeout(50000);
+
       try {
         const searchResults = await Promise.all([
           Torrent.search('Game of Thrones', {
