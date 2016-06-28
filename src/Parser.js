@@ -27,11 +27,22 @@ export function isTorrentVerified(element) {
 }
 
 export function parsePage(url, parseCallback, filter = {}) {
-  return fetch(url, {
-    mode: 'no-cors'
-  })
-  .then(response => response.text())
-  .then(response => parseCallback(response, filter));
+  const attempt = (error) => {
+    if (error) console.log(error);
+
+    return fetch(url, {
+      mode: 'no-cors'
+    })
+    .then(response => response.text());
+  };
+
+  return attempt()
+    .then(response => (
+      response.includes('Database maintenance')
+        ? (attempt('Failed because of db error, retrying'))
+        : response
+    ))
+    .then(response => parseCallback(response, filter));
 }
 
 export function parseResults(resultsHTML, filter = {}) {
