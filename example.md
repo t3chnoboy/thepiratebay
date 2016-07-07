@@ -1,7 +1,6 @@
-/* eslint-disable */
-
+## Example:
+```js
 const PirateBay = require('thepiratebay');
-
 
 // Promise
 PirateBay
@@ -20,3 +19,4 @@ async function searchPirateBay() {
 
   console.log(searchResults);
 }
+```
