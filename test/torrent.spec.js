@@ -62,6 +62,9 @@ function assertHasNecessaryProperties(torrent, additionalProperties = []) {
 }
 
 describe('Torrent', () => {
+  // Temporarily allow retrying of tests until api outage solution is found
+  this.retries(3);
+
   describe('order object to number converter', () => {
     it('should convert orderBy and sortBy', (done) => {
       try {
