@@ -61,7 +61,7 @@ function assertHasNecessaryProperties(torrent, additionalProperties = []) {
   }
 }
 
-describe('Torrent', () => {
+describe('Torrent', function torrentTest() {
   // Temporarily allow retrying of tests until api outage solution is found
   this.retries(3);
 
