@@ -20,6 +20,9 @@ npm install thepiratebay --save
 ## Usage
 
 ```javascript
+// ES6 module import
+import PirateBay from 'thepiratebay'
+/// CommonJS import
 const PirateBay = require('thepiratebay')
 ```
 All methods are asynchronous!
