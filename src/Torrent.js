@@ -1,6 +1,3 @@
-/**
- * @todo: callbackify support
- */
 import {
   parsePage,
   parseResults,

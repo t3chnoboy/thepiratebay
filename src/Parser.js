@@ -2,8 +2,6 @@
 
 /**
  * Parse all pages
- *
- * @todo: support callbacks with callbackify
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
