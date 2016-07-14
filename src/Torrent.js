@@ -8,11 +8,11 @@ import {
 } from './Parser';
 import querystring from 'querystring';
 
-export const baseUrl = 'https://thepiratebay.se';
+const baseUrl = 'https://thepiratebay.se';
 
-export const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
+const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
 
-export const searchDefaults = {
+const searchDefaults = {
   category: '0',
   page: '0',
   filter: {
@@ -221,5 +221,5 @@ export function getCategories() {
 
 export default {
   search, getTorrent, topTorrents, recentTorrents, userTorrents, tvShows,
-  getTvShow, getCategories
+  getTvShow, getCategories, baseUrl, searchDefaults, defaultOrder
 };
