@@ -12,6 +12,16 @@ export const baseUrl = 'https://thepiratebay.se';
 
 export const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
 
+export const searchDefaults = {
+  category: '0',
+  page: '0',
+  filter: {
+    verified: true
+  },
+  orderBy: 'seeds',
+  sortBy: 'desc'
+};
+
 export const primaryCategoryNumbers = {
   audio: 100,
   video: 200,
@@ -119,23 +129,13 @@ function resolveCategory(categoryParam) {
 }
 
 export function search(title = '*', opts = {}) {
-  const defaults = {
-    category: '0',
-    page: '0',
-    filter: {
-      verified: true
-    },
-    orderBy: 'seeds',
-    sortBy: 'desc'
-  };
-
   const convertedCategory = resolveCategory(opts.category);
 
   const castedOptions = {
     ...opts,
-    page: opts.page ? castNumberToString(opts.page) : defaults.page,
-    category: opts.category ? castNumberToString(convertedCategory) : defaults.category,
-    orderby: opts.orderby ? castNumberToString(opts.orderby) : defaults.orderby
+    page: opts.page ? castNumberToString(opts.page) : searchDefaults.page,
+    category: opts.category ? castNumberToString(convertedCategory) : searchDefaults.category,
+    orderby: opts.orderby ? castNumberToString(opts.orderby) : searchDefaults.orderby
   };
 
   const {
@@ -144,7 +144,7 @@ export function search(title = '*', opts = {}) {
     orderBy,
     sortBy,
     ...rest
-  } = { ...defaults, ...castedOptions };
+  } = { ...searchDefaults, ...castedOptions };
 
   const orderingNumber = convertOrderByObject({ orderBy, sortBy });
 
