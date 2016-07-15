@@ -8,9 +8,9 @@ import {
 } from './Parser';
 import querystring from 'querystring';
 
-const baseUrl = 'https://thepiratebay.se';
+export const baseUrl = 'https://thepiratebay.se';
 
-const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
+export const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
 
 const searchDefaults = {
   category: '0',
