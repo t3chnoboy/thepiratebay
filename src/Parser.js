@@ -7,6 +7,7 @@ import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
 import { baseUrl } from './Torrent';
 
+const maxConcurrentRequests = 2;
 
 export function _parseTorrentIsVIP(element) {
   return (
@@ -28,10 +29,16 @@ export function parsePage(url, parseCallback, filter = {}) {
   const attempt = (error) => {
     if (error) console.log(error);
 
-    return fetch(url, {
+    const requests = [];
+    const request = fetch(url, {
       mode: 'no-cors'
-    })
-    .then(response => response.text());
+    });
+
+    for (let i = 0; i < maxConcurrentRequests; i++) {
+      requests.push(request);
+    }
+
+    return Promise.race(requests).then(response => response.text());
   };
 
   return attempt()

@@ -24,8 +24,7 @@
     "clean": "rm -rf lib",
     "precommit": "npm run test-all",
     "lint": "cross-env NODE_ENV=test eslint src test",
-    "version": "npm run build",
-    "debug": "cross-env NODE_ENV=test mocha debug --harmony"
+    "version": "npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.10.1",

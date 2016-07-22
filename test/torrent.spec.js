@@ -131,6 +131,8 @@ describe('Torrent', function torrentTest() {
    * it('searches by category', async done => {});
    */
   describe('search', function () {
+    this.slow(3000);
+
     before(async () => {
       try {
         this.search = await torrentSearchFactory();
@@ -339,7 +341,9 @@ describe('Torrent', function torrentTest() {
   /**
    * Get torrent types
    */
-  describe('torrent types', () => {
+  describe('torrent types', function testTorrentTypes() {
+    this.slow(3000);
+
     it('should get top torrents', async done => {
       try {
         const torrents = await Torrent.topTorrents();
@@ -702,7 +706,9 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should handle numeric input', async done => {
+    it('should handle numeric input', async function testNumericInput(done) {
+      this.slow(3000);
+
       try {
         const topTorrents = await Torrent.topTorrents(205);
         expect(topTorrents).to.be.an('array');
