@@ -5,7 +5,8 @@
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
-import { baseUrl } from './Torrent';
+import URL from 'url-parse';
+
 
 const maxConcurrentRequests = 2;
 
@@ -25,32 +26,45 @@ export function isTorrentVerified(element) {
   return _parseTorrentIsVIP(element) || _parseTorrentIsTrusted(element);
 }
 
-export function parsePage(url, parseCallback, filter = {}) {
-  const attempt = (error) => {
-    if (error) console.log(error);
+export function getProxyList() {
+  const response = fetch('https://thepiratebay-proxylist.org/')
+    .then(res => res.text());
 
-    const requests = [];
-    const request = fetch(url, {
-      mode: 'no-cors'
-    });
+  const $ = cheerio.load(response);
+  const links = $('a[rel="nofollow"]').each(element => element.text());
 
-    for (let i = 0; i < maxConcurrentRequests; i++) {
-      requests.push(request);
-    }
+  console.log(links);
 
-    return Promise.race(requests).then(response => response.text());
-  };
-
-  return attempt()
-    .then(response => (
-      response.includes('Database maintenance')
-        ? (attempt('Failed because of db error, retrying'))
-        : response
-    ))
-    .then(response => parseCallback(response, filter));
+  return links;
 }
 
-export function parseResults(resultsHTML, filter = {}) {
+export function parsePage(url, parseCallback, filter = {}, baseUrls = ['https://thepiratebay.se']) {
+  const attempt = (_baseUrls = baseUrls) => {
+    const requests = _baseUrls.map(baseUrl => fetch(`${baseUrl}${url}`, {
+      mode: 'no-cors'
+    }));
+
+    if (baseUrls.length === 1) {
+      for (let i = 0; i < maxConcurrentRequests; i++) {
+        requests.push(requests[0]);
+      }
+    }
+
+    return Promise.race(requests);
+  };
+
+  return attempt().then(async response => (
+    (await response.text()).includes('Database maintenance')
+      ? attempt(await getProxyList())
+      : response
+  ))
+  .then(response => {
+    const burl = (new URL(response.url)).host;
+    parseCallback(`https://${burl}`, response.text(), filter);
+  });
+}
+
+export function parseResults(baseUrl, resultsHTML, filter = {}) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
@@ -96,7 +110,7 @@ export function parseResults(resultsHTML, filter = {}) {
   return parsedResultsArray;
 }
 
-export function parseTvShow(tvShowPage) {
+export function parseTvShow(baseUrl, tvShowPage) {
   const $ = cheerio.load(tvShowPage);
 
   const seasons = $('dt a').map(() => $(this).text()).get();
@@ -117,7 +131,7 @@ export function parseTvShow(tvShowPage) {
   );
 }
 
-export function parseTorrentPage(torrentPage) {
+export function parseTorrentPage(baseUrl, torrentPage) {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 

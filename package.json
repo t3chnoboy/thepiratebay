@@ -54,7 +54,8 @@
   "dependencies": {
     "babel-runtime": "^6.9.2",
     "cheerio": "github:cheeriojs/cheerio#e65ad72",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "url-parse": "^1.1.1"
   },
   "engines": {
     "node": "4.x || 6.x",
