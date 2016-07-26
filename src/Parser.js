@@ -5,10 +5,11 @@
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
-import URL from 'url-parse';
+import { baseUrl } from './Torrent';
+import UrlParse from 'url-parse';
 
 
-const maxConcurrentRequests = 2;
+const maxConcurrentRequests = 3;
 
 export function _parseTorrentIsVIP(element) {
   return (
@@ -26,45 +27,51 @@ export function isTorrentVerified(element) {
   return _parseTorrentIsVIP(element) || _parseTorrentIsTrusted(element);
 }
 
-export function getProxyList() {
-  const response = fetch('https://thepiratebay-proxylist.org/')
+export async function getProxyList() {
+  console.log('Retriving proxy list...');
+
+  const response = await fetch('https://proxybay.tv/')
     .then(res => res.text());
 
   const $ = cheerio.load(response);
-  const links = $('a[rel="nofollow"]').each(element => element.text());
 
-  console.log(links);
+  const links = $('[rel="nofollow"]').map(function getElementLinks() {
+    return $(this).attr('href');
+  })
+  .get()
+  .filter((res, index) => (index < maxConcurrentRequests));
 
   return links;
 }
 
-export function parsePage(url, parseCallback, filter = {}, baseUrls = ['https://thepiratebay.se']) {
-  const attempt = (_baseUrls = baseUrls) => {
-    const requests = _baseUrls.map(baseUrl => fetch(`${baseUrl}${url}`, {
-      mode: 'no-cors'
-    }));
+export function parsePage(url, parseCallback, filter = {}) {
+  const attempt = async error => {
+    if (error) console.log(error);
 
-    if (baseUrls.length === 1) {
-      for (let i = 0; i < maxConcurrentRequests; i++) {
-        requests.push(requests[0]);
-      }
-    }
+    const proxyUrls = [
+      'https://thepiratebay.org',
+      'https://thepiratebay.se',
+      'https://pirateproxy.one',
+      'https://ahoy.one'
+    ];
 
-    return Promise.race(requests);
+    const requests = proxyUrls
+      .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
+      .map(_url => fetch(_url, { mode: 'no-cors' }));
+
+    return Promise.race(requests).then(response => response.text());
   };
 
-  return attempt().then(async response => (
-    (await response.text()).includes('Database maintenance')
-      ? attempt(await getProxyList())
-      : response
-  ))
-  .then(response => {
-    const burl = (new URL(response.url)).host;
-    parseCallback(`https://${burl}`, response.text(), filter);
-  });
+  return attempt()
+    .then(response => (
+      response.includes('Database maintenance')
+        ? (attempt('Failed because of db error, retrying'))
+        : response
+    ))
+    .then(response => parseCallback(response, filter));
 }
 
-export function parseResults(baseUrl, resultsHTML, filter = {}) {
+export function parseResults(resultsHTML, filter = {}) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
@@ -110,7 +117,7 @@ export function parseResults(baseUrl, resultsHTML, filter = {}) {
   return parsedResultsArray;
 }
 
-export function parseTvShow(baseUrl, tvShowPage) {
+export function parseTvShow(tvShowPage) {
   const $ = cheerio.load(tvShowPage);
 
   const seasons = $('dt a').map(() => $(this).text()).get();
@@ -131,11 +138,10 @@ export function parseTvShow(baseUrl, tvShowPage) {
   );
 }
 
-export function parseTorrentPage(baseUrl, torrentPage) {
+export function parseTorrentPage(torrentPage) {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 
-  // filesCount = parseInt($('a[title="Files"]').text());
   const size = $('dt:contains(Size:) + dd').text().trim();
   const uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
   const uploader = $('dt:contains(By:) + dd').text().trim();

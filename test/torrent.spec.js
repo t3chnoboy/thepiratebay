@@ -8,7 +8,7 @@
 
 /* eslint no-unused-expressions: 0, no-console: 0, func-names: 0 */
 import { expect } from 'chai';
-import { parseCategories, parsePage } from '../src/Parser';
+import { parseCategories, parsePage, getProxyList } from '../src/Parser';
 import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';
 
 
@@ -193,7 +193,7 @@ describe('Torrent', function torrentTest() {
     /**
      * Assert by searching wrong
      */
-    it('should search using primary category names', async function getCategoryNames(done) {
+    it.skip('should search using primary category names', async function getCategoryNames(done) {
       this.timeout(50000);
 
       try {
@@ -450,16 +450,6 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it.skip('should have an info hash', (done) => {
-      try {
-        expect(this.torrent).to.have.property('uploader');
-        expect(this.torrent.infoHash).to.equal('0259F6B98A7CA160A36F13457C89344C7DD34000');
-        done();
-      } catch (err) {
-        done(err);
-      }
-    });
-
     it('should have an id', (done) => {
       try {
         expect(this.torrent).to.have.property('id', '10676856');
@@ -512,6 +502,7 @@ describe('Torrent', function torrentTest() {
     it('should have a magnet link', (done) => {
       try {
         expect(this.torrent).to.have.property('magnetLink');
+        console.log(this.torrent.magnetLink);
         done();
       } catch (err) {
         done(err);
@@ -647,6 +638,7 @@ describe('Torrent', function torrentTest() {
       it('should have a magnet link', (done) => {
         try {
           expect(this.fistSearchResult).to.have.property('magnetLink');
+          console.log(this.fistSearchResult.magnetLink);
           expect(this.fistSearchResult.magnetLink).to.match(/magnet:\?xt=.+/);
           done();
         } catch (err) {
@@ -1029,54 +1021,6 @@ describe('Torrent', function torrentTest() {
         done(err);
       }
     });
-
-    it.skip('should yield an array', (done) => {
-      try {
-        expect(this.tvShows).to.be.an('array');
-        done();
-      } catch (err) {
-        done(err);
-      }
-    });
-
-    describe('tv show', () => {
-      it.skip('should have a title', (done) => {
-        try {
-          expect(this.tvShows[0].title).to.be.a('string');
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
-      it.skip('should have an id', (done) => {
-        try {
-          expect(this.tvShows[0].id).to.match(/^\d+$/);
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
-      it.skip('should have sesons list', (done) => {
-        try {
-          expect(this.tvShows[0].seasons).to.be.an('array');
-          expect(this.tvShows[0].seasons.length).to.be.greaterThan(0);
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
-      it.skip('season number should be valid', (done) => {
-        try {
-          expect(this.tvShows[0].seasons[0]).to.match(/^S\d+$/);
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-    });
   });
 
   /**
@@ -1099,63 +1043,19 @@ describe('Torrent', function torrentTest() {
         done(err);
       }
     });
-
-    it.skip('should return an array of seasons', (done) => {
-      try {
-        expect(this.tvShow).to.be.an('array');
-        done();
-      } catch (err) {
-        done(err);
-      }
-    });
-
-    describe('season', () => {
-      it.skip('should have a title', (done) => {
+    describe('Helper Methods', () => {
+      it('getProxyList should return an array of links', async (done) => {
         try {
-          expect(this.tvShow[0].title).to.be.a('string');
-          expect(this.tvShow[0].title).to.match(/^S\d+$/);
+          const list = await getProxyList();
+          expect(list).to.be.an('array');
+          for (const link of list) {
+            expect(link).to.be.a('string');
+            expect(link).to.contain('https://');
+          }
           done();
         } catch (err) {
           done(err);
         }
-      });
-
-      it.skip('should have an array of torrents', (done) => {
-        try {
-          expect(this.tvShow[0].torrents).to.be.an('array');
-          done();
-        } catch (err) {
-          done(err);
-        }
-      });
-
-      describe('link', () => {
-        it.skip('should have a title', (done) => {
-          try {
-            expect(this.tvShow[0].torrents[0].title).to.be.a('string');
-            done();
-          } catch (err) {
-            done(err);
-          }
-        });
-
-        it.skip('should have a link', (done) => {
-          try {
-            expect(this.tvShow[0].torrents[0].link).to.be.a('string');
-            done();
-          } catch (err) {
-            done(err);
-          }
-        });
-
-        it.skip('should have an id', (done) => {
-          try {
-            expect(this.tvShow[0].torrents[0].id).to.match(/^\d+$/);
-            done();
-          } catch (err) {
-            done(err);
-          }
-        });
       });
     });
   });
