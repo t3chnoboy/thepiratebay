@@ -15,5 +15,10 @@
   },
   "plugins": [
     "immutable"
-  ]
+  ],
+  "settings": {
+    "webpack": {
+      "config": "webpack.config.eslint.js"
+    }
+  }
 }
