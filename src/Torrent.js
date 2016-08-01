@@ -16,7 +16,7 @@ const searchDefaults = {
   category: '0',
   page: '0',
   filter: {
-    verified: true
+    verified: false
   },
   orderBy: 'seeds',
   sortBy: 'desc'

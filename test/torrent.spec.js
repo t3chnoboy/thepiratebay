@@ -66,7 +66,7 @@ describe('Torrent', function torrentTest() {
   this.retries(3);
 
   describe('order object to number converter', () => {
-    it('should convert orderBy and sortBy', (done) => {
+    it('should convert orderBy and sortBy', done => {
       try {
         const searchNumber = convertOrderByObject({
           orderBy: 'name', sortBy: 'asc'
@@ -78,7 +78,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should convert orderBy and sortBy', (done) => {
+    it('should convert orderBy and sortBy', done => {
       try {
         const searchNumber = convertOrderByObject({
           orderBy: 'leeches', sortBy: 'desc'
@@ -150,22 +150,10 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have verified property', (done) => {
+    it('should have verified property', done => {
       try {
         expect(this.search[0]).to.have.property('verified');
         expect(this.search[0].verified).to.be.a('boolean');
-        done();
-      } catch (err) {
-        done(err);
-      }
-    });
-
-    it('should filter verified by default', (done) => {
-      try {
-        for (const result of this.search) {
-          expect(result).to.have.property('verified');
-          expect(result.verified).to.equal(true);
-        }
         done();
       } catch (err) {
         done(err);
@@ -396,7 +384,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have no undefined properties', (done) => {
+    it('should have no undefined properties', done => {
       try {
         for (const property in this.torrent) { // eslint-disable-line
           if (this.torrent.hasOwnProperty(property)) {
@@ -411,7 +399,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(torrentFactory()).to.be.a('promise');
         done();
@@ -420,7 +408,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have a name', (done) => {
+    it('should have a name', done => {
       try {
         expect(this.torrent).to.have.property(
           'name',
@@ -432,7 +420,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have uploader', (done) => {
+    it('should have uploader', done => {
       try {
         expect(this.torrent).to.have.property('uploader', 'YIFY');
         done();
@@ -441,7 +429,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have uploader link', (done) => {
+    it('should have uploader link', done => {
       try {
         expect(this.torrent).to.have.property('uploaderLink', `${baseUrl}/user/YIFY/`);
         done();
@@ -450,7 +438,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have an id', (done) => {
+    it('should have an id', done => {
       try {
         expect(this.torrent).to.have.property('id', '10676856');
         done();
@@ -459,7 +447,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have upload date', (done) => {
+    it('should have upload date', done => {
       try {
         expect(this.torrent).to.have.property('uploadDate', '2014-08-02 08:15:25 GMT');
         done();
@@ -468,7 +456,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have size', (done) => {
+    it('should have size', done => {
       try {
         expect(this.torrent).to.have.property('size');
         expect(this.torrent.size).to.match(/\d+\.\d+\s(G|M|K)iB/);
@@ -478,7 +466,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have seeders and leechers count', (done) => {
+    it('should have seeders and leechers count', done => {
       try {
         expect(this.torrent).to.have.property('seeders');
         expect(this.torrent).to.have.property('leechers');
@@ -490,7 +478,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have a link', (done) => {
+    it('should have a link', done => {
       try {
         expect(this.torrent).to.have.property('link', `${baseUrl}/torrent/10676856`);
         done();
@@ -499,7 +487,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have a magnet link', (done) => {
+    it('should have a magnet link', done => {
       try {
         expect(this.torrent).to.have.property('magnetLink');
         console.log(this.torrent.magnetLink);
@@ -509,7 +497,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should have a description', (done) => {
+    it('should have a description', done => {
       try {
         expect(this.torrent).to.have.property('description');
         expect(this.torrent.description).to.be.a('string');
@@ -533,7 +521,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(Torrent.search('Game of Thrones')).to.be.a('promise');
         done();
@@ -542,7 +530,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return an array of search results', (done) => {
+    it('should return an array of search results', done => {
       try {
         expect(this.searchResults).to.be.an('array');
         done();
@@ -552,7 +540,7 @@ describe('Torrent', function torrentTest() {
     });
 
     describe('search result', () => {
-      it('should have an id', (done) => {
+      it('should have an id', done => {
         try {
           expect(this.fistSearchResult).to.have.property('id');
           expect(this.fistSearchResult.id).to.match(/^\d+$/);
@@ -562,7 +550,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a name', (done) => {
+      it('should have a name', done => {
         try {
           expect(this.fistSearchResult).to.have.property('name');
           expect(this.fistSearchResult.name).to.match(/game.of.thrones/i);
@@ -572,7 +560,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have upload date', (done) => {
+      it('should have upload date', done => {
         try {
           expect(this.fistSearchResult).to.have.property('uploadDate');
           /*
@@ -595,7 +583,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have size', (done) => {
+      it('should have size', done => {
         try {
           expect(this.fistSearchResult).to.have.property('size');
           /*
@@ -611,7 +599,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have seeders and leechers count', (done) => {
+      it('should have seeders and leechers count', done => {
         try {
           expect(this.fistSearchResult).to.have.property('seeders');
           expect(this.fistSearchResult).to.have.property('leechers');
@@ -623,7 +611,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a link', (done) => {
+      it('should have a link', done => {
         try {
           expect(this.fistSearchResult).to.have.property('link');
           expect(this.fistSearchResult.link).to.match(
@@ -635,7 +623,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a magnet link', (done) => {
+      it('should have a magnet link', done => {
         try {
           expect(this.fistSearchResult).to.have.property('magnetLink');
           console.log(this.fistSearchResult.magnetLink);
@@ -646,7 +634,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a category', (done) => {
+      it('should have a category', done => {
         try {
           expect(this.fistSearchResult).to.have.property('category');
           expect(this.fistSearchResult.category.id).to.match(/[1-6]00/);
@@ -657,7 +645,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a subcategory', (done) => {
+      it('should have a subcategory', done => {
         try {
           expect(this.fistSearchResult).to.have.property('subcategory');
           expect(this.fistSearchResult.subcategory.id).to.match(/[1-6][09][1-9]/);
@@ -668,7 +656,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have an uploader and uploader link', (done) => {
+      it('should have an uploader and uploader link', done => {
         try {
           expect(this.fistSearchResult).to.have.property('uploader');
           expect(this.fistSearchResult).to.have.property('uploaderLink');
@@ -689,7 +677,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(Torrent.topTorrents('205')).to.be.a('promise');
         done();
@@ -712,7 +700,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return an array of top torrents of the selected category', (done) => {
+    it('should return an array of top torrents of the selected category', done => {
       try {
         expect(this.topTorrents).to.be.an('array');
         done();
@@ -722,7 +710,7 @@ describe('Torrent', function torrentTest() {
     });
 
     describe('search result', () => {
-      it('category and subcategory shoud match specified category', (done) => {
+      it('category and subcategory shoud match specified category', done => {
         try {
           expect(this.topTorrents[0].category.name).to.be.equal('Video');
           expect(this.topTorrents[0].subcategory.name).to.be.equal('TV shows');
@@ -743,7 +731,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(Torrent.recentTorrents()).to.be.a('promise');
         done();
@@ -752,7 +740,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return an array of the most recent torrents', (done) => {
+    it('should return an array of the most recent torrents', done => {
       try {
         expect(this.recentTorrents).to.be.an('array');
         done();
@@ -762,7 +750,7 @@ describe('Torrent', function torrentTest() {
     });
 
     describe('recent torrent', () => {
-      it('should be uploaded recently', (done) => {
+      it('should be uploaded recently', done => {
         try {
           const [recentTorrent] = this.recentTorrents;
           expect(recentTorrent.uploadDate).to.exist;
@@ -784,7 +772,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return promise', (done) => {
+    it('should return promise', done => {
       try {
         expect(parsePage(`${baseUrl}/recent`, parseCategories)).to.be.a('promise');
         done();
@@ -793,7 +781,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return an array of categories', (done) => {
+    it('should return an array of categories', done => {
       try {
         expect(this.categories).to.be.an('array');
         done();
@@ -803,7 +791,7 @@ describe('Torrent', function torrentTest() {
     });
 
     describe('category', () => {
-      it('should have an id', (done) => {
+      it('should have an id', done => {
         try {
           expect(this.categories[0]).to.have.property('id');
           expect(this.categories[0].id).to.match(/\d00/);
@@ -813,7 +801,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a name', (done) => {
+      it('should have a name', done => {
         try {
           expect(this.categories[0]).to.have.property('name');
           expect(this.categories[0].name).to.be.a('string');
@@ -823,7 +811,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('name should match id', (done) => {
+      it('name should match id', done => {
         try {
           const video = this.categories.find((elem) => elem.name === 'Video');
           expect(video.id).to.equal('200');
@@ -833,7 +821,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('shold have subcategories array', (done) => {
+      it('shold have subcategories array', done => {
         try {
           expect(this.categories[0]).to.have.property('subcategories');
           expect(this.categories[0].subcategories).to.be.an('array');
@@ -844,7 +832,7 @@ describe('Torrent', function torrentTest() {
       });
 
       describe('subcategory', () => {
-        it('should have an id', (done) => {
+        it('should have an id', done => {
           try {
             expect(this.subcategory).to.have.property('id');
             expect(this.subcategory.id).to.match(/\d{3}/);
@@ -854,7 +842,7 @@ describe('Torrent', function torrentTest() {
           }
         });
 
-        it('should have a name', (done) => {
+        it('should have a name', done => {
           try {
             expect(this.subcategory).to.have.property('name');
             expect(this.subcategory.name).to.be.a('string');
@@ -879,7 +867,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(Torrent.userTorrents('YIFY')).to.be.a('promise');
         done();
@@ -888,7 +876,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return an array of the user torrents', (done) => {
+    it('should return an array of the user torrents', done => {
       try {
         expect(this.userTorrents).to.be.an('array');
         done();
@@ -898,7 +886,7 @@ describe('Torrent', function torrentTest() {
     });
 
     describe('user torrent', () => {
-      it('should have a name', (done) => {
+      it('should have a name', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('name');
           done();
@@ -907,7 +895,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have upload date', (done) => {
+      it('should have upload date', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('uploadDate');
           /*
@@ -929,7 +917,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have size', (done) => {
+      it('should have size', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('size');
           /*
@@ -945,7 +933,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have seeders and leechers count', (done) => {
+      it('should have seeders and leechers count', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('seeders');
           expect(this.userTorrents[0]).to.have.property('leechers');
@@ -957,7 +945,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a link', (done) => {
+      it('should have a link', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('link');
           expect(this.userTorrents[0].link).to.match(new RegExp(`${baseUrl}/torrent/\\d+/\.+`));
@@ -967,7 +955,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a magnet link', (done) => {
+      it('should have a magnet link', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('magnetLink');
           expect(this.userTorrents[0].magnetLink).to.match(/magnet:\?xt=.+/);
@@ -977,7 +965,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a category', (done) => {
+      it('should have a category', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('category');
           expect(this.userTorrents[0].category.id).to.match(/[1-6]00/);
@@ -988,7 +976,7 @@ describe('Torrent', function torrentTest() {
         }
       });
 
-      it('should have a subcategory', (done) => {
+      it('should have a subcategory', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('subcategory');
           expect(this.userTorrents[0].subcategory.id).to.match(/[1-6][09][1-9]/);
@@ -1013,7 +1001,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(Torrent.tvShows()).to.be.a('promise');
         done();
@@ -1035,7 +1023,7 @@ describe('Torrent', function torrentTest() {
       }
     });
 
-    it('should return a promise', (done) => {
+    it('should return a promise', done => {
       try {
         expect(Torrent.getTvShow('2')).to.be.a('promise');
         done();
@@ -1044,7 +1032,7 @@ describe('Torrent', function torrentTest() {
       }
     });
     describe('Helper Methods', () => {
-      it('getProxyList should return an array of links', async (done) => {
+      it('getProxyList should return an array of links', async done => {
         try {
           const list = await getProxyList();
           expect(list).to.be.an('array');

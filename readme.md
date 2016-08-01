@@ -66,7 +66,7 @@ PirateBay.search('Game of Thrones', {
                       // You can also use the category number:
                       // `/search/0/99/{category_number}`
   filter: {
-    verified: true    // default - true | Filter all VIP or trusted torrents
+    verified: false    // default - false | Filter all VIP or trusted torrents
   },
   page: 0,            // default - 0 - 99
   orderBy: 'leeches', // default - name, date, size, seeds, leeches
