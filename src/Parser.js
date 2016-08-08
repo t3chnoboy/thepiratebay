@@ -3,10 +3,9 @@
 /**
  * Parse all pages
  */
+import UrlParse from 'url-parse';
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
-import { baseUrl } from './Torrent';
-import UrlParse from 'url-parse';
 
 
 const maxConcurrentRequests = 3;
@@ -44,34 +43,30 @@ export async function getProxyList() {
   return links;
 }
 
-export function parsePage(url, parseCallback, filter = {}) {
-  const attempt = async error => {
-    if (error) console.log(error);
-
-    const proxyUrls = [
+export function parsePage(url, parseCallback, filter = {}, opts = {}) {
+  const proxyUrls = opts.endpoint
+    ? [opts.endpoint]
+    : [
       'https://thepiratebay.org',
       'https://thepiratebay.se',
       'https://pirateproxy.one',
       'https://ahoy.one'
     ];
 
-    const requests = proxyUrls
-      .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
-      .map(_url => fetch(_url, { mode: 'no-cors' }));
+  const requests = proxyUrls
+    .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
+    .map(_url => fetch(_url, { mode: 'no-cors' }));
 
-    return Promise.race(requests).then(response => response.text());
-  };
-
-  return attempt()
-    .then(response => (
-      response.includes('Database maintenance')
-        ? (attempt('Failed because of db error, retrying'))
-        : response
-    ))
-    .then(response => parseCallback(response, filter));
+  return Promise
+    .race(requests)
+    .then(async response => ({
+      text: await response.text(),
+      _url: `https://${new UrlParse(await response.url).hostname}`
+    }))
+    .then(({ text, _url }) => parseCallback(text, filter, _url));
 }
 
-export function parseResults(resultsHTML, filter = {}) {
+export function parseResults(resultsHTML, filter = {}, baseUrl) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
@@ -103,8 +98,19 @@ export function parseResults(resultsHTML, filter = {}) {
     };
 
     return {
-      id, name, size, link, category, seeders, leechers, uploadDate, magnetLink,
-      subcategory, uploader, verified, uploaderLink
+      id,
+      name,
+      size,
+      link,
+      category,
+      seeders,
+      leechers,
+      uploadDate,
+      magnetLink,
+      subcategory,
+      uploader,
+      verified,
+      uploaderLink
     };
   });
 
@@ -117,28 +123,33 @@ export function parseResults(resultsHTML, filter = {}) {
   return parsedResultsArray;
 }
 
-export function parseTvShow(tvShowPage) {
+export function parseTvShow(tvShowPage, filter, baseUrl) {
   const $ = cheerio.load(tvShowPage);
 
-  const seasons = $('dt a').map(() => $(this).text()).get();
+  const seasons = $('dt a').map(function mapTvShow() {
+    return $(this).text();
+  })
+  .get();
 
   const rawLinks = $('dd');
 
-  const torrents = rawLinks.map(element =>
-    $(this).find('a').map(() => ({
-      title: element.text(),
-      link: baseUrl + element.attr('href'),
-      id: element.attr('href').match(/\/torrent\/(\d+)/)[1]
-    }))
-    .get()
-  );
+  const torrents = rawLinks.map(function mapTvShowTorrents() {
+    return $(this).find('a').map(function mapTorrents() {
+      return {
+        title: $(this).text(),
+        link: baseUrl + $(this).attr('href'),
+        id: $(this).attr('href').match(/\/torrent\/(\d+)/)[1]
+      };
+    })
+    .get();
+  });
 
   return seasons.map(
     (season, index) => ({ title: season, torrents: torrents[index] })
   );
 }
 
-export function parseTorrentPage(torrentPage) {
+export function parseTorrentPage(torrentPage, filter, baseUrl) {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 
@@ -154,8 +165,17 @@ export function parseTorrentPage(torrentPage) {
   const description = $('div.nfo').text().trim();
 
   return {
-    name, size, seeders, leechers, uploadDate, magnetLink, link,
-    id, description, uploader, uploaderLink
+    name,
+    size,
+    seeders,
+    leechers,
+    uploadDate,
+    magnetLink,
+    link,
+    id,
+    description,
+    uploader,
+    uploaderLink
   };
 }
 
@@ -163,18 +183,19 @@ export function parseTvShows(tvShowsPage) {
   const $ = cheerio.load(tvShowsPage);
   const rawTitles = $('dt a');
 
-  const series = rawTitles.map(
-    (element) => ({
-      title: element.text(),
-      id: element.attr('href').match(/\/tv\/(\d+)/)[1]
-    }))
-    .get();
+  const series = rawTitles.map(function mapTvShow() {
+    return {
+      title: $(this).text(),
+      id: $(this).attr('href').match(/\/tv\/(\d+)/)[1]
+    };
+  })
+  .get();
 
   const rawSeasons = $('dd');
 
-  const seasons = rawSeasons.map(
-    element => element.find('a').text().match(/S\d+/g)
-  );
+  const seasons = rawSeasons.map(function mapSeasons() {
+    return $(this).find('a').text().match(/S\d+/g);
+  });
 
   return series.map(
     (s, index) => ({ title: s.title, id: s.id, seasons: seasons[index] })

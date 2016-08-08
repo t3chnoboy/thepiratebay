@@ -65,6 +65,7 @@ PirateBay.search('Game of Thrones', {
                       //
                       // You can also use the category number:
                       // `/search/0/99/{category_number}`
+  endpoint: 'pb.com', // A custom endpoint that will override the default endpoints
   filter: {
     verified: false    // default - false | Filter all VIP or trusted torrents
   },

@@ -3,18 +3,27 @@
   "extends": "airbnb",
   "env": {
     "mocha": true,
-    "node": true
+    "node": true,
+    "es6": true
   },
   "rules": {
+    "comma-dangle": ["error", "never"],
+    "consistent-return": 2,
+    "generator-star-spacing": [0], # HACK: https://github.com/airbnb/javascript/issues/948
+    "import/no-extraneous-dependencies": ["off"],
+    "import/no-unresolved": [2, { "ignore": ["electron"] }],
+    "jsx-filename-extension": 0,
+    "new-cap": 0,
+    "no-mixed-operators": 0,
+    "no-use-before-define": 0,
+    "no-nested-ternary": 0,
     "no-underscore-dangle": 0,
-    comma-dangle: ["error", "never"],
-    "consistent-return": 0,
-    "immutable/no-let": 1,
-    "immutable/no-this": 0,
-    "immutable/no-mutation": 0
+    "no-console": 0,
+    "no-var": "error"
   },
   "plugins": [
-    "immutable"
+    "immutable",
+    "import"
   ],
   "settings": {
     "webpack": {
