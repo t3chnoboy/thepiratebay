@@ -65,11 +65,30 @@ describe('Torrent', function torrentTest() {
   // Temporarily allow retrying of tests until api outage solution is found
   this.retries(3);
 
+  describe('custom endpoint', () => {
+    it('should route to custom endpoint', async done => {
+      try {
+        const results = await Torrent.search('Game of Thrones', {
+          category: '205',
+          endpoint: 'https://thepiratebay.lu'
+        });
+
+        for (const result of results) {
+          expect(result.uploaderLink).to.contain('https://thepiratebay.lu');
+        }
+        done();
+      } catch (err) {
+        done(err);
+      }
+    });
+  });
+
   describe('order object to number converter', () => {
     it('should convert orderBy and sortBy', done => {
       try {
         const searchNumber = convertOrderByObject({
-          orderBy: 'name', sortBy: 'asc'
+          orderBy: 'name',
+          sortBy: 'asc'
         });
         expect(searchNumber).to.equal(2);
         done();
@@ -81,7 +100,8 @@ describe('Torrent', function torrentTest() {
     it('should convert orderBy and sortBy', done => {
       try {
         const searchNumber = convertOrderByObject({
-          orderBy: 'leeches', sortBy: 'desc'
+          orderBy: 'leeches',
+          sortBy: 'desc'
         });
         expect(searchNumber).to.equal(9);
         done();
@@ -1002,6 +1022,7 @@ describe('Torrent', function torrentTest() {
   /**
    * TV shows
    */
+  /*
   describe('Torrent.tvShows()', function testTvShows() {
     before(async done => {
       try {
@@ -1021,17 +1042,16 @@ describe('Torrent', function torrentTest() {
       }
     });
   });
+  */
 
   /**
    * Get TV show
    */
 
-  /*
   describe('Torrent.getTvShow(id)', function testGetTvShow() {
     before(async done => {
       try {
         this.tvShow = await Torrent.getTvShow('2');
-        console.log(this.tvShow);
         done();
       } catch (err) {
         done(err);
@@ -1047,7 +1067,6 @@ describe('Torrent', function torrentTest() {
       }
     });
   });
-  */
 
   describe('Helper Methods', () => {
     it('getProxyList should return an array of links', async done => {

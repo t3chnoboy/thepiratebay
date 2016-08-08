@@ -212,7 +212,6 @@ function tvShows(opts) {
  */
 function getTvShow(id, opts) {
   const { baseUrl } = _handleOpts(opts);
-  console.log(`${baseUrl}/tv/${id}`);
   return parsePage(`${baseUrl}/tv/${id}`, parseTvShow, opts);
 }
 
