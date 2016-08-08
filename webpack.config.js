@@ -26,7 +26,7 @@ export default {
     umdNamedDefine: 'thepiratebay'
   },
   resolve: {
-    extensions: ['', '.js', '.jsx'],
+    extensions: ['', '.js'],
     packageMains: ['webpack', 'browser', 'web', 'browserify', ['jam', 'main'], 'main']
   },
   target: 'web',
