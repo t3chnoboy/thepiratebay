@@ -19,7 +19,7 @@ npm install thepiratebay --save
 
 ## Usage
 
-```javascript
+```js
 // ES6 module import
 import PirateBay from 'thepiratebay'
 /// CommonJS import
@@ -29,7 +29,7 @@ All methods are asynchronous!
 You can use promises, ES6 generators, or async/await
 
 Using promises:
-```javascript
+```js
 PirateBay.search('Game of Thrones', {
 	category: 205
 })
@@ -42,7 +42,7 @@ PirateBay.search('Game of Thrones', {
 ```
 
 Using ES7 async/await (requires babel)
-```javascript
+```js
 async search() {
   const searchResults = await PirateBay.search('harry potter', {
     category: 'video',
@@ -57,7 +57,7 @@ async search() {
 ## Methods
 
 ### search
-```javascript
+```js
 // Takes a search query and options
 PirateBay.search('Game of Thrones', {
   category: 'all',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
@@ -93,7 +93,7 @@ PirateBay.search('Game of Thrones', {
 ```
 
 ### getTorrent
-```javascript
+```js
 // takes an id or a link
 PirateBay
   .getTorrent('10676856')
@@ -122,7 +122,7 @@ output:
 ```
 
 ### topTorrents
-```javascript
+```js
 // returns top 100 torrents
 PirateBay.topTorrents()
 
@@ -131,13 +131,13 @@ PirateBay.topTorrents(400)
 ```
 
 ### recentTorrents
-```javascript
+```js
 // returns the most recent torrents
 PirateBay.recentTorrents()
 ```
 
 ### userTorrents
-```javascript
+```js
 // Gets a specific user's torrents
 PirateBay.userTorrents('YIFY', {
   page: 3,
@@ -147,7 +147,7 @@ PirateBay.userTorrents('YIFY', {
 ```
 
 ### getCategories
-```javascript
+```js
 // Gets all available categories on piratebay
 PirateBay.getCategories()
 
