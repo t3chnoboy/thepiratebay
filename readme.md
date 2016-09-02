@@ -31,13 +31,13 @@ You can use promises, ES6 generators, or async/await
 Using promises:
 ```javascript
 PirateBay.search('Game of Thrones', {
-	category: 205
+  category: 205
 })
-.then(function(results) {
-	console.log(results)
+.then(results => {
+  console.log(results)
 })
-.catch(function(err) {
-	console.log(err)
+.catch(err => {
+  console.log(err)
 })
 ```
 
@@ -96,10 +96,10 @@ PirateBay.search('Game of Thrones', {
 // takes an id or a link
 PirateBay
   .getTorrent('10676856')
-  .then(function(results) {
+  .then(results => {
     console.log(results)
   })
-  .catch(function(error) {
+  .catch(error => {
     console.log(error)
   })
 
