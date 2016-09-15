@@ -170,3 +170,6 @@ PirateBay.getCategories()
 ]
 */
 ```
+
+## Used by:
+* [popcorn-time-desktop](https://github.com/amilajack/popcorn-time-desktop)
