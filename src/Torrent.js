@@ -1,12 +1,11 @@
+import querystring from 'querystring';
 import {
   parsePage,
   parseResults,
   parseTorrentPage,
   parseTvShow,
-  parseTvShows,
   parseCategories
 } from './Parser';
-import querystring from 'querystring';
 
 export const baseUrl = 'https://thepiratebay.se';
 
@@ -128,7 +127,7 @@ function resolveCategory(categoryParam) {
   return categoryParam;
 }
 
-export function search(title = '*', opts = {}) {
+function search(title = '*', opts = {}) {
   const convertedCategory = resolveCategory(opts.category);
 
   const castedOptions = {
@@ -158,15 +157,15 @@ export function search(title = '*', opts = {}) {
   return parsePage(url, parseResults, rest.filter);
 }
 
-export function getTorrent(id) {
-  const url = (typeof id === Number) || /^\d+$/.test(id)
+function getTorrent(id) {
+  const url = (typeof id === 'number') || /^\d+$/.test(id)
     ? `${baseUrl}/torrent/${id}`
     : id.link || id;
 
   return parsePage(url, parseTorrentPage);
 }
 
-export function topTorrents(category = 'all') {
+function topTorrents(category = 'all') {
   let castedCategory;
 
   // Check if category is number and can be casted
@@ -177,11 +176,11 @@ export function topTorrents(category = 'all') {
   return parsePage(`${baseUrl}/top/${castedCategory || category}`, parseResults);
 }
 
-export function recentTorrents() {
+function recentTorrents() {
   return parsePage(`${baseUrl}/recent`, parseResults);
 }
 
-export function userTorrents(username, opts = {}) {
+function userTorrents(username, opts = {}) {
   // This is the orderingNumber (1 - 10), not a orderBy param, like 'seeds', etc
   let { orderby } = opts;
 
@@ -203,23 +202,32 @@ export function userTorrents(username, opts = {}) {
 
 /**
  * @todo: url not longer returning results
+ * @broken
  */
-export function tvShows() {
-  return parsePage(`${baseUrl}'/tv/all`, parseTvShows);
-}
+// function tvShows() {
+//   return parsePage(`${baseUrl}'/tv/all`, parseTvShows);
+// }
 
 /**
  * @todo: url not longer returning results
  */
-export function getTvShow(id) {
+function getTvShow(id) {
   return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
 }
 
-export function getCategories() {
+function getCategories() {
   return parsePage(`${baseUrl}/recent`, parseCategories);
 }
 
 export default {
-  search, getTorrent, topTorrents, recentTorrents, userTorrents, tvShows,
-  getTvShow, getCategories, baseUrl, searchDefaults, defaultOrder
+  search,
+  getTorrent,
+  topTorrents,
+  recentTorrents,
+  userTorrents,
+  getTvShow,
+  getCategories,
+  baseUrl,
+  searchDefaults,
+  defaultOrder
 };
