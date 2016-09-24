@@ -5,8 +5,8 @@
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
-import { baseUrl } from './Torrent';
 import UrlParse from 'url-parse';
+import { baseUrl } from './Torrent';
 
 
 const maxConcurrentRequests = 3;
@@ -103,8 +103,19 @@ export function parseResults(resultsHTML, filter = {}) {
     };
 
     return {
-      id, name, size, link, category, seeders, leechers, uploadDate, magnetLink,
-      subcategory, uploader, verified, uploaderLink
+      id,
+      name,
+      size,
+      link,
+      category,
+      seeders,
+      leechers,
+      uploadDate,
+      magnetLink,
+      subcategory,
+      uploader,
+      verified,
+      uploaderLink
     };
   });
 
@@ -154,8 +165,17 @@ export function parseTorrentPage(torrentPage) {
   const description = $('div.nfo').text().trim();
 
   return {
-    name, size, seeders, leechers, uploadDate, magnetLink, link,
-    id, description, uploader, uploaderLink
+    name,
+    size,
+    seeders,
+    leechers,
+    uploadDate,
+    magnetLink,
+    link,
+    id,
+    description,
+    uploader,
+    uploaderLink
   };
 }
 

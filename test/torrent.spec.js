@@ -19,13 +19,13 @@ async function torrentFactory() {
   return torrent;
 }
 
-async function torrentSearchFactory() {
+function torrentSearchFactory() {
   return Torrent.search('Game of Thrones', {
     category: '205'
   });
 }
 
-async function torrentCategoryFactory() {
+function torrentCategoryFactory() {
   return Torrent.getCategories();
 }
 
@@ -992,7 +992,7 @@ describe('Torrent', function torrentTest() {
   /**
    * TV shows
    */
-  describe('Torrent.tvShows()', function testTvShows() {
+  describe.skip('Torrent.tvShows()', function testTvShows() {
     before(async () => {
       try {
         this.tvShows = await Torrent.tvShows();
