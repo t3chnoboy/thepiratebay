@@ -1,7 +1,6 @@
 The Pirate Bay node.js client
 =============================
 [![Build Status](https://travis-ci.org/t3chnoboy/thepiratebay.svg?branch=master)](https://travis-ci.org/t3chnoboy/thepiratebay)
-[![Build status](https://ci.appveyor.com/api/projects/status/l4s4n56skbaj6map/branch/master?svg=true)](https://ci.appveyor.com/project/amilajack/thepiratebay/branch/master)
 [![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
 [![Dependency Status](https://img.shields.io/david/t3chnoboy/thepiratebay.svg)](https://david-dm.org/t3chnoboy/thepiratebay)
 [![npm](https://img.shields.io/npm/dm/thepiratebay.svg?maxAge=2592000)]()
@@ -31,13 +30,13 @@ You can use promises, ES6 generators, or async/await
 Using promises:
 ```javascript
 PirateBay.search('Game of Thrones', {
-	category: 205
+  category: 205
 })
-.then(function(results) {
-	console.log(results)
+.then(results => {
+  console.log(results)
 })
-.catch(function(err) {
-	console.log(err)
+.catch(err => {
+  console.log(err)
 })
 ```
 
@@ -96,10 +95,10 @@ PirateBay.search('Game of Thrones', {
 // takes an id or a link
 PirateBay
   .getTorrent('10676856')
-  .then(function(results) {
+  .then(results => {
     console.log(results)
   })
-  .catch(function(error) {
+  .catch(error => {
     console.log(error)
   })
 
@@ -170,3 +169,6 @@ PirateBay.getCategories()
 ]
 */
 ```
+
+## Used by:
+* [popcorn-time-desktop](https://github.com/amilajack/popcorn-time-desktop)
