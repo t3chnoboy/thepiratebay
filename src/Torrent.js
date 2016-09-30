@@ -1,3 +1,6 @@
+/**
+ * @flow
+ */
 import querystring from 'querystring';
 import {
   parsePage,
@@ -56,7 +59,7 @@ export const primaryCategoryNumbers = {
  * @example: { orderBy: 'leeches', sortBy: 'asc' }
  * @example: { orderBy: 'name', sortBy: 'desc' }
  */
-export function convertOrderByObject(orderByObject = defaultOrder) {
+export function convertOrderByObject(orderByObject: Object = defaultOrder) {
   let searchNumber;
 
   const options = [
@@ -127,7 +130,7 @@ function resolveCategory(categoryParam) {
   return categoryParam;
 }
 
-function search(title = '*', opts = {}) {
+function search(title: string = '*', opts: Object = {}) {
   const convertedCategory = resolveCategory(opts.category);
 
   const castedOptions = {
@@ -157,7 +160,7 @@ function search(title = '*', opts = {}) {
   return parsePage(url, parseResults, rest.filter);
 }
 
-function getTorrent(id) {
+function getTorrent(id: string) {
   const url = (typeof id === 'number') || /^\d+$/.test(id)
     ? `${baseUrl}/torrent/${id}`
     : id.link || id;
@@ -165,7 +168,7 @@ function getTorrent(id) {
   return parsePage(url, parseTorrentPage);
 }
 
-function topTorrents(category = 'all') {
+function topTorrents(category: string = 'all') {
   let castedCategory;
 
   // Check if category is number and can be casted
@@ -180,7 +183,7 @@ function recentTorrents() {
   return parsePage(`${baseUrl}/recent`, parseResults);
 }
 
-function userTorrents(username, opts = {}) {
+function userTorrents(username: string, opts: Object = {}) {
   // This is the orderingNumber (1 - 10), not a orderBy param, like 'seeds', etc
   let { orderby } = opts;
 
@@ -211,7 +214,7 @@ function userTorrents(username, opts = {}) {
 /**
  * @todo: url not longer returning results
  */
-function getTvShow(id) {
+function getTvShow(id: string) {
   return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
 }
 

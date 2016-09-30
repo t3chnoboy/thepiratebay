@@ -1,7 +1,6 @@
-/* eslint newline-per-chained-call: 0 */
-
 /**
  * Parse all pages
+ * @flow
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
@@ -44,7 +43,7 @@ export async function getProxyList() {
   return links;
 }
 
-export function parsePage(url, parseCallback, filter = {}) {
+export function parsePage(url: string, parseCallback, filter: Object = {}) {
   const attempt = async error => {
     if (error) console.log(error);
 
@@ -71,7 +70,7 @@ export function parsePage(url, parseCallback, filter = {}) {
     .then(response => parseCallback(response, filter));
 }
 
-export function parseResults(resultsHTML, filter = {}) {
+export function parseResults(resultsHTML: string, filter: Object = {}) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
