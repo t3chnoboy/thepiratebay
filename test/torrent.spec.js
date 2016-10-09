@@ -317,7 +317,7 @@ describe('Torrent', function torrentTest() {
           expect(result).to.have.length.above(10);
           expect(result[0])
             .to.have.deep.property('seeders')
-            .that.is.greaterThan(30);
+            .that.is.greaterThan(20);
         }
         done();
       } catch (err) {

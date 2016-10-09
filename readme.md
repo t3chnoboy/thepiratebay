@@ -16,6 +16,14 @@ Install using npm:
 npm install thepiratebay --save
 ```
 
+
+## Configuration
+### Endpoint
+You can customize your endpoint by setting the environment variable `THEPIRATEBAY_DEFAULT_ENDPOINT`!
+```bash
+THEPIRATEBAY_DEFAULT_ENDPOINT=http://some-endpoint.com node some-script.js
+```
+
 ## Usage
 
 ```javascript
