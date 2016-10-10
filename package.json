@@ -1,6 +1,6 @@
 {
   "name": "thepiratebay",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "The pirate bay client",
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
@@ -17,13 +17,13 @@
     "scraper"
   ],
   "scripts": {
-    "test": "cross-env NODE_ENV=test mocha --bail --timeout 30000 --inline-diffs --async-only --growl --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
-    "test-all": "cross-env NODE_ENV=test npm-check --production && npm run lint && npm run test && npm run build",
     "build": "cross-env NODE_ENV=production babel src --out-dir lib && npm run build-web",
     "build-web": "cross-env NODE_ENV=production node -r babel-register ./node_modules/webpack/bin/webpack --config webpack.config.js --progress --profile --colors --display-error-details",
     "clean": "rm -rf lib",
-    "precommit": "npm run test-all",
     "lint": "cross-env NODE_ENV=test eslint src test",
+    "precommit": "npm run test-all",
+    "spec": "cross-env NODE_ENV=test mocha --bail --timeout 30000 --inline-diffs --async-only --growl --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
+    "test": "cross-env NODE_ENV=test npm-check --production && npm run lint && npm run spec && npm run build",
     "version": "npm run build"
   },
   "devDependencies": {
