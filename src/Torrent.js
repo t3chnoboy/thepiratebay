@@ -127,7 +127,7 @@ function resolveCategory(categoryParam) {
   return categoryParam;
 }
 
-function search(title = '*', opts = {}) {
+export function search(title = '*', opts = {}) {
   const convertedCategory = resolveCategory(opts.category);
 
   const castedOptions = {
@@ -157,7 +157,7 @@ function search(title = '*', opts = {}) {
   return parsePage(url, parseResults, rest.filter);
 }
 
-function getTorrent(id) {
+export function getTorrent(id) {
   const url = (typeof id === 'number') || /^\d+$/.test(id)
     ? `${baseUrl}/torrent/${id}`
     : id.link || id;
@@ -165,7 +165,7 @@ function getTorrent(id) {
   return parsePage(url, parseTorrentPage);
 }
 
-function topTorrents(category = 'all') {
+export function topTorrents(category = 'all') {
   let castedCategory;
 
   // Check if category is number and can be casted
@@ -176,11 +176,11 @@ function topTorrents(category = 'all') {
   return parsePage(`${baseUrl}/top/${castedCategory || category}`, parseResults);
 }
 
-function recentTorrents() {
+export function recentTorrents() {
   return parsePage(`${baseUrl}/recent`, parseResults);
 }
 
-function userTorrents(username, opts = {}) {
+export function userTorrents(username, opts = {}) {
   // This is the orderingNumber (1 - 10), not a orderBy param, like 'seeds', etc
   let { orderby } = opts;
 
@@ -211,11 +211,11 @@ function userTorrents(username, opts = {}) {
 /**
  * @todo: url not longer returning results
  */
-function getTvShow(id) {
+export function getTvShow(id) {
   return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
 }
 
-function getCategories() {
+export function getCategories() {
   return parsePage(`${baseUrl}/recent`, parseCategories);
 }
 
