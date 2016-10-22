@@ -80,12 +80,12 @@ PirateBay.search('Game of Thrones', {
 [
   {
     name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
-    size: '4.17 GiB',
+    size: '4.17 GiB',
     link: 'http://thepiratebay.se/torrent/10013794/Game_of_Thron...'
     category: { id: '200', name: 'Video' },
     seeders: '125',
     leechers: '552',
-    uploadDate: 'Today 00:57',
+    uploadDate: 'Today 00:57',
     magnetLink: 'magnet:?xt=urn:btih:4e6a2304fed5841c04b16d61a0ba...
     subcategory: { id: '202', name: 'Movies DVDR' }
   },
@@ -99,18 +99,14 @@ PirateBay.search('Game of Thrones', {
 // takes an id or a link
 PirateBay
   .getTorrent('10676856')
-  .then(results => {
-    console.log(results)
-  })
-  .catch(error => {
-    console.log(error)
-  })
+  .then(results => console.log(results))
+  .catch(err => console.log(err))
 
 /* Returns a single torrent's description
 {
   name: 'The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY',
   filesCount: 2,
-  size: '2.06 GiB (2209149731 Bytes)',
+  size: '2.06 GiB (2209149731 Bytes)',
   seeders: '14142',
   leechers: '3140',
   uploadDate: '2014-08-02 08:15:25 GMT',
