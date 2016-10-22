@@ -40,12 +40,8 @@ Using promises:
 PirateBay.search('Game of Thrones', {
   category: 205
 })
-.then(results => {
-  console.log(results)
-})
-.catch(err => {
-  console.log(err)
-})
+.then(results => console.log(results))
+.catch(err => console.log(err))
 ```
 
 Using ES7 async/await (requires babel)
@@ -55,7 +51,7 @@ async search() {
     category: 'video',
     page: 3,
     orderBy: 'seeds',
-    sortBy: 'desc',
+    sortBy: 'desc'
   })
   console.log(searchResults)
 }
@@ -80,7 +76,7 @@ PirateBay.search('Game of Thrones', {
   sortBy: 'desc'      // default - desc, asc
 })
 
-/* returns an array of search results:
+/* Returns an array of search results
 [
   {
     name: 'Game of Thrones (2014)(dvd5) Season 4 DVD 1 SAM TBS',
@@ -110,20 +106,19 @@ PirateBay
     console.log(error)
   })
 
-/*
-output:
-  {
-    name: 'The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY',
-    filesCount: 2,
-    size: '2.06 GiB (2209149731 Bytes)',
-    seeders: '14142',
-    leechers: '3140',
-    uploadDate: '2014-08-02 08:15:25 GMT',
-    magnetLink: 'magnet:?xt=urn:btih:025....
-    link: 'http://thepiratebay.se/torrent/10676856/',
-    id: '10676856',
-    description: 'I've always known that Spider-Man...'
-  }
+/* Returns a single torrent's description
+{
+  name: 'The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY',
+  filesCount: 2,
+  size: '2.06 GiB (2209149731 Bytes)',
+  seeders: '14142',
+  leechers: '3140',
+  uploadDate: '2014-08-02 08:15:25 GMT',
+  magnetLink: 'magnet:?xt=urn:btih:025....
+  link: 'http://thepiratebay.se/torrent/10676856/',
+  id: '10676856',
+  description: 'I've always known that Spider-Man...'
+}
 */
 ```
 
@@ -157,7 +152,7 @@ PirateBay.userTorrents('YIFY', {
 // Gets all available categories on piratebay
 PirateBay.getCategories()
 
-/*
+/* Returns an array of categories and subcategories
 [
   { name: 'Video',
     id: '200',
