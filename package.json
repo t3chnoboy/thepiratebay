@@ -62,7 +62,7 @@
     "npm": "2.x || 3.x"
   },
   "devEngines": {
-    "node": "4.x || 6.x || 7.x",
-    "npm": "3.x"
+    "node": ">=4.x",
+    "npm": ">=3.x"
   }
 }
