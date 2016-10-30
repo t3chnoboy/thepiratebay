@@ -317,7 +317,7 @@ describe('Torrent', function torrentTest() {
           expect(result).to.have.length.above(10);
           expect(result[0])
             .to.have.deep.property('seeders')
-            .that.is.greaterThan(30);
+            .that.is.greaterThan(20);
         }
         done();
       } catch (err) {
@@ -615,7 +615,7 @@ describe('Torrent', function torrentTest() {
         try {
           expect(this.fistSearchResult).to.have.property('link');
           expect(this.fistSearchResult.link).to.match(
-            new RegExp(`${baseUrl}/torrent/\\d+/\.+`)
+            new RegExp(`${baseUrl}/torrent/\\d+/+`)
           );
           done();
         } catch (err) {
@@ -948,7 +948,7 @@ describe('Torrent', function torrentTest() {
       it('should have a link', done => {
         try {
           expect(this.userTorrents[0]).to.have.property('link');
-          expect(this.userTorrents[0].link).to.match(new RegExp(`${baseUrl}/torrent/\\d+/\.+`));
+          expect(this.userTorrents[0].link).to.match(new RegExp(`${baseUrl}/torrent/\\d+/+`));
           done();
         } catch (err) {
           done(err);

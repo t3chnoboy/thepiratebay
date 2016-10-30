@@ -118,7 +118,10 @@ export function parseResults(resultsHTML: string, filter: Object = {}) {
     };
   });
 
-  const parsedResultsArray = results.get();
+  const parsedResultsArray =
+    results
+      .get()
+      .filter(result => !result.uploaderLink.includes('undefined'));
 
   if (filter.verified === true) {
     return parsedResultsArray.filter(result => result.verified === true);

@@ -10,7 +10,7 @@ import {
   parseCategories
 } from './Parser';
 
-export const baseUrl = 'https://thepiratebay.se';
+export const baseUrl = process.env.THEPIRATEBAY_DEFAULT_ENDPOINT || 'https://thepiratebay.org';
 
 export const defaultOrder = { orderBy: 'seeds', sortBy: 'desc' };
 
