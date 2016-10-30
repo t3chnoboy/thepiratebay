@@ -349,7 +349,7 @@ describe('Torrent', function torrentTest() {
         const torrents = await Torrent.recentTorrents();
         assertHasArrayOfTorrents(torrents);
         assertHasNecessaryProperties(torrents[0]);
-        expect(torrents).to.have.lengthOf(20);
+        expect(torrents).to.have.length.above(20);
         done();
       } catch (err) {
         done(err);
