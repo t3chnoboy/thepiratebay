@@ -26,6 +26,10 @@
     "spec": "cross-env NODE_ENV=test mocha --timeout 30000 --inline-diffs --async-only --growl --compilers js:babel-register --recursive --require ./test/setup.js test/*.spec.js",
     "test": "cross-env NODE_ENV=test npm-check --production && npm run lint && npm run spec && npm run build"
   },
+  "files": [
+    "index.js",
+    "lib"
+  ],
   "devDependencies": {
     "babel-cli": "^6.18.0",
     "babel-eslint": "^7.1.0",
