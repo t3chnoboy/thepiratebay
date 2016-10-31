@@ -2,7 +2,7 @@
   "parser": "babel-eslint",
   "extends": "airbnb",
   "env": {
-    "mocha": true,
+    "jest": true,
     "node": true
   },
   "rules": {
@@ -19,7 +19,7 @@
     "immutable/no-let": 1,
     "immutable/no-this": 0,
     "immutable/no-mutation": 0,
-    "flowtype-errors/show-errors": 2
+    "flowtype-errors/show-errors": 1
   },
   "plugins": [
     "immutable",
