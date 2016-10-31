@@ -1,7 +1,6 @@
-/* eslint newline-per-chained-call: 0 */
-
 /**
  * Parse all pages
+ * @flow
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
@@ -11,19 +10,19 @@ import { baseUrl } from './Torrent';
 
 const maxConcurrentRequests = 3;
 
-export function _parseTorrentIsVIP(element) {
+export function _parseTorrentIsVIP(element: Object) {
   return (
     element.find('img[title="VIP"]').attr('title') === 'VIP'
   );
 }
 
-export function _parseTorrentIsTrusted(element) {
+export function _parseTorrentIsTrusted(element: Object) {
   return (
     element.find('img[title="Trusted"]').attr('title') === 'Trusted'
   );
 }
 
-export function isTorrentVerified(element) {
+export function isTorrentVerified(element: Object) {
   return _parseTorrentIsVIP(element) || _parseTorrentIsTrusted(element);
 }
 
@@ -44,7 +43,7 @@ export async function getProxyList() {
   return links;
 }
 
-export function parsePage(url, parseCallback, filter = {}) {
+export function parsePage(url: string, parseCallback, filter: Object = {}) {
   const attempt = async error => {
     if (error) console.log(error);
 
@@ -71,7 +70,7 @@ export function parsePage(url, parseCallback, filter = {}) {
     .then(response => parseCallback(response, filter));
 }
 
-export function parseResults(resultsHTML, filter = {}) {
+export function parseResults(resultsHTML: string, filter: Object = {}) {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
@@ -93,12 +92,20 @@ export function parseResults(resultsHTML, filter = {}) {
     const verified = isTorrentVerified($(this));
 
     const category = {
-      id: $(this).find('center a').first().attr('href').match(/\/browse\/(\d+)/)[1],
+      id: $(this)
+            .find('center a')
+            .first()
+            .attr('href')
+            .match(/\/browse\/(\d+)/)[1],
       name: $(this).find('center a').first().text()
     };
 
     const subcategory = {
-      id: $(this).find('center a').last().attr('href').match(/\/browse\/(\d+)/)[1],
+      id: $(this)
+            .find('center a')
+            .last()
+            .attr('href')
+            .match(/\/browse\/(\d+)/)[1],
       name: $(this).find('center a').last().text()
     };
 
@@ -131,7 +138,7 @@ export function parseResults(resultsHTML, filter = {}) {
   return parsedResultsArray;
 }
 
-export function parseTvShow(tvShowPage) {
+export function parseTvShow(tvShowPage: string) {
   const $ = cheerio.load(tvShowPage);
 
   const seasons = $('dt a').map(() => $(this).text()).get();
@@ -152,7 +159,7 @@ export function parseTvShow(tvShowPage) {
   );
 }
 
-export function parseTorrentPage(torrentPage) {
+export function parseTorrentPage(torrentPage: string) {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 

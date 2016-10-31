@@ -253,7 +253,7 @@ describe('Torrent', () => {
       const torrents = await Torrent.recentTorrents();
       assertHasArrayOfTorrents(torrents);
       assertHasNecessaryProperties(torrents[0]);
-      expect(torrents).to.have.lengthOf(30);
+      expect(torrents).to.have.length.above(20);
     });
 
     it('should get users torrents', async () => {
@@ -330,7 +330,6 @@ describe('Torrent', () => {
 
     it('should have a magnet link', () => {
       expect(this.torrent).to.have.property('magnetLink');
-      console.log(this.torrent.magnetLink);
     });
 
     it('should have a description', () => {
@@ -411,7 +410,6 @@ describe('Torrent', () => {
 
       it('should have a magnet link', () => {
         expect(this.fistSearchResult).to.have.property('magnetLink');
-        console.log(this.fistSearchResult.magnetLink);
         expect(this.fistSearchResult.magnetLink).to.match(/magnet:\?xt=.+/);
       });
 

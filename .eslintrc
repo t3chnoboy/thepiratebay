@@ -18,10 +18,12 @@
     "consistent-return": 0,
     "immutable/no-let": 1,
     "immutable/no-this": 0,
-    "immutable/no-mutation": 0
+    "immutable/no-mutation": 0,
+    "flowtype-errors/show-errors": 1
   },
   "plugins": [
-    "immutable"
+    "immutable",
+    "flowtype-errors"
   ],
   "settings": {
     "webpack": {
