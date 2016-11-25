@@ -45,7 +45,7 @@
     "eslint-plugin-flowtype-errors": "1.5.0",
     "eslint-plugin-immutable": "^1.0.0",
     "eslint-plugin-import": "^2.2.0",
-    "eslint-plugin-jsx-a11y": "^3.0.1",
+    "eslint-plugin-jsx-a11y": "^2.0.1",
     "eslint-plugin-react": "^6.7.1",
     "husky": "^0.11.9",
     "jest-cli": "^17.0.3",
