@@ -27,8 +27,6 @@ export function isTorrentVerified(element: Object) {
 }
 
 export async function getProxyList() {
-  console.log('Retriving proxy list...');
-
   const response = await fetch('https://proxybay.tv/')
     .then(res => res.text());
 
