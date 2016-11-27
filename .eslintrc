@@ -13,7 +13,7 @@
     "generator-star-spacing": 0,
     "no-bitwise": 0,
     "no-prototype-builtins": 0,
-    "comma-dangle": ["error", "never"],
+    comma-dangle: ["error", "never"],
     "import/no-extraneous-dependencies": ["off"],
     "consistent-return": 0,
     "immutable/no-let": 1,
