@@ -75,29 +75,15 @@ export function convertOrderByObject(orderByObject: Object = defaultOrder) {
     ['leeches', 'asc']
   ];
 
-  options.some(option => {
-    const hashConfig = (
+  for (const option of options) {
+    if (
       option.includes(orderByObject.orderBy) &&
       option.includes(orderByObject.sortBy)
-    );
-
-    if (hashConfig) {
+    ) {
       searchNumber = options.indexOf(option) + 1;
-      return true;
+      break;
     }
-
-    return false;
-  });
-
-  // for (const option of options) {
-  //   if (
-  //     option.includes(orderByObject.orderBy) &&
-  //     option.includes(orderByObject.sortBy)
-  //   ) {
-  //     searchNumber = options.indexOf(option) + 1;
-  //     break;
-  //   }
-  // }
+  }
 
   if (!searchNumber) throw Error("Can't find option");
 
