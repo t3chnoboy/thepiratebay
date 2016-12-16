@@ -326,8 +326,8 @@ describe('Torrent', () => {
     it('should have seeders and leechers count', () => {
       expect(this.torrent).to.have.property('seeders');
       expect(this.torrent).to.have.property('leechers');
-      expect(~~this.torrent.leechers).to.be.within(-1, 100000);
-      expect(~~this.torrent.seeders).to.be.within(-1, 100000);
+      expect(~~this.torrent.leechers).to.be.above(-1);
+      expect(~~this.torrent.seeders).to.be.above(-1);
     });
 
     it('should have a link', () => {
@@ -403,8 +403,8 @@ describe('Torrent', () => {
       it('should have seeders and leechers count', () => {
         expect(this.fistSearchResult).to.have.property('seeders');
         expect(this.fistSearchResult).to.have.property('leechers');
-        expect((~~this.fistSearchResult.leechers)).to.be.within(-1, 100000);
-        expect((~~this.fistSearchResult.seeders)).to.be.within(-1, 100000);
+        expect((~~this.fistSearchResult.leechers)).to.be.above(-1);
+        expect((~~this.fistSearchResult.seeders)).to.be.above(-1);
       });
 
       it('should have a link', () => {
@@ -588,8 +588,8 @@ describe('Torrent', () => {
       it('should have seeders and leechers count', () => {
         expect(this.userTorrents[0]).to.have.property('seeders');
         expect(this.userTorrents[0]).to.have.property('leechers');
-        expect((~~this.userTorrents[0].leechers)).to.be.within(-1, 100000);
-        expect((~~this.userTorrents[0].seeders)).to.be.within(-1, 100000);
+        expect((~~this.userTorrents[0].leechers)).to.be.above(-1);
+        expect((~~this.userTorrents[0].seeders)).to.be.above(-1);
       });
 
       it('should have a link', () => {
