@@ -6,7 +6,13 @@
  *        function
  */
 
-/* eslint no-unused-expressions: 0, no-undef: 0, no-console: 0, func-names: 0 */
+/* eslint
+  no-unused-expressions: 0,
+  no-undef: 0,
+  no-console: 0,
+  func-names: 0,
+  no-restricted-syntax: 0
+*/
 import { expect } from 'chai';
 import { parseCategories, parsePage, getProxyList } from '../src/Parser';
 import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';

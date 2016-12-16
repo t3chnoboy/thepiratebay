@@ -60,8 +60,6 @@ export const primaryCategoryNumbers = {
  * @example: { orderBy: 'name', sortBy: 'desc' }
  */
 export function convertOrderByObject(orderByObject: Object = defaultOrder) {
-  let searchNumber;
-
   const options = [
     ['name', 'desc'],
     ['name', 'asc'],
@@ -75,29 +73,14 @@ export function convertOrderByObject(orderByObject: Object = defaultOrder) {
     ['leeches', 'asc']
   ];
 
-  options.some(option => {
-    const hashConfig = (
-      option.includes(orderByObject.orderBy) &&
-      option.includes(orderByObject.sortBy)
-    );
+  // Find the query option
+  const option = options.find(
+    _option => _option.includes(orderByObject.orderBy) &&
+              _option.includes(orderByObject.sortBy)
+  );
 
-    if (hashConfig) {
-      searchNumber = options.indexOf(option) + 1;
-      return true;
-    }
-
-    return false;
-  });
-
-  // for (const option of options) {
-  //   if (
-  //     option.includes(orderByObject.orderBy) &&
-  //     option.includes(orderByObject.sortBy)
-  //   ) {
-  //     searchNumber = options.indexOf(option) + 1;
-  //     break;
-  //   }
-  // }
+  // Get the index of the query option
+  const searchNumber = option ? options.indexOf(option) + 1 : undefined;
 
   if (!searchNumber) throw Error("Can't find option");
 
