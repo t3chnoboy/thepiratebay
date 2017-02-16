@@ -74,13 +74,15 @@ export function convertOrderByObject(orderByObject: Object = defaultOrder) {
   ];
 
   // Find the query option
-  const option = options.find(
-    _option => _option.includes(orderByObject.orderBy) &&
-              _option.includes(orderByObject.sortBy)
+  const option = options.find(_option =>
+    _option.includes(orderByObject.orderBy) &&
+    _option.includes(orderByObject.sortBy)
   );
 
   // Get the index of the query option
-  const searchNumber = option ? options.indexOf(option) + 1 : undefined;
+  const searchNumber = option
+    ? options.indexOf(option) + 1
+    : undefined;
 
   if (!searchNumber) throw Error("Can't find option");
 
@@ -93,7 +95,7 @@ export function convertOrderByObject(orderByObject: Object = defaultOrder) {
  * @param  {number} pageNumber
  * @return {string}
  */
-function castNumberToString(pageNumber) {
+function castNumberToString(pageNumber: number | string): string {
   if (typeof pageNumber === 'number') {
     return String(pageNumber);
   }
@@ -108,15 +110,14 @@ function castNumberToString(pageNumber) {
   ) {
     throw new Error('Unexpected page number type');
   }
+
+  throw new Error(`Unable to cast ${pageNumber} to string`);
 }
 
 /**
  * Determine the category number from an category name ('movies', 'audio', etc)
- *
- * @param  {number} || {string}
- * @return {number}
  */
-function resolveCategory(categoryParam) {
+function resolveCategory(categoryParam: number | string): number {
   if (
     typeof categoryParam === 'string' &&
     categoryParam in primaryCategoryNumbers
@@ -124,7 +125,7 @@ function resolveCategory(categoryParam) {
     return primaryCategoryNumbers[categoryParam];
   }
 
-  return categoryParam;
+  throw new Error(`Cannot resolve category: '${categoryParam}'`);
 }
 
 function search(title: string = '*', opts: Object = {}) {
@@ -199,14 +200,6 @@ function userTorrents(username: string, opts: Object = {}) {
 
   return parsePage(query, parseResults);
 }
-
-/**
- * @todo: url not longer returning results
- * @broken
- */
-// function tvShows() {
-//   return parsePage(`${baseUrl}'/tv/all`, parseTvShows);
-// }
 
 /**
  * @todo: url not longer returning results

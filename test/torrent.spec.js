@@ -1,7 +1,7 @@
 /**
  * Test all high level methods
  *
- * @todo: reduced the number of api calls by querying once and running multiple
+ * @todo: Reduced the number of api calls by querying once and running multiple
  *        tests against that query. ideally, this would be done in a 'before'
  *        function
  */

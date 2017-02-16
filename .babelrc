@@ -2,8 +2,8 @@
   "presets": ["es2015", "stage-0"],
   "plugins": [
     "transform-flow-strip-types",
-		"transform-runtime",
+    "transform-runtime",
     "add-module-exports",
     "transform-es2015-modules-umd"
-	]
+  ]
 }

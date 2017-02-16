@@ -10,6 +10,22 @@ import { baseUrl } from './Torrent';
 
 const maxConcurrentRequests = 3;
 
+type resultType = {
+  id: string,
+  name: string,
+  size: string,
+  link: string,
+  category: string,
+  seeders: string,
+  leechers: string,
+  uploadDate: string,
+  magnetLink: string,
+  subcategory: string,
+  uploader: string,
+  verified: string,
+  uploaderLink: string
+};
+
 export function _parseTorrentIsVIP(element: Object) {
   return (
     element.find('img[title="VIP"]').attr('title') === 'VIP'
@@ -27,9 +43,7 @@ export function isTorrentVerified(element: Object) {
 }
 
 export async function getProxyList() {
-  const response = await fetch('https://proxybay.tv/')
-    .then(res => res.text());
-
+  const response = await fetch('https://proxybay.tv/').then(res => res.text());
   const $ = cheerio.load(response);
 
   const links = $('[rel="nofollow"]').map(function getElementLinks() {
@@ -41,7 +55,7 @@ export async function getProxyList() {
   return links;
 }
 
-export function parsePage(url: string, parseCallback, filter: Object = {}) {
+export function parsePage(url: string, parseCallback, filter: Object = {}): resultType {
   const attempt = async error => {
     if (error) console.log(error);
 
@@ -68,16 +82,14 @@ export function parsePage(url: string, parseCallback, filter: Object = {}) {
     .then(response => parseCallback(response, filter));
 }
 
-export function parseResults(resultsHTML: string, filter: Object = {}) {
+export function parseResults(resultsHTML: string, filter: Object = {}): resultType {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
   const results = rawResults.map(function getRawResults() {
     const name = $(this).find('a.detLink').text();
-    const uploadDate = $(this).find('font').text()
-      .match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
-    const size = $(this).find('font').text()
-      .match(/Size (.+?),/)[1];
+    const uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
+    const size = $(this).find('font').text().match(/Size (.+?),/)[1];
 
     const seeders = $(this).find('td[align="right"]').first().text();
     const leechers = $(this).find('td[align="right"]').next().text();
@@ -136,11 +148,9 @@ export function parseResults(resultsHTML: string, filter: Object = {}) {
   return parsedResultsArray;
 }
 
-export function parseTvShow(tvShowPage: string) {
+export function parseTvShow(tvShowPage: string): resultType {
   const $ = cheerio.load(tvShowPage);
-
   const seasons = $('dt a').map(() => $(this).text()).get();
-
   const rawLinks = $('dd');
 
   const torrents = rawLinks.map(element =>
@@ -152,12 +162,13 @@ export function parseTvShow(tvShowPage: string) {
     .get()
   );
 
-  return seasons.map(
-    (season, index) => ({ title: season, torrents: torrents[index] })
-  );
+  return seasons.map((season, index) => ({
+    title: season,
+    torrents: torrents[index]
+  }));
 }
 
-export function parseTorrentPage(torrentPage: string) {
+export function parseTorrentPage(torrentPage: string): resultType {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 
@@ -173,6 +184,7 @@ export function parseTorrentPage(torrentPage: string) {
   const description = $('div.nfo').text().trim();
 
   return {
+    category: '',
     name,
     size,
     seeders,
@@ -187,7 +199,7 @@ export function parseTorrentPage(torrentPage: string) {
   };
 }
 
-export function parseTvShows(tvShowsPage) {
+export function parseTvShows(tvShowsPage: string): resultType {
   const $ = cheerio.load(tvShowsPage);
   const rawTitles = $('dt a');
 
@@ -209,7 +221,7 @@ export function parseTvShows(tvShowsPage) {
   );
 }
 
-export function parseCategories(categoriesHTML) {
+export function parseCategories(categoriesHTML: string): resultType {
   const $ = cheerio.load(categoriesHTML);
   const categoriesContainer = $('select#category optgroup');
   let currentCategoryId = 0;

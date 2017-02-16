@@ -1,5 +1,9 @@
 {
   "rules": {
-    "no-restricted-syntax": 0
+    "no-restricted-syntax": 0,
+    "fp/no-loops": 0,
+    "fp/no-mutation": 0,
+    "no-bitwise": 0,
+    "no-prototype-builtins": 0
   }
 }
