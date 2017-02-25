@@ -47,7 +47,7 @@ PirateBay.search('Game of Thrones', {
 
 Using ES7 async/await (requires babel)
 ```javascript
-async search() {
+async function search() {
   const searchResults = await PirateBay.search('harry potter', {
     category: 'video',
     page: 3,
