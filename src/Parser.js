@@ -1,12 +1,13 @@
 /**
  * Parse all pages
- * @flow
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
 import UrlParse from 'url-parse';
 import { baseUrl } from './Torrent';
 
+
+/* eslint promise/no-promise-in-callback: 0, max-len: [2, 200] */
 
 const maxConcurrentRequests = 3;
 
@@ -26,36 +27,39 @@ type resultType = {
   uploaderLink: string
 };
 
-export function _parseTorrentIsVIP(element: Object) {
+export function _parseTorrentIsVIP(element: Object): bool {
   return (
     element.find('img[title="VIP"]').attr('title') === 'VIP'
   );
 }
 
-export function _parseTorrentIsTrusted(element: Object) {
+export function _parseTorrentIsTrusted(element: Object): bool {
   return (
     element.find('img[title="Trusted"]').attr('title') === 'Trusted'
   );
 }
 
-export function isTorrentVerified(element: Object) {
+export function isTorrentVerified(element: Object): bool {
   return _parseTorrentIsVIP(element) || _parseTorrentIsTrusted(element);
 }
 
-export async function getProxyList() {
+export async function getProxyList(): Promise<Array<string>> {
   const response = await fetch('https://proxybay.tv/').then(res => res.text());
   const $ = cheerio.load(response);
 
-  const links = $('[rel="nofollow"]').map(function getElementLinks() {
-    return $(this).attr('href');
-  })
-  .get()
-  .filter((res, index) => (index < maxConcurrentRequests));
+  const links = $('[rel="nofollow"]')
+    .map(function getElementLinks() {
+      return $(this).attr('href');
+    })
+    .get()
+    .filter((res, index) => (index < maxConcurrentRequests));
 
   return links;
 }
 
-export function parsePage(url: string, parseCallback, filter: Object = {}): resultType {
+type parseCallbackType = (resultsHTML: string, filter: Object) => Array<resultType>;
+
+export function parsePage(url: string, parseCallback: parseCallbackType, filter: Object = {}): Promise<resultType> {
   const attempt = async error => {
     if (error) console.log(error);
 
@@ -82,24 +86,24 @@ export function parsePage(url: string, parseCallback, filter: Object = {}): resu
     .then(response => parseCallback(response, filter));
 }
 
-export function parseResults(resultsHTML: string, filter: Object = {}): resultType {
+export function parseResults(resultsHTML: string, filter: Object = {}): Promise<Array<resultType>> {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
   const results = rawResults.map(function getRawResults() {
-    const name = $(this).find('a.detLink').text();
-    const uploadDate = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
-    const size = $(this).find('font').text().match(/Size (.+?),/)[1];
+    const name: string = $(this).find('a.detLink').text();
+    const uploadDate: string = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
+    const size: string = $(this).find('font').text().match(/Size (.+?),/)[1];
 
-    const seeders = $(this).find('td[align="right"]').first().text();
-    const leechers = $(this).find('td[align="right"]').next().text();
-    const relativeLink = $(this).find('div.detName a').attr('href');
-    const link = baseUrl + relativeLink;
-    const id = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10);
-    const magnetLink = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
-    const uploader = $(this).find('font .detDesc').text();
-    const uploaderLink = baseUrl + $(this).find('font a').attr('href');
-    const verified = isTorrentVerified($(this));
+    const seeders: string = $(this).find('td[align="right"]').first().text();
+    const leechers: string = $(this).find('td[align="right"]').next().text();
+    const relativeLink: string = $(this).find('div.detName a').attr('href');
+    const link: string = baseUrl + relativeLink;
+    const id: number = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10);
+    const magnetLink: string = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
+    const uploader: string = $(this).find('font .detDesc').text();
+    const uploaderLink: string = baseUrl + $(this).find('font a').attr('href');
+    const verified: bool = isTorrentVerified($(this));
 
     const category = {
       id: $(this)
@@ -141,14 +145,21 @@ export function parseResults(resultsHTML: string, filter: Object = {}): resultTy
       .get()
       .filter(result => !result.uploaderLink.includes('undefined'));
 
-  if (filter.verified === true) {
-    return parsedResultsArray.filter(result => result.verified === true);
-  }
-
-  return parsedResultsArray;
+  return filter.verified === true
+     ? parsedResultsArray.filter(result => result.verified === true)
+     : parsedResultsArray;
 }
 
-export function parseTvShow(tvShowPage: string): resultType {
+type parseTvShowType = {
+  title: string,
+  torrents: Array<{
+    title: string,
+    link: string,
+    id: string
+  }>
+};
+
+export function parseTvShow(tvShowPage: string): Promise<Array<parseTvShowType>> {
   const $ = cheerio.load(tvShowPage);
   const seasons = $('dt a').map(() => $(this).text()).get();
   const rawLinks = $('dd');
@@ -168,7 +179,7 @@ export function parseTvShow(tvShowPage: string): resultType {
   }));
 }
 
-export function parseTorrentPage(torrentPage: string): resultType {
+export function parseTorrentPage(torrentPage: string): Array<resultType> {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 
@@ -199,7 +210,7 @@ export function parseTorrentPage(torrentPage: string): resultType {
   };
 }
 
-export function parseTvShows(tvShowsPage: string): resultType {
+export function parseTvShows(tvShowsPage: string): Promise<resultType> {
   const $ = cheerio.load(tvShowsPage);
   const rawTitles = $('dt a');
 
@@ -221,7 +232,7 @@ export function parseTvShows(tvShowsPage: string): resultType {
   );
 }
 
-export function parseCategories(categoriesHTML: string): resultType {
+export function parseCategories(categoriesHTML: string): Promise<resultType> {
   const $ = cheerio.load(categoriesHTML);
   const categoriesContainer = $('select#category optgroup');
   let currentCategoryId = 0;

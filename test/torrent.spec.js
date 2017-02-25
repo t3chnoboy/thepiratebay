@@ -1,18 +1,13 @@
 /**
  * Test all high level methods
  *
- * @todo: Reduced the number of api calls by querying once and running multiple
+ * @TODO: Reduced the number of api calls by querying once and running multiple
  *        tests against that query. ideally, this would be done in a 'before'
  *        function
  */
 
-/* eslint
-  no-unused-expressions: 0,
-  no-undef: 0,
-  no-console: 0,
-  func-names: 0,
-  no-restricted-syntax: 0
-*/
+/* eslint no-unused-expressions: 0, func-names: 0 */
+
 import { expect } from 'chai';
 import { parseCategories, parsePage, getProxyList } from '../src/Parser';
 import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';
@@ -20,9 +15,8 @@ import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';
 
 const testingUsername = 'YIFY';
 
-async function torrentFactory() {
-  const torrent = await Torrent.getTorrent(10676856);
-  return torrent;
+function torrentFactory() {
+  return Torrent.getTorrent('10676856');
 }
 
 function torrentSearchFactory() {

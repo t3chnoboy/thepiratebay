@@ -1,6 +1,3 @@
-/**
- * @flow
- */
 import querystring from 'querystring';
 import {
   parsePage,
