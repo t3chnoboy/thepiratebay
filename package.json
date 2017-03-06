@@ -26,7 +26,7 @@
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
     "version": "npm run build",
     "spec": "jest",
-    "test": "cross-env NODE_ENV=test npm run flow && npm run lint && npm run spec && npm run build"
+    "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.23.0",
