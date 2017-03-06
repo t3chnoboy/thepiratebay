@@ -22,22 +22,22 @@ type resultType = {
   leechers: string,
   uploadDate: string,
   magnetLink: string,
-  subcategory: string,
+  subcategory?: string,
   uploader: string,
-  verified: string,
+  verified?: string,
   uploaderLink: string
 };
 
 export function _parseTorrentIsVIP(element: Object): bool {
-  return (
-    element.find('img[title="VIP"]').attr('title') === 'VIP'
-  );
+  return element
+    .find('img[title="VIP"]')
+    .attr('title') === 'VIP';
 }
 
 export function _parseTorrentIsTrusted(element: Object): bool {
-  return (
-    element.find('img[title="Trusted"]').attr('title') === 'Trusted'
-  );
+  return element
+    .find('img[title="Trusted"]')
+    .attr('title') === 'Trusted';
 }
 
 export function isTorrentVerified(element: Object): bool {
@@ -58,9 +58,10 @@ export async function getProxyList(): Promise<Array<string>> {
   return links;
 }
 
-type parseCallbackType = (resultsHTML: string, filter: Object) => Array<resultType>;
+type parseResultType = Array<resultType> | resultType;
+type parseCallbackType = (resultsHTML: string, filter: Object) => parseResultType;
 
-export function parsePage(url: string, parseCallback: parseCallbackType, filter: Object = {}): Promise<resultType> {
+export function parsePage(url: string, parseCallback: parseCallbackType, filter: Object = {}): Promise<parseResultType> {
   const attempt = async error => {
     if (error) console.log(error);
 

@@ -10,7 +10,7 @@ import { parseCategories, parsePage, getProxyList } from '../src/Parser';
 import Torrent, { baseUrl, convertOrderByObject } from '../src/PirateBay';
 
 
-/* eslint no-unused-expressions: 0, func-names: 0 */
+/* eslint no-unused-expressions: 0, import/no-named-as-default-member: 0 */
 
 const testingUsername = 'YIFY';
 

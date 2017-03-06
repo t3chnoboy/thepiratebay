@@ -91,7 +91,7 @@ export function convertOrderByObject(orderByObject: Object = defaultOrder) {
 /**
  * Helper method for parsing page numbers
  */
-function castNumberToString(pageNumber: number | string): string {
+function castNumberToString(pageNumber?: number | string): string {
   if (typeof pageNumber === 'number') {
     return String(pageNumber);
   }
@@ -113,25 +113,28 @@ function castNumberToString(pageNumber: number | string): string {
 /**
  * Determine the category number from an category name ('movies', 'audio', etc)
  */
-function resolveCategory(categoryParam: number | string): number {
-  if (
-    typeof categoryParam === 'string' &&
-    categoryParam in primaryCategoryNumbers
-  ) {
-    return primaryCategoryNumbers[categoryParam];
+function resolveCategory(categoryParam: number | string, defaultCategory: number): number {
+  if (typeof categoryParam === 'number') {
+    return categoryParam;
   }
 
-  throw new Error(`Cannot resolve category: '${categoryParam}'`);
+  if (typeof categoryParam === 'string') {
+    if (categoryParam in primaryCategoryNumbers) {
+      return primaryCategoryNumbers[categoryParam];
+    }
+  }
+
+  return defaultCategory;
 }
 
-function search(title: string = '*', opts: Object = {}) {
-  const convertedCategory = resolveCategory(opts.category);
+export function search(title: string = '*', opts: Object = {}) {
+  const convertedCategory = resolveCategory(opts.category, parseInt(searchDefaults.category, 10));
 
   const castedOptions = {
     ...opts,
     page: opts.page ? castNumberToString(opts.page) : searchDefaults.page,
     category: opts.category ? castNumberToString(convertedCategory) : searchDefaults.category,
-    orderby: opts.orderby ? castNumberToString(opts.orderby) : searchDefaults.orderby
+    orderby: opts.orderby ? castNumberToString(opts.orderby) : searchDefaults.orderBy
   };
 
   const {
@@ -154,15 +157,22 @@ function search(title: string = '*', opts: Object = {}) {
   return parsePage(url, parseResults, rest.filter);
 }
 
-function getTorrent(id: string | Object) {
-  const url = typeof id === 'number' || /^\d+$/.test(id)
-    ? `${baseUrl}/torrent/${id}`
-    : id.link || id;
+export function getTorrent(id: string | { link: string }) {
+  const url = (() => {
+    if (typeof id === 'object') {
+      return id.link;
+    }
+    return typeof id === 'number' || /^\d+$/.test(id)
+      ? `${baseUrl}/torrent/${id}`
+      // If id is an object return it's link property. Otherwise,
+      // return 'id' itself
+      : id;
+  })();
 
   return parsePage(url, parseTorrentPage);
 }
 
-function topTorrents(category: string = 'all') {
+export function topTorrents(category: string = 'all') {
   let castedCategory;
 
   // Check if category is number and can be casted
@@ -173,11 +183,11 @@ function topTorrents(category: string = 'all') {
   return parsePage(`${baseUrl}/top/${castedCategory || category}`, parseResults);
 }
 
-function recentTorrents() {
+export function recentTorrents() {
   return parsePage(`${baseUrl}/recent`, parseResults);
 }
 
-function userTorrents(username: string, opts: Object = {}) {
+export function userTorrents(username: string, opts: Object = {}) {
   // This is the orderingNumber (1 - 10), not a orderBy param, like 'seeds', etc
   let { orderby } = opts;
 
@@ -200,11 +210,11 @@ function userTorrents(username: string, opts: Object = {}) {
 /**
  * @TODO: url not longer returning results
  */
-function getTvShow(id: string) {
+export function getTvShow(id: string) {
   return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
 }
 
-function getCategories() {
+export function getCategories() {
   return parsePage(`${baseUrl}/recent`, parseCategories);
 }
 
@@ -215,8 +225,5 @@ export default {
   recentTorrents,
   userTorrents,
   getTvShow,
-  getCategories,
-  baseUrl,
-  searchDefaults,
-  defaultOrder
+  getCategories
 };
