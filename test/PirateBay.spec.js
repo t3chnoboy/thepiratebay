@@ -5,13 +5,12 @@
  *        tests against that query. ideally, this would be done in a 'before'
  *        function
  */
-
-/* eslint no-unused-expressions: 0, func-names: 0 */
-
 import { expect } from 'chai';
 import { parseCategories, parsePage, getProxyList } from '../src/Parser';
-import Torrent, { baseUrl, convertOrderByObject } from '../src/Torrent';
+import Torrent, { baseUrl, convertOrderByObject } from '../src/PirateBay';
 
+
+/* eslint no-unused-expressions: 0, func-names: 0 */
 
 const testingUsername = 'YIFY';
 

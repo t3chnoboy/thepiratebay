@@ -1,10 +1,11 @@
 /**
  * Parse all pages
+ * @flow
  */
 import cheerio from 'cheerio';
 import fetch from 'isomorphic-fetch';
 import UrlParse from 'url-parse';
-import { baseUrl } from './Torrent';
+import { baseUrl } from './PirateBay';
 
 
 /* eslint promise/no-promise-in-callback: 0, max-len: [2, 200] */
@@ -86,7 +87,7 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
     .then(response => parseCallback(response, filter));
 }
 
-export function parseResults(resultsHTML: string, filter: Object = {}): Promise<Array<resultType>> {
+export function parseResults(resultsHTML: string, filter: Object = {}): Array<resultType> {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $('table#searchResult tr:has(a.detLink)');
 
@@ -99,7 +100,7 @@ export function parseResults(resultsHTML: string, filter: Object = {}): Promise<
     const leechers: string = $(this).find('td[align="right"]').next().text();
     const relativeLink: string = $(this).find('div.detName a').attr('href');
     const link: string = baseUrl + relativeLink;
-    const id: number = parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10);
+    const id: string = String(parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10));
     const magnetLink: string = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
     const uploader: string = $(this).find('font .detDesc').text();
     const uploaderLink: string = baseUrl + $(this).find('font a').attr('href');
@@ -179,7 +180,7 @@ export function parseTvShow(tvShowPage: string): Promise<Array<parseTvShowType>>
   }));
 }
 
-export function parseTorrentPage(torrentPage: string): Array<resultType> {
+export function parseTorrentPage(torrentPage: string): resultType {
   const $ = cheerio.load(torrentPage);
   const name = $('#title').text().trim();
 
@@ -213,32 +214,32 @@ export function parseTorrentPage(torrentPage: string): Array<resultType> {
 export function parseTvShows(tvShowsPage: string): Promise<resultType> {
   const $ = cheerio.load(tvShowsPage);
   const rawTitles = $('dt a');
-
-  const series = rawTitles.map(
-    (element) => ({
-      title: element.text(),
-      id: element.attr('href').match(/\/tv\/(\d+)/)[1]
-    }))
-    .get();
+  const series = rawTitles.map((element) => ({
+    title: element.text(),
+    id: element.attr('href').match(/\/tv\/(\d+)/)[1]
+  }))
+  .get();
 
   const rawSeasons = $('dd');
-
-  const seasons = rawSeasons.map(
-    element => element.find('a').text().match(/S\d+/g)
+  const seasons = rawSeasons.map(element =>
+    element.find('a').text().match(/S\d+/g)
   );
 
-  return series.map(
-    (s, index) => ({ title: s.title, id: s.id, seasons: seasons[index] })
-  );
+  return series.map((s, index) => ({
+    title: s.title,
+    id: s.id,
+    seasons: seasons[index]
+  }));
 }
 
-export function parseCategories(categoriesHTML: string): Promise<resultType> {
+export function parseCategories(categoriesHTML: string): Array<resultType> {
   const $ = cheerio.load(categoriesHTML);
   const categoriesContainer = $('select#category optgroup');
   let currentCategoryId = 0;
 
   const categories = categoriesContainer.map(function getElements() {
     currentCategoryId += 100;
+
     const category = {
       name: $(this).attr('label'),
       id: `${currentCategoryId}`,

@@ -5,7 +5,7 @@
   "homepage": "http://github.com/t3chnoboy/thepiratebay",
   "repository": "git://github.com/t3chnoboy/thepiratebay.git",
   "author": "Dmitry Mazuro <dmitry.mazuro@icloud.com>",
-  "main": "index.js",
+  "main": "./lib/PirateBay.js",
   "license": "MIT",
   "jest": {
     "testEnvironment": "node"

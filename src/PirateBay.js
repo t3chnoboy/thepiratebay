@@ -1,3 +1,4 @@
+// @flow
 import querystring from 'querystring';
 import {
   parsePage,
@@ -6,6 +7,7 @@ import {
   parseTvShow,
   parseCategories
 } from './Parser';
+
 
 export const baseUrl = process.env.THEPIRATEBAY_DEFAULT_ENDPOINT || 'https://thepiratebay.org';
 
@@ -88,9 +90,6 @@ export function convertOrderByObject(orderByObject: Object = defaultOrder) {
 
 /**
  * Helper method for parsing page numbers
- *
- * @param  {number} pageNumber
- * @return {string}
  */
 function castNumberToString(pageNumber: number | string): string {
   if (typeof pageNumber === 'number') {
@@ -155,8 +154,8 @@ function search(title: string = '*', opts: Object = {}) {
   return parsePage(url, parseResults, rest.filter);
 }
 
-function getTorrent(id: string) {
-  const url = (typeof id === 'number') || /^\d+$/.test(id)
+function getTorrent(id: string | Object) {
+  const url = typeof id === 'number' || /^\d+$/.test(id)
     ? `${baseUrl}/torrent/${id}`
     : id.link || id;
 
@@ -199,7 +198,7 @@ function userTorrents(username: string, opts: Object = {}) {
 }
 
 /**
- * @todo: url not longer returning results
+ * @TODO: url not longer returning results
  */
 function getTvShow(id: string) {
   return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
