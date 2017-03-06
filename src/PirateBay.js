@@ -157,7 +157,7 @@ export function search(title: string = '*', opts: Object = {}) {
   return parsePage(url, parseResults, rest.filter);
 }
 
-export function getTorrent(id: string | { link: string }) {
+export function getTorrent(id: string | number | { link: string }) {
   const url = (() => {
     if (typeof id === 'object') {
       return id.link;

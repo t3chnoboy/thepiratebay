@@ -12,7 +12,6 @@ cache: yarn
 notifications:
   email: false
 
-matrix:
-  allow_failures:
-    - node: 6
-    - node: 4
+allow_failures:
+  - node: 6
+  - node: 4
