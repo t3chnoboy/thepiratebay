@@ -62,16 +62,18 @@ function assertHasNecessaryProperties(torrent, additionalProperties = []) {
 
 describe('Torrent', () => {
   describe('order object to number converter', () => {
-    it('should convert orderBy and sortBy', () => {
+    it('should convert orderBy and sortBy with name', () => {
       const searchNumber = convertOrderByObject({
-        orderBy: 'name', sortBy: 'asc'
+        orderBy: 'name',
+        sortBy: 'asc'
       });
       expect(searchNumber).to.equal(2);
     });
 
-    it('should convert orderBy and sortBy', () => {
+    it('should convert orderBy and sortBy with leechers', () => {
       const searchNumber = convertOrderByObject({
-        orderBy: 'leeches', sortBy: 'desc'
+        orderBy: 'leeches',
+        sortBy: 'desc'
       });
       expect(searchNumber).to.equal(9);
     });
