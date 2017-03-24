@@ -74,17 +74,36 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
 
     const requests = proxyUrls
       .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
-      .map(_url => fetch(_url, { mode: 'no-cors' }));
+      .map(_url =>
+        fetch(_url, { mode: 'no-cors' })
+        .then(response => response.text())
+        .then(body => {
+          if (body.includes('Database maintenance') || body.includes('502: Bad gateway')) {
+            return Promise.reject('Database or 502 error');
+          }
+          return Promise.resolve(body);
+        }));
 
-    return Promise.race(requests).then(response => response.text());
+    const abandonFailedResponses = index => {
+      const p = requests.splice(index, 1)[0];
+      p.catch();
+    };
+
+    const race = () => {
+      if (requests.length < 1) {
+        return Promise.reject('None of the proxy requests were successful');
+      }
+      const indexedRequests = requests.map((p, index) => p.catch(() => { throw index; }));
+      return Promise.race(indexedRequests).catch(index => {
+        abandonFailedResponses(index);
+        return race(requests);
+      });
+    };
+    return race(requests);
   };
 
   return attempt()
-    .then(response => (
-      response.includes('Database maintenance')
-        ? (attempt('Failed because of db error, retrying'))
-        : response
-    ))
+    .catch(() => (attempt('Failed, retrying')))
     .then(response => parseCallback(response, filter));
 }
 
