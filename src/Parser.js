@@ -77,12 +77,11 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
       .map(_url =>
         fetch(_url, { mode: 'no-cors' })
         .then(response => response.text())
-        .then(body => {
-          if (body.includes('Database maintenance') || body.includes('502: Bad gateway')) {
-            return Promise.reject('Database or 502 error');
-          }
-          return Promise.resolve(body);
-        }));
+        .then(body => (body.includes('502: Bad gateway') || body.includes('Database maintenance')
+          ? Promise.reject('Database maintenance or 502 error')
+          : Promise.resolve(body)
+        )
+      ));
 
     const abandonFailedResponses = index => {
       const p = requests.splice(index, 1)[0];
@@ -93,7 +92,9 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
       if (requests.length < 1) {
         return Promise.reject('None of the proxy requests were successful');
       }
-      const indexedRequests = requests.map((p, index) => p.catch(() => { throw index; }));
+      const indexedRequests = requests.map((p, index) => p.catch(() => {
+        throw index;
+      }));
       return Promise.race(indexedRequests).catch(index => {
         abandonFailedResponses(index);
         return race(requests);
@@ -103,7 +104,7 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
   };
 
   return attempt()
-    .catch(() => (attempt('Failed, retrying')))
+    .catch(() => attempt('Failed, retrying'))
     .then(response => parseCallback(response, filter));
 }
 
