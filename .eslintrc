@@ -6,7 +6,6 @@
     "fp/no-let": 0,
     "fp/no-throw": 0,
     "import/no-extraneous-dependencies": 0,
-    "no-underscore-dangle": 0,
-    "linebreak-style": 0
+    "no-underscore-dangle": 0
   }
 }
