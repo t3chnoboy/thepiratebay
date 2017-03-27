@@ -118,7 +118,7 @@ describe('Torrent', () => {
       expect(this.search[0].verified).to.be.a('boolean');
     });
 
-    it('should search un-verified', async () => {
+    it.concurrent('should search un-verified', async () => {
       const searchResults = await Torrent.search('Game of Thrones', {
         category: '205',
         filter: {
@@ -166,7 +166,7 @@ describe('Torrent', () => {
       expect(searchResults[5][0].category.name).to.equal('Other');
     });
 
-    it('should handle numerical values', async () => {
+    it.concurrent('should handle numerical values', async () => {
       const searchResults = await Torrent.search('Game of Thrones', {
         page: 1,
         orderBy: 'seeds',
@@ -175,7 +175,7 @@ describe('Torrent', () => {
       assertHasNecessaryProperties(searchResults[0]);
     });
 
-    it('should handle non-numerical values', async () => {
+    it.concurrent('should handle non-numerical values', async () => {
       const searchResults = await Torrent.search('Game of Thrones', {
         category: 'all',
         page: '1',
@@ -185,7 +185,7 @@ describe('Torrent', () => {
       assertHasNecessaryProperties(searchResults[0]);
     });
 
-    it('should search with backwards compatible method', async () => {
+    it.concurrent('should search with backwards compatible method', async () => {
       const searchResults = await Torrent.search('Game of Thrones', {
         orderby: '8' // Search orderby seeds, asc
       });
@@ -199,7 +199,7 @@ describe('Torrent', () => {
       assertHasNecessaryProperties(this.search[0]);
     });
 
-    it('searches by sortBy: desc', async () => {
+    it.concurrent('searches by sortBy: desc', async () => {
       const searchResults = await Torrent.search('Game of Thrones', {
         category: '205',
         orderBy: 'seeds',
@@ -211,7 +211,7 @@ describe('Torrent', () => {
       greaterThanOrEqualTo(searchResults[3].seeders, searchResults[3].seeders);
     });
 
-    it('searches by sortBy: asc', async () => {
+    it.concurrent('searches by sortBy: asc', async () => {
       const searchResults = await Torrent.search('Game of Thrones', {
         category: '205',
         orderBy: 'seeds',
@@ -223,7 +223,7 @@ describe('Torrent', () => {
       lessThanOrEqualToZero(searchResults[3].seeders, searchResults[3].seeders);
     });
 
-    it('should get torrents, strict', async () => {
+    it.concurrent('should get torrents, strict', async () => {
       const searchResults = await Promise.all([
         Torrent.search('Game of Thrones S01E08'),
         Torrent.search('Game of Thrones S02E03'),
@@ -243,21 +243,21 @@ describe('Torrent', () => {
    * Get torrent types
    */
   describe('torrent types', () => {
-    it('should get top torrents', async () => {
+    it.concurrent('should get top torrents', async () => {
       const torrents = await Torrent.topTorrents();
       assertHasArrayOfTorrents(torrents);
       assertHasNecessaryProperties(torrents[0]);
       expect(torrents.length === 100).to.be.true;
     });
 
-    it('should get recent torrents', async () => {
+    it.concurrent('should get recent torrents', async () => {
       const torrents = await Torrent.recentTorrents();
       assertHasArrayOfTorrents(torrents);
       assertHasNecessaryProperties(torrents[0]);
       expect(torrents).to.have.length.above(20);
     });
 
-    it('should get users torrents', async () => {
+    it.concurrent('should get users torrents', async () => {
       const torrents = await Torrent.userTorrents(testingUsername);
       assertHasArrayOfTorrents(torrents);
       assertHasNecessaryProperties(torrents[0]);
@@ -442,7 +442,7 @@ describe('Torrent', () => {
       expect(Torrent.topTorrents('205')).to.be.a('promise');
     });
 
-    it('should handle numeric input', async () => {
+    it.concurrent('should handle numeric input', async () => {
       const topTorrents = await Torrent.topTorrents(205);
       expect(topTorrents).to.be.an('array');
       expect(topTorrents[0].category.name).to.be.equal('Video');
