@@ -61,7 +61,7 @@ export async function getProxyList(): Promise<Array<string>> {
 type parseResultType = Array<resultType> | resultType;
 type parseCallbackType = (resultsHTML: string, filter: Object) => parseResultType;
 
-export function parsePage(url: string, parseCallback: parseCallbackType, filter: Object = {}): Promise<parseResultType> {
+export function parsePage(url: string, parseCallback: parseCallbackType, filter: Object = {}, method: string = 'GET', formData: Object = {}): Promise<parseResultType> {
   const attempt = async error => {
     if (error) console.log(error);
 
@@ -72,10 +72,16 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
       'https://ahoy.one'
     ];
 
+    const options: Object = {
+      mode: 'no-cors',
+      method,
+      body: formData
+    };
+
     const requests = proxyUrls
       .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
       .map(_url =>
-        fetch(_url, { mode: 'no-cors' })
+        fetch(_url, options)
         .then(response => response.text())
         .then(body => (body.includes('502: Bad gateway') || body.includes('Database maintenance')
           ? Promise.reject('Database maintenance or 502 error')
@@ -280,4 +286,20 @@ export function parseCategories(categoriesHTML: string): Array<resultType> {
   });
 
   return categories.get();
+}
+
+export function parseCommentsPage(commentsHTML: string): Array<resultType> {
+  const $ = cheerio.load(commentsHTML);
+
+  const comments = $.root().contents().map(function getRawComments() {
+    const comment = $(this).find('div.comment').text().trim();
+    const user = $(this).find('a').text().trim();
+
+    return {
+      user,
+      comment
+    };
+  });
+
+  return comments.get();
 }

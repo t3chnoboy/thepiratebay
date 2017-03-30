@@ -54,6 +54,7 @@
   "dependencies": {
     "babel-runtime": "^6.23.0",
     "cheerio": "^0.22.0",
+    "form-data": "^2.1.2",
     "isomorphic-fetch": "^2.2.1",
     "url-parse": "^1.1.8"
   },
