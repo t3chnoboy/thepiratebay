@@ -114,9 +114,7 @@ describe('Torrent', () => {
     it('retrieves comments with expected properties', async () => {
       const properties = ['user', 'comment'];
       for (const property of properties) {
-        expect(this.comments[0]).to.have.property(property);
-        expect(this.comments[0][property]).to.exist;
-        expect(this.comments[0][property]).to.not.contain('undefined');
+        expect(this.comments[0]).to.have.property(property).that.is.a('string');
       }
     });
   });

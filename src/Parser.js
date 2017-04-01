@@ -72,7 +72,7 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
       'https://ahoy.one'
     ];
 
-    const options: Object = {
+    const options = {
       mode: 'no-cors',
       method,
       body: formData
@@ -81,11 +81,12 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
     const requests = proxyUrls
       .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
       .map(_url =>
+        // $FlowFixMe
         fetch(_url, options)
-        .then(response => response.text())
-        .then(body => (body.includes('502: Bad gateway') || body.includes('Database maintenance')
-          ? Promise.reject('Database maintenance or 502 error')
-          : Promise.resolve(body)
+          .then(response => response.text())
+          .then(body => (body.includes('502: Bad gateway') || body.includes('Database maintenance')
+            ? Promise.reject('Database maintenance or 502 error')
+            : Promise.resolve(body)
         )
       ));
 
@@ -288,7 +289,12 @@ export function parseCategories(categoriesHTML: string): Array<resultType> {
   return categories.get();
 }
 
-export function parseCommentsPage(commentsHTML: string): Array<resultType> {
+type parseCommentsPageType = {
+  user: string,
+  comment: string
+};
+
+export function parseCommentsPage(commentsHTML: string): Array<parseCommentsPageType> {
   const $ = cheerio.load(commentsHTML);
 
   const comments = $.root().contents().map(function getRawComments() {
