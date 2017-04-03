@@ -1,5 +1,5 @@
 // @flow
-// $FlowFixMe
+// $FlowFixMe - form-data library not supported
 import Formdata from 'form-data';
 import querystring from 'querystring';
 

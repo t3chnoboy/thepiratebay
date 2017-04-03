@@ -81,10 +81,12 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
     const requests = proxyUrls
       .map(_url => (new UrlParse(url)).set('hostname', new UrlParse(_url).hostname).href)
       .map(_url =>
-        // $FlowFixMe
+        // $FlowFixMe - To avoid unnessary object type conversion, https://github.com/facebook/flow/issues/1606
         fetch(_url, options)
           .then(response => response.text())
-          .then(body => (body.includes('502: Bad gateway') || body.includes('Database maintenance')
+          .then(body => (
+            body.includes('502: Bad gateway') ||
+            body.includes('Database maintenance')
             ? Promise.reject('Database maintenance or 502 error')
             : Promise.resolve(body)
         )
