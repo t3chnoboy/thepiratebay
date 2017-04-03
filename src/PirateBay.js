@@ -1,9 +1,13 @@
 // @flow
+// $FlowFixMe - form-data library not supported
+import Formdata from 'form-data';
 import querystring from 'querystring';
+
 import {
   parsePage,
   parseResults,
   parseTorrentPage,
+  parseCommentsPage,
   parseTvShow,
   parseCategories
 } from './Parser';
@@ -172,6 +176,13 @@ export function getTorrent(id: string | number | { link: string }) {
   return parsePage(url, parseTorrentPage);
 }
 
+export function getComments(id: number) {
+  const url = `${baseUrl}/ajax_details_comments.php`;
+  const formData = new Formdata();
+  formData.append('id', id);
+  return parsePage(url, parseCommentsPage, {}, 'POST', formData);
+}
+
 export function topTorrents(category: string = 'all') {
   let castedCategory;
 
@@ -221,6 +232,7 @@ export function getCategories() {
 export default {
   search,
   getTorrent,
+  getComments,
   topTorrents,
   recentTorrents,
   userTorrents,

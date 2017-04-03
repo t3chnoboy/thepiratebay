@@ -24,6 +24,10 @@ function torrentSearchFactory() {
   });
 }
 
+function torrentCommentsFactory() {
+  return Torrent.getComments('10676856');
+}
+
 function torrentCategoryFactory() {
   return Torrent.getCategories();
 }
@@ -94,6 +98,23 @@ describe('Torrent', () => {
         expect(this.categories[0]).to.have.property(property);
         expect(this.categories[0][property]).to.exist;
         expect(this.categories[0][property]).to.not.contain('undefined');
+      }
+    });
+  });
+
+  describe('comments', function () {
+    beforeAll(async () => {
+      this.comments = await torrentCommentsFactory();
+    });
+
+    it('retrieves comments', async () => {
+      expect(this.comments).to.be.an('array');
+    });
+
+    it('retrieves comments with expected properties', async () => {
+      const properties = ['user', 'comment'];
+      for (const property of properties) {
+        expect(this.comments[0]).to.have.property(property).that.is.a('string');
       }
     });
   });
@@ -527,6 +548,32 @@ describe('Torrent', () => {
           expect(this.subcategory).to.have.property('name');
           expect(this.subcategory.name).to.be.a('string');
         });
+      });
+    });
+  });
+
+  describe('Torrent.getComments()', function testGetComments() {
+    beforeAll(async () => {
+      this.comments = await torrentCommentsFactory();
+    });
+
+    it('should return promise', () => {
+      expect(Torrent.getComments('10676856')).to.be.a('promise');
+    });
+
+    it('should return an array of comment', () => {
+      expect(this.comments).to.be.an('array');
+    });
+
+    describe('comment', () => {
+      it('should have a user', () => {
+        expect(this.comments[0]).to.have.property('user');
+        expect(this.comments[0].user).to.be.a('string');
+      });
+
+      it('should have a comment', () => {
+        expect(this.comments[0]).to.have.property('comment');
+        expect(this.comments[0].comment).to.be.a('string');
       });
     });
   });
