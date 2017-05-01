@@ -1,5 +1,5 @@
-// flow-typed signature: 9e3d57d259619cd3fcf8c7c3eced99f5
-// flow-typed version: 60acee2512/chai_v3.5.x/flow_>=v0.24.0
+// flow-typed signature: bad3c03afed474d4fb576a7afe069701
+// flow-typed version: 731a6ee6c3/chai_v3.5.x/flow_>=v0.24.0
 
 declare module "chai" {
 
@@ -56,7 +56,10 @@ declare module "chai" {
         key: (key: string) => ExpectChain<T>,
         keys: (key: string | Array<string>, ...keys: Array<string>) => ExpectChain<T>,
 
-        throw: <E>(err: Class<E> | Error | RegExp | string, msg?: RegExp | string) => ExpectChain<T>,
+        throw: <E>(
+            err: Class<E> | Error | RegExp | string,
+            errMsgMatcher?: RegExp | string,
+            msg?: string) => ExpectChain<T>,
 
         respondTo: (method: string) => ExpectChain<T>,
         itself: ExpectChain<T>,
@@ -93,6 +96,17 @@ declare module "chai" {
         calledWith: (...args: Array<mixed>) => ExpectChain<T>,
         calledWithMatch: (...args: Array<mixed>) => ExpectChain<T>,
         calledWithExactly: (...args: Array<mixed>) => ExpectChain<T>,
+
+        // chai-as-promised
+        eventually: ExpectChain<T>,
+        resolvedWith: (value: mixed) => Promise<mixed> & ExpectChain<T>,
+        resolved: () => Promise<mixed> & ExpectChain<T>,
+        rejectedWith: (value: mixed) => Promise<mixed> & ExpectChain<T>,
+        rejected: () => Promise<mixed> & ExpectChain<T>,
+        notify: (callback: () => mixed) => ExpectChain<T>,
+
+        // chai-subset
+        containSubset: (obj: Object | Object[]) => ExpectChain<T>
     };
 
     declare function expect<T>(actual: T): ExpectChain<T>;
@@ -115,6 +129,7 @@ declare module "chai" {
       static deepEqual(act: mixed, exp: mixed, msg?: string): void;
       static notDeepEqual(act: mixed, exp: mixed, msg?: string): void;
 
+      static ok(val: mixed, msg?: string): void;
       static isTrue(val: mixed, msg?: string): void;
       static isNotTrue(val: mixed, msg?: string): void;
       static isFalse(val: mixed, msg?: string): void;
@@ -160,10 +175,10 @@ declare module "chai" {
       static notInstanceOf(val: mixed, constructor: Function, msg?: string): void;
 
       static include(exp: string, inc: mixed, msg?: string): void;
-      static include(exp: Array<mixed>, inc: mixed, msg?: string): void;
+      static include<T>(exp: Array<T>, inc: T, msg?: string): void;
 
       static notInclude(exp: string, inc: mixed, msg?: string): void;
-      static notInclude(exp: Array<mixed>, inc: mixed, msg?: string): void;
+      static notInclude<T>(exp: Array<T>, inc: T, msg?: string): void;
 
       static match(exp: mixed, re: RegExp, msg?: string): void;
       static notMatch(exp: mixed, re: RegExp, msg?: string): void;
@@ -180,6 +195,17 @@ declare module "chai" {
       static deepPropertyNotVal(obj: Object, prop: string, val: mixed, msg?: string): void;
 
       static lengthOf(exp: mixed, len: number, msg?: string): void;
+
+      static throws<E>(
+          func: () => any,
+          err?: Class<E> | Error | RegExp | string,
+          errorMsgMatcher?: string | RegExp,
+          msg?: string): void;
+      static doesNotThrow<E>(
+          func: () => any,
+          err?: Class<E> | Error | RegExp | string,
+          errorMsgMatcher?: string | RegExp,
+          msg?: string): void;
     }
 
     declare var config: {
