@@ -25,6 +25,7 @@
     "flow-typed": "flow-typed install",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
     "version": "npm run build",
+    "postinstall": "flow-typed install",
     "spec": "jest",
     "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build"
   },
