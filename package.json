@@ -26,7 +26,7 @@
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
     "postcheckout": "npm run flow-typed",
     "spec": "jest",
-    "test": "cross-env NODE_ENV=test npm run lint && npm run flow && npm run spec && npm run build",
+    "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build",
     "version": "npm run build"
   },
   "devDependencies": {
