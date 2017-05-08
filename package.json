@@ -25,9 +25,8 @@
     "flow-typed": "flow-typed install",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
     "version": "npm run build",
-    "postinstall": "flow-typed install",
     "spec": "jest",
-    "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build"
+    "test": "cross-env NODE_ENV=test npm run lint && npm run flow && npm run spec && npm run build"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -49,7 +48,7 @@
     "eslint-formatter-pretty": "^1.1.0",
     "flow-bin": "^0.45.0",
     "flow-typed": "^2.1.2",
-    "jest-cli": "^19.0.2",
+    "jest-cli": "^20.0.0",
     "json-loader": "^0.5.4"
   },
   "dependencies": {
