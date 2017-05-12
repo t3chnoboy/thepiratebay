@@ -21,7 +21,7 @@
   "scripts": {
     "build": "cross-env NODE_ENV=production babel src --out-dir lib",
     "clean": "rm -rf lib",
-    "flow": "flow check",
+    "flow": "npm run flow-typed && flow check",
     "flow-typed": "flow-typed install",
     "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
     "postcheckout": "npm run flow-typed",
