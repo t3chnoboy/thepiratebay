@@ -1,0 +1,31 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Torrent Torrent.getCategories() category shold have subcategories array 1`] = `"object"`;
+
+exports[`Torrent Torrent.getCategories() should return an array of categories 1`] = `"object"`;
+
+exports[`Torrent Torrent.getComments() should return an array of comment 1`] = `"object"`;
+
+exports[`Torrent Torrent.getTvShow(id) Helper Methods getProxyList should return an array of links 1`] = `"object"`;
+
+exports[`Torrent Torrent.recentTorrents() should return an array of the most recent torrents 1`] = `"object"`;
+
+exports[`Torrent Torrent.search(title, opts) should return an array of search results 1`] = `"object"`;
+
+exports[`Torrent Torrent.topTorrents(category, opts) should handle numeric input 1`] = `"object"`;
+
+exports[`Torrent Torrent.topTorrents(category, opts) should return an array of top torrents of the selected category 1`] = `"object"`;
+
+exports[`Torrent Torrent.userTorrents(userName, opts) should return an array of the user torrents 1`] = `"object"`;
+
+exports[`Torrent categories retrieves categories 1`] = `"object"`;
+
+exports[`Torrent comments retrieves comments 1`] = `"object"`;
+
+exports[`Torrent search searches for items 1`] = `"object"`;
+
+exports[`Torrent torrent types should get recent torrents 1`] = `"object"`;
+
+exports[`Torrent torrent types should get top torrents 1`] = `"object"`;
+
+exports[`Torrent torrent types should get users torrents 1`] = `"object"`;
