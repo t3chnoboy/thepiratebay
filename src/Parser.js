@@ -88,7 +88,7 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
             body.includes('502: Bad gateway') ||
             body.includes('403 Forbidden') ||
             body.includes('Database maintenance')
-              ? Promise.reject('Database maintenance or 502 error')
+              ? Promise.reject('Database maintenance, 403, or 502 error')
               : Promise.resolve(body)
         )
       ));
