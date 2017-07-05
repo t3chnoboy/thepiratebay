@@ -5,7 +5,7 @@
  *        tests against that query. ideally, this would be done in a 'before'
  *        function
  */
-import { expect } from 'chai';
+import { expect as chaiExpect } from 'chai';
 import { parseCategories, parsePage, getProxyList } from '../src/Parser';
 import Torrent, { baseUrl, convertOrderByObject } from '../src/PirateBay';
 
@@ -41,8 +41,8 @@ function lessThanOrEqualToZero(first, second) {
 }
 
 function assertHasArrayOfTorrents(arrayOfTorrents) {
-  expect(arrayOfTorrents).to.be.an('array');
-  expect(arrayOfTorrents[0]).to.be.an('object');
+  chaiExpect(arrayOfTorrents).to.be.an('array');
+  chaiExpect(arrayOfTorrents[0]).to.be.an('object');
 }
 
 /**
@@ -56,10 +56,10 @@ function assertHasNecessaryProperties(torrent, additionalProperties = []) {
   ];
 
   for (const property of defaultPropertiesToValidate) {
-    expect(torrent).to.have.property(property);
-    expect(torrent[property]).to.exist;
+    chaiExpect(torrent).to.have.property(property);
+    chaiExpect(torrent[property]).to.exist;
     if (typeof torrent[property] === 'string') {
-      expect(torrent[property]).to.not.contain('undefined');
+      chaiExpect(torrent[property]).to.not.contain('undefined');
     }
   }
 }
@@ -71,7 +71,7 @@ describe('Torrent', () => {
         orderBy: 'name',
         sortBy: 'asc'
       });
-      expect(searchNumber).to.equal(2);
+      chaiExpect(searchNumber).to.equal(2);
     });
 
     it('should convert orderBy and sortBy with leechers', () => {
@@ -79,7 +79,7 @@ describe('Torrent', () => {
         orderBy: 'leeches',
         sortBy: 'desc'
       });
-      expect(searchNumber).to.equal(9);
+      chaiExpect(searchNumber).to.equal(9);
     });
   });
 
@@ -89,15 +89,15 @@ describe('Torrent', () => {
     });
 
     it('retrieves categories', async () => {
-      expect(this.categories).to.be.an('array');
+      chaiExpect(this.categories).to.be.an('array');
     });
 
     it('retrieves categories with expected properties', async () => {
       const properties = ['name', 'id', 'subcategories'];
       for (const property of properties) {
-        expect(this.categories[0]).to.have.property(property);
-        expect(this.categories[0][property]).to.exist;
-        expect(this.categories[0][property]).to.not.contain('undefined');
+        chaiExpect(this.categories[0]).to.have.property(property);
+        chaiExpect(this.categories[0][property]).to.exist;
+        chaiExpect(this.categories[0][property]).to.not.contain('undefined');
       }
     });
   });
@@ -108,13 +108,13 @@ describe('Torrent', () => {
     });
 
     it('retrieves comments', async () => {
-      expect(this.comments).to.be.an('array');
+      chaiExpect(this.comments).to.be.an('array');
     });
 
     it('retrieves comments with expected properties', async () => {
       const properties = ['user', 'comment'];
       for (const property of properties) {
-        expect(this.comments[0]).to.have.property(property).that.is.a('string');
+        chaiExpect(this.comments[0]).to.have.property(property).that.is.a('string');
       }
     });
   });
@@ -135,8 +135,8 @@ describe('Torrent', () => {
     });
 
     it('should have verified property', () => {
-      expect(this.search[0]).to.have.property('verified');
-      expect(this.search[0].verified).to.be.a('boolean');
+      chaiExpect(this.search[0]).to.have.property('verified');
+      chaiExpect(this.search[0].verified).to.be.a('boolean');
     });
 
     it('should search un-verified', async () => {
@@ -148,7 +148,7 @@ describe('Torrent', () => {
       });
 
       for (const result of searchResults) {
-        expect(result).to.have.property('verified').that.is.a('boolean');
+        chaiExpect(result).to.have.property('verified').that.is.a('boolean');
       }
     });
 
@@ -179,12 +179,12 @@ describe('Torrent', () => {
         })
       ]);
 
-      expect(searchResults[0][0].category.name).to.equal('Applications');
-      expect(searchResults[1][0].category.name).to.equal('Audio');
-      expect(searchResults[2][0].category.name).to.equal('Video');
-      expect(searchResults[3][0].category.name).to.equal('Games');
-      expect(searchResults[4][0].category.name).to.equal('Porn');
-      expect(searchResults[5][0].category.name).to.equal('Other');
+      chaiExpect(searchResults[0][0].category.name).to.equal('Applications');
+      chaiExpect(searchResults[1][0].category.name).to.equal('Audio');
+      chaiExpect(searchResults[2][0].category.name).to.equal('Video');
+      chaiExpect(searchResults[3][0].category.name).to.equal('Games');
+      chaiExpect(searchResults[4][0].category.name).to.equal('Porn');
+      chaiExpect(searchResults[5][0].category.name).to.equal('Other');
     });
 
     it('should handle numerical values', async () => {
@@ -252,8 +252,8 @@ describe('Torrent', () => {
       ]);
 
       for (const result of searchResults) {
-        expect(result).to.have.length.above(10);
-        expect(result[0])
+        chaiExpect(result).to.have.length.above(10);
+        chaiExpect(result[0])
             .to.have.deep.property('seeders')
             .that.is.greaterThan(20);
       }
@@ -268,14 +268,14 @@ describe('Torrent', () => {
       const torrents = await Torrent.topTorrents();
       assertHasArrayOfTorrents(torrents);
       assertHasNecessaryProperties(torrents[0]);
-      expect(torrents.length === 100).to.be.true;
+      chaiExpect(torrents.length === 100).to.be.true;
     });
 
     it('should get recent torrents', async () => {
       const torrents = await Torrent.recentTorrents();
       assertHasArrayOfTorrents(torrents);
       assertHasNecessaryProperties(torrents[0]);
-      expect(torrents).to.have.length.above(20);
+      chaiExpect(torrents).to.have.length.above(20);
     });
 
     it('should get users torrents', async () => {
@@ -301,62 +301,62 @@ describe('Torrent', () => {
         for (const property in this.torrent) { // eslint-disable-line
           if (this.torrent.hasOwnProperty(property)) {
             if (typeof this.torrent[property] === 'string') {
-              expect(this.torrent[property]).to.not.include('undefined');
+              chaiExpect(this.torrent[property]).to.not.include('undefined');
             }
           }
         }
     });
 
     it('should return a promise', () => {
-      expect(torrentFactory()).to.be.a('promise');
+      chaiExpect(torrentFactory()).to.be.a('promise');
     });
 
     it('should have a name', () => {
-      expect(this.torrent).to.have.property(
+      chaiExpect(this.torrent).to.have.property(
           'name',
           'The Amazing Spider-Man 2 (2014) 1080p BrRip x264 - YIFY'
         );
     });
 
     it('should have uploader', () => {
-      expect(this.torrent).to.have.property('uploader', 'YIFY');
+      chaiExpect(this.torrent).to.have.property('uploader', 'YIFY');
     });
 
     it('should have uploader link', () => {
-      expect(this.torrent).to.have.property('uploaderLink', `${baseUrl}/user/YIFY/`);
+      chaiExpect(this.torrent).to.have.property('uploaderLink', `${baseUrl}/user/YIFY/`);
     });
 
     it('should have an id', () => {
-      expect(this.torrent).to.have.property('id', '10676856');
+      chaiExpect(this.torrent).to.have.property('id', '10676856');
     });
 
     it('should have upload date', () => {
-      expect(this.torrent).to.have.property('uploadDate', '2014-08-02 08:15:25 GMT');
+      chaiExpect(this.torrent).to.have.property('uploadDate', '2014-08-02 08:15:25 GMT');
     });
 
     it('should have size', () => {
-      expect(this.torrent).to.have.property('size');
-      expect(this.torrent.size).to.match(/\d+\.\d+\s(G|M|K)iB/);
+      chaiExpect(this.torrent).to.have.property('size');
+      chaiExpect(this.torrent.size).to.match(/\d+\.\d+\s(G|M|K)iB/);
     });
 
     it('should have seeders and leechers count', () => {
-      expect(this.torrent).to.have.property('seeders');
-      expect(this.torrent).to.have.property('leechers');
-      expect(~~this.torrent.leechers).to.be.above(-1);
-      expect(~~this.torrent.seeders).to.be.above(-1);
+      chaiExpect(this.torrent).to.have.property('seeders');
+      chaiExpect(this.torrent).to.have.property('leechers');
+      chaiExpect(~~this.torrent.leechers).to.be.above(-1);
+      chaiExpect(~~this.torrent.seeders).to.be.above(-1);
     });
 
     it('should have a link', () => {
-      expect(this.torrent).to.have.property('link', `${baseUrl}/torrent/10676856`);
+      chaiExpect(this.torrent).to.have.property('link', `${baseUrl}/torrent/10676856`);
     });
 
     it('should have a magnet link', () => {
-      expect(this.torrent).to.have.property('magnetLink');
+      chaiExpect(this.torrent).to.have.property('magnetLink');
     });
 
     it('should have a description', () => {
-      expect(this.torrent).to.have.property('description');
-      expect(this.torrent.description).to.be.a('string');
+      chaiExpect(this.torrent).to.have.property('description');
+      chaiExpect(this.torrent.description).to.be.a('string');
     });
   });
 
@@ -370,26 +370,26 @@ describe('Torrent', () => {
     });
 
     it('should return a promise', () => {
-      expect(Torrent.search('Game of Thrones')).to.be.a('promise');
+      chaiExpect(Torrent.search('Game of Thrones')).to.be.a('promise');
     });
 
     it('should return an array of search results', () => {
-      expect(this.searchResults).to.be.an('array');
+      chaiExpect(this.searchResults).to.be.an('array');
     });
 
     describe('search result', () => {
       it('should have an id', () => {
-        expect(this.fistSearchResult).to.have.property('id');
-        expect(this.fistSearchResult.id).to.match(/^\d+$/);
+        chaiExpect(this.fistSearchResult).to.have.property('id');
+        chaiExpect(this.fistSearchResult.id).to.match(/^\d+$/);
       });
 
       it('should have a name', () => {
-        expect(this.fistSearchResult).to.have.property('name');
-        expect(this.fistSearchResult.name).to.match(/game.of.thrones/i);
+        chaiExpect(this.fistSearchResult).to.have.property('name');
+        chaiExpect(this.fistSearchResult.name).to.match(/game.of.thrones/i);
       });
 
       it('should have upload date', () => {
-        expect(this.fistSearchResult).to.have.property('uploadDate');
+        chaiExpect(this.fistSearchResult).to.have.property('uploadDate');
           /**
             * Valid dates:
             *  31 mins ago
@@ -398,7 +398,7 @@ describe('Torrent', () => {
             *  02-10 03:36
             *  06-21 2011
             */
-        expect(this.fistSearchResult.uploadDate)
+        chaiExpect(this.fistSearchResult.uploadDate)
             .to
             .match(
               /(\d*\smins\sago)|(Today|Y-day)\s\d\d:\d\d|\d\d-\d\d\s(\d\d:\d\d|\d{4})/
@@ -406,50 +406,50 @@ describe('Torrent', () => {
       });
 
       it('should have size', () => {
-        expect(this.fistSearchResult).to.have.property('size');
+        chaiExpect(this.fistSearchResult).to.have.property('size');
           /**
             * Valid sizes:
             *  529.84 MiB
             *  2.04 GiB
             *  598.98 KiB
             */
-        expect(this.fistSearchResult.size).to.exist;
+        chaiExpect(this.fistSearchResult.size).to.exist;
       });
 
       it('should have seeders and leechers count', () => {
-        expect(this.fistSearchResult).to.have.property('seeders');
-        expect(this.fistSearchResult).to.have.property('leechers');
-        expect((~~this.fistSearchResult.leechers)).to.be.above(-1);
-        expect((~~this.fistSearchResult.seeders)).to.be.above(-1);
+        chaiExpect(this.fistSearchResult).to.have.property('seeders');
+        chaiExpect(this.fistSearchResult).to.have.property('leechers');
+        chaiExpect((~~this.fistSearchResult.leechers)).to.be.above(-1);
+        chaiExpect((~~this.fistSearchResult.seeders)).to.be.above(-1);
       });
 
       it('should have a link', () => {
-        expect(this.fistSearchResult).to.have.property('link');
-        expect(this.fistSearchResult.link).to.match(
+        chaiExpect(this.fistSearchResult).to.have.property('link');
+        chaiExpect(this.fistSearchResult.link).to.match(
             new RegExp(`${baseUrl}/torrent/\\d+/+`)
           );
       });
 
       it('should have a magnet link', () => {
-        expect(this.fistSearchResult).to.have.property('magnetLink');
-        expect(this.fistSearchResult.magnetLink).to.match(/magnet:\?xt=.+/);
+        chaiExpect(this.fistSearchResult).to.have.property('magnetLink');
+        chaiExpect(this.fistSearchResult.magnetLink).to.match(/magnet:\?xt=.+/);
       });
 
       it('should have a category', () => {
-        expect(this.fistSearchResult).to.have.property('category');
-        expect(this.fistSearchResult.category.id).to.match(/[1-6]00/);
-        expect(this.fistSearchResult.category.name).to.match(/\w+/);
+        chaiExpect(this.fistSearchResult).to.have.property('category');
+        chaiExpect(this.fistSearchResult.category.id).to.match(/[1-6]00/);
+        chaiExpect(this.fistSearchResult.category.name).to.match(/\w+/);
       });
 
       it('should have a subcategory', () => {
-        expect(this.fistSearchResult).to.have.property('subcategory');
-        expect(this.fistSearchResult.subcategory.id).to.match(/[1-6][09][1-9]/);
-        expect(this.fistSearchResult.subcategory.name).to.match(/[a-zA-Z0-9 ()/-]/);
+        chaiExpect(this.fistSearchResult).to.have.property('subcategory');
+        chaiExpect(this.fistSearchResult.subcategory.id).to.match(/[1-6][09][1-9]/);
+        chaiExpect(this.fistSearchResult.subcategory.name).to.match(/[a-zA-Z0-9 ()/-]/);
       });
 
       it('should have an uploader and uploader link', () => {
-        expect(this.fistSearchResult).to.have.property('uploader');
-        expect(this.fistSearchResult).to.have.property('uploaderLink');
+        chaiExpect(this.fistSearchResult).to.have.property('uploader');
+        chaiExpect(this.fistSearchResult).to.have.property('uploaderLink');
       });
     });
   });
@@ -460,24 +460,24 @@ describe('Torrent', () => {
     });
 
     it('should return a promise', () => {
-      expect(Torrent.topTorrents('205')).to.be.a('promise');
+      chaiExpect(Torrent.topTorrents('205')).to.be.a('promise');
     });
 
     it('should handle numeric input', async () => {
       const topTorrents = await Torrent.topTorrents(205);
-      expect(topTorrents).to.be.an('array');
-      expect(topTorrents[0].category.name).to.be.equal('Video');
-      expect(topTorrents[0].subcategory.name).to.be.equal('TV shows');
+      chaiExpect(topTorrents).to.be.an('array');
+      chaiExpect(topTorrents[0].category.name).to.be.equal('Video');
+      chaiExpect(topTorrents[0].subcategory.name).to.be.equal('TV shows');
     });
 
     it('should return an array of top torrents of the selected category', () => {
-      expect(this.topTorrents).to.be.an('array');
+      chaiExpect(this.topTorrents).to.be.an('array');
     });
 
     describe('search result', () => {
       it('category and subcategory shoud match specified category', () => {
-        expect(this.topTorrents[0].category.name).to.be.equal('Video');
-        expect(this.topTorrents[0].subcategory.name).to.be.equal('TV shows');
+        chaiExpect(this.topTorrents[0].category.name).to.be.equal('Video');
+        chaiExpect(this.topTorrents[0].subcategory.name).to.be.equal('TV shows');
       });
     });
   });
@@ -488,17 +488,17 @@ describe('Torrent', () => {
     });
 
     it('should return a promise', () => {
-      expect(Torrent.recentTorrents()).to.be.a('promise');
+      chaiExpect(Torrent.recentTorrents()).to.be.a('promise');
     });
 
     it('should return an array of the most recent torrents', () => {
-      expect(this.recentTorrents).to.be.an('array');
+      chaiExpect(this.recentTorrents).to.be.an('array');
     });
 
     describe('recent torrent', () => {
       it('should be uploaded recently', () => {
         const [recentTorrent] = this.recentTorrents;
-        expect(recentTorrent.uploadDate).to.exist;
+        chaiExpect(recentTorrent.uploadDate).to.exist;
       });
     });
   });
@@ -510,43 +510,43 @@ describe('Torrent', () => {
     });
 
     it('should return promise', () => {
-      expect(parsePage(`${baseUrl}/recent`, parseCategories)).to.be.a('promise');
+      chaiExpect(parsePage(`${baseUrl}/recent`, parseCategories)).to.be.a('promise');
     });
 
     it('should return an array of categories', () => {
-      expect(this.categories).to.be.an('array');
+      chaiExpect(this.categories).to.be.an('array');
     });
 
     describe('category', () => {
       it('should have an id', () => {
-        expect(this.categories[0]).to.have.property('id');
-        expect(this.categories[0].id).to.match(/\d00/);
+        chaiExpect(this.categories[0]).to.have.property('id');
+        chaiExpect(this.categories[0].id).to.match(/\d00/);
       });
 
       it('should have a name', () => {
-        expect(this.categories[0]).to.have.property('name');
-        expect(this.categories[0].name).to.be.a('string');
+        chaiExpect(this.categories[0]).to.have.property('name');
+        chaiExpect(this.categories[0].name).to.be.a('string');
       });
 
       it('name should match id', () => {
         const video = this.categories.find((elem) => elem.name === 'Video');
-        expect(video.id).to.equal('200');
+        chaiExpect(video.id).to.equal('200');
       });
 
       it('shold have subcategories array', () => {
-        expect(this.categories[0]).to.have.property('subcategories');
-        expect(this.categories[0].subcategories).to.be.an('array');
+        chaiExpect(this.categories[0]).to.have.property('subcategories');
+        chaiExpect(this.categories[0].subcategories).to.be.an('array');
       });
 
       describe('subcategory', () => {
         it('should have an id', () => {
-          expect(this.subcategory).to.have.property('id');
-          expect(this.subcategory.id).to.match(/\d{3}/);
+          chaiExpect(this.subcategory).to.have.property('id');
+          chaiExpect(this.subcategory.id).to.match(/\d{3}/);
         });
 
         it('should have a name', () => {
-          expect(this.subcategory).to.have.property('name');
-          expect(this.subcategory.name).to.be.a('string');
+          chaiExpect(this.subcategory).to.have.property('name');
+          chaiExpect(this.subcategory.name).to.be.a('string');
         });
       });
     });
@@ -558,22 +558,22 @@ describe('Torrent', () => {
     });
 
     it('should return promise', () => {
-      expect(Torrent.getComments('10676856')).to.be.a('promise');
+      chaiExpect(Torrent.getComments('10676856')).to.be.a('promise');
     });
 
     it('should return an array of comment', () => {
-      expect(this.comments).to.be.an('array');
+      chaiExpect(this.comments).to.be.an('array');
     });
 
     describe('comment', () => {
       it('should have a user', () => {
-        expect(this.comments[0]).to.have.property('user');
-        expect(this.comments[0].user).to.be.a('string');
+        chaiExpect(this.comments[0]).to.have.property('user');
+        chaiExpect(this.comments[0].user).to.be.a('string');
       });
 
       it('should have a comment', () => {
-        expect(this.comments[0]).to.have.property('comment');
-        expect(this.comments[0].comment).to.be.a('string');
+        chaiExpect(this.comments[0]).to.have.property('comment');
+        chaiExpect(this.comments[0].comment).to.be.a('string');
       });
     });
   });
@@ -587,20 +587,20 @@ describe('Torrent', () => {
     });
 
     it('should return a promise', () => {
-      expect(Torrent.userTorrents('YIFY')).to.be.a('promise');
+      chaiExpect(Torrent.userTorrents('YIFY')).to.be.a('promise');
     });
 
     it('should return an array of the user torrents', () => {
-      expect(this.userTorrents).to.be.an('array');
+      chaiExpect(this.userTorrents).to.be.an('array');
     });
 
     describe('user torrent', () => {
       it('should have a name', () => {
-        expect(this.userTorrents[0]).to.have.property('name');
+        chaiExpect(this.userTorrents[0]).to.have.property('name');
       });
 
       it('should have upload date', () => {
-        expect(this.userTorrents[0]).to.have.property('uploadDate');
+        chaiExpect(this.userTorrents[0]).to.have.property('uploadDate');
           /*
             * Valid dates:
             *  31 mins ago
@@ -609,7 +609,7 @@ describe('Torrent', () => {
             *  02-10 03:36
             *  06-21 2011
                   */
-        expect(this.userTorrents[0].uploadDate)
+        chaiExpect(this.userTorrents[0].uploadDate)
             .to
             .match(
               /(\d*\smins\sago)|(Today|Y-day)\s\d\d:\d\d|\d\d-\d\d\s(\d\d:\d\d|\d{4})/
@@ -617,43 +617,43 @@ describe('Torrent', () => {
       });
 
       it('should have size', () => {
-        expect(this.userTorrents[0]).to.have.property('size');
+        chaiExpect(this.userTorrents[0]).to.have.property('size');
           /*
             * Valid sizes:
             *  529.84 MiB
             *  2.04 GiB
             *  598.98 KiB
                   */
-        expect(this.userTorrents[0].size).to.match(/\d+\.\d+\s(G|M|K)iB/);
+        chaiExpect(this.userTorrents[0].size).to.match(/\d+\.\d+\s(G|M|K)iB/);
       });
 
       it('should have seeders and leechers count', () => {
-        expect(this.userTorrents[0]).to.have.property('seeders');
-        expect(this.userTorrents[0]).to.have.property('leechers');
-        expect((~~this.userTorrents[0].leechers)).to.be.above(-1);
-        expect((~~this.userTorrents[0].seeders)).to.be.above(-1);
+        chaiExpect(this.userTorrents[0]).to.have.property('seeders');
+        chaiExpect(this.userTorrents[0]).to.have.property('leechers');
+        chaiExpect((~~this.userTorrents[0].leechers)).to.be.above(-1);
+        chaiExpect((~~this.userTorrents[0].seeders)).to.be.above(-1);
       });
 
       it('should have a link', () => {
-        expect(this.userTorrents[0]).to.have.property('link');
-        expect(this.userTorrents[0].link).to.match(new RegExp(`${baseUrl}/torrent/\\d+/+`));
+        chaiExpect(this.userTorrents[0]).to.have.property('link');
+        chaiExpect(this.userTorrents[0].link).to.match(new RegExp(`${baseUrl}/torrent/\\d+/+`));
       });
 
       it('should have a magnet link', () => {
-        expect(this.userTorrents[0]).to.have.property('magnetLink');
-        expect(this.userTorrents[0].magnetLink).to.match(/magnet:\?xt=.+/);
+        chaiExpect(this.userTorrents[0]).to.have.property('magnetLink');
+        chaiExpect(this.userTorrents[0].magnetLink).to.match(/magnet:\?xt=.+/);
       });
 
       it('should have a category', () => {
-        expect(this.userTorrents[0]).to.have.property('category');
-        expect(this.userTorrents[0].category.id).to.match(/[1-6]00/);
-        expect(this.userTorrents[0].category.name).to.match(/\w+/);
+        chaiExpect(this.userTorrents[0]).to.have.property('category');
+        chaiExpect(this.userTorrents[0].category.id).to.match(/[1-6]00/);
+        chaiExpect(this.userTorrents[0].category.name).to.match(/\w+/);
       });
 
       it('should have a subcategory', () => {
-        expect(this.userTorrents[0]).to.have.property('subcategory');
-        expect(this.userTorrents[0].subcategory.id).to.match(/[1-6][09][1-9]/);
-        expect(this.userTorrents[0].subcategory.name).to.match(/[a-zA-Z0-9 ()/-]/);
+        chaiExpect(this.userTorrents[0]).to.have.property('subcategory');
+        chaiExpect(this.userTorrents[0].subcategory.id).to.match(/[1-6][09][1-9]/);
+        chaiExpect(this.userTorrents[0].subcategory.name).to.match(/[a-zA-Z0-9 ()/-]/);
       });
     });
   });
@@ -667,15 +667,15 @@ describe('Torrent', () => {
     });
 
     it('should return a promise', () => {
-      expect(Torrent.getTvShow('2')).to.be.a('promise');
+      chaiExpect(Torrent.getTvShow('2')).to.be.a('promise');
     });
     describe('Helper Methods', () => {
       it('getProxyList should return an array of links', async () => {
         const list = await getProxyList();
-        expect(list).to.be.an('array');
+        chaiExpect(list).to.be.an('array');
         for (const link of list) {
-          expect(link).to.be.a('string');
-          expect(link).to.contain('https://');
+          chaiExpect(link).to.be.a('string');
+          chaiExpect(link).to.contain('https://');
         }
       });
     });
