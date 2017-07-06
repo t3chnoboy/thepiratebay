@@ -87,8 +87,9 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
           .then(body => (
             body.includes('502: Bad gateway') ||
             body.includes('403 Forbidden') ||
-            body.includes('Database maintenance')
-              ? Promise.reject('Database maintenance, 403, or 502 error')
+            body.includes('Database maintenance') ||
+            body.includes('Origin DNS error')
+              ? Promise.reject('Database maintenance, Cloudflare DNS error, 403 or 502 error')
               : Promise.resolve(body)
         )
       ));
