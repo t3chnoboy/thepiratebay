@@ -89,7 +89,7 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
             body.includes('403 Forbidden') ||
             body.includes('Database maintenance') ||
             body.includes('Origin DNS error')
-              ? Promise.reject('Database maintenance, 403, or 502 error')
+              ? Promise.reject('Database maintenance, Cloudflare DNS error, 403 or 502 error')
               : Promise.resolve(body)
         )
       ));
