@@ -96,7 +96,7 @@ export function parsePage(url: string, parseCallback: parseCallbackType, filter:
 
     const abandonFailedResponses = index => {
       const p = requests.splice(index, 1)[0];
-      p.catch((err) => {});
+      p.catch(() => {});
     };
 
     const race = () => {
