@@ -34,3 +34,4 @@ node_modules
 
 lib
 flow-typed
+package-lock.json

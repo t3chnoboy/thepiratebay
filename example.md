@@ -11,12 +11,8 @@ PirateBay
 
 // Async/Await
 async function searchPirateBay() {
-  const searchResults = await PirateBay
-    .search('game of thrones')
-    .then(response => {
-      console.log(response);
-    });
-
+  const searchResults =
+    await PirateBay.search('game of thrones');
   console.log(searchResults);
 }
 ```

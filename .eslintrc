@@ -1,11 +1,14 @@
 {
   "extends": "bliss",
   "rules": {
-    "fp/no-this": 0,
-    "fp/no-mutation": 0,
-    "fp/no-let": 0,
-    "fp/no-throw": 0,
-    "import/no-extraneous-dependencies": 0,
-    "no-underscore-dangle": 0
+    "fp/no-this": "off",
+    "fp/no-mutation": "off",
+    "fp/no-let": "off",
+    "fp/no-throw": "off",
+    "import/no-extraneous-dependencies": "off",
+    "no-underscore-dangle": "off",
+    "no-plusplus": "off",
+    "flowtype/boolean-style": "off",
+    "flowtype-errors/show-errors": "warn"
   }
 }
