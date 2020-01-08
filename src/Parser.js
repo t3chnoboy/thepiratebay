@@ -132,11 +132,11 @@ export function parseResults(resultsHTML: string, filter: Object = {}): Array<re
     const seeders: string = $(this).find('td[align="right"]').first().text();
     const leechers: string = $(this).find('td[align="right"]').next().text();
     const relativeLink: string = $(this).find('div.detName a').attr('href');
-    const link: string = baseUrl + relativeLink;
-    const id: string = String(parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10));
+    const link: string = new URL(relativeLink, baseUrl).href;
+    const id: string = String(parseInt(/\/torrent\/(\d+)\//.exec(link)[1], 10));
     const magnetLink: string = $(this).find('a[title="Download this torrent using magnet"]').attr('href');
     const uploader: string = $(this).find('font .detDesc').text();
-    const uploaderLink: string = baseUrl + $(this).find('font a').attr('href');
+    const uploaderLink: string = new URL($(this).find('font a').attr('href'), baseUrl).href;
     const verified: bool = isTorrentVerified($(this));
 
     const category = {
@@ -201,7 +201,7 @@ export function parseTvShow(tvShowPage: string): Promise<Array<parseTvShowType>>
   const torrents = rawLinks.map(element =>
     $(this).find('a').map(() => ({
       title: element.text(),
-      link: baseUrl + element.attr('href'),
+      link: new URL(element.attr('href'), baseUrl).href,
       id: element.attr('href').match(/\/torrent\/(\d+)/)[1]
     }))
     .get()
@@ -220,7 +220,7 @@ export function parseTorrentPage(torrentPage: string): resultType {
   const size = $('dt:contains(Size:) + dd').text().trim();
   const uploadDate = $('dt:contains(Uploaded:) + dd').text().trim();
   const uploader = $('dt:contains(By:) + dd').text().trim();
-  const uploaderLink = baseUrl + $('dt:contains(By:) + dd a').attr('href');
+  const uploaderLink = new URL($('dt:contains(By:) + dd a').attr('href'), baseUrl).href;
   const seeders = $('dt:contains(Seeders:) + dd').text().trim();
   const leechers = $('dt:contains(Leechers:) + dd').text().trim();
   const id = $('input[name=id]').attr('value');
