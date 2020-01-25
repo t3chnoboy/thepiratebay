@@ -15,55 +15,30 @@ The Pirate Bay node.js client
 
 Install using npm:
 ```bash
-npm install thepiratebay --save
-```
-
-## Configuration
-### Endpoint
-You can customize your endpoint by setting the environment variable `THEPIRATEBAY_DEFAULT_ENDPOINT`!
-```bash
-THEPIRATEBAY_DEFAULT_ENDPOINT=http://some-endpoint.com node some-script.js
+# NPM
+npm install thepiratebay
+# Yarn
+yarn add thepiratebay
 ```
 
 ## Usage
 
-```javascript
-// ES6 module import
+```js
 import PirateBay from 'thepiratebay'
-/// CommonJS import
-const PirateBay = require('thepiratebay')
-```
-All methods are asynchronous!
-You can use promises, ES6 generators, or async/await
 
-Using promises:
-```javascript
-PirateBay.search('Game of Thrones', {
-  category: 205
+await PirateBay.search('harry potter', {
+  category: 'video',
+  page: 3
 })
-.then(results => console.log(results))
-.catch(err => console.log(err))
-```
-
-Using ES7 async/await (requires babel)
-```javascript
-async function search() {
-  const searchResults = await PirateBay.search('harry potter', {
-    category: 'video',
-    page: 3,
-    orderBy: 'seeds',
-    sortBy: 'desc'
-  })
-  console.log(searchResults)
-}
+console.log(searchResults)
 ```
 
 ## Methods
 
 ### search
-```javascript
+```js
 // Takes a search query and options
-PirateBay.search('Game of Thrones', {
+await PirateBay.search('Game of Thrones', {
   category: 'all',    // default - 'all' | 'all', 'audio', 'video', 'xxx',
                       //                   'applications', 'games', 'other'
                       //
@@ -96,12 +71,9 @@ PirateBay.search('Game of Thrones', {
 ```
 
 ### getTorrent
-```javascript
+```js
 // takes an id or a link
-PirateBay
-  .getTorrent('10676856')
-  .then(results => console.log(results))
-  .catch(err => console.log(err))
+await PirateBay.getTorrent('10676856')
 
 /* Returns a single torrent's description
 {
@@ -120,24 +92,24 @@ PirateBay
 ```
 
 ### topTorrents
-```javascript
+```js
 // returns top 100 torrents
-PirateBay.topTorrents()
+await PirateBay.topTorrents()
 
 // returns top 100 torrents for the category '400' aka Games
-PirateBay.topTorrents(400)
+await PirateBay.topTorrents(400)
 ```
 
 ### recentTorrents
-```javascript
+```js
 // returns the most recent torrents
-PirateBay.recentTorrents()
+await PirateBay.recentTorrents()
 ```
 
 ### userTorrents
-```javascript
+```js
 // Gets a specific user's torrents
-PirateBay.userTorrents('YIFY', {
+await PirateBay.userTorrents('YIFY', {
   page: 3,
   orderBy: 'name',
   sortBy: 'asc'
@@ -145,7 +117,7 @@ PirateBay.userTorrents('YIFY', {
 ```
 
 ### getCategories
-```javascript
+```js
 // Gets all available categories on piratebay
 PirateBay.getCategories()
 
@@ -168,6 +140,13 @@ PirateBay.getCategories()
   ...
 ]
 */
+```
+
+## Configuration
+### Endpoint
+You can customize your endpoint by setting the environment variable `THEPIRATEBAY_DEFAULT_ENDPOINT`!
+```bash
+THEPIRATEBAY_DEFAULT_ENDPOINT=http://some-endpoint.com node some-script.js
 ```
 
 ## Used by:
