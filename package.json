@@ -19,11 +19,12 @@
     "scraper"
   ],
   "scripts": {
-    "build": "cross-env NODE_ENV=production babel src --out-dir lib",
+    "build": "cross-env NODE_ENV=production babel src --out-dir lib --extensions '.ts'",
     "clean": "rm -rf lib",
-    "lint": "eslint --cache --format=node_modules/eslint-formatter-pretty .",
+    "lint": "eslint --cache . --ext .js,.ts",
     "spec": "jest",
     "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build",
+    "ts": "tsc",
     "version": "npm run build"
   },
   "devDependencies": {
@@ -32,15 +33,22 @@
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.0.0",
+    "@types/cheerio": "^0.22.15",
+    "@types/isomorphic-fetch": "^0.0.35",
+    "@types/url-parse": "^1.4.3",
+    "@typescript-eslint/eslint-plugin": "^2.17.0",
     "babel-jest": "^23.4.2",
     "chai": "^4.2.0",
     "cross-env": "^6.0.3",
     "eslint": "^6.8.0",
     "eslint-config-bliss": "^4.6.0",
-    "eslint-formatter-pretty": "^3.0.1",
+    "eslint-config-erb": "^0.2.0",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.18.0",
     "husky": "^4.2.1",
     "jest-cli": "^25.1.0",
-    "json-loader": "^0.5.7"
+    "json-loader": "^0.5.7",
+    "typescript": "^3.7.5"
   },
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
@@ -55,48 +63,13 @@
     "presets": [
       "@babel/preset-env",
       "@babel/preset-typescript"
-    ],
-    "plugins": [
-      [
-        "@babel/plugin-transform-runtime",
-        {
-          "corejs": 3
-        }
-      ],
-      "add-module-exports",
-      "@babel/plugin-transform-modules-umd",
-      "@babel/plugin-syntax-dynamic-import",
-      "@babel/plugin-syntax-import-meta",
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-proposal-json-strings",
-      [
-        "@babel/plugin-proposal-decorators",
-        {
-          "legacy": true
-        }
-      ],
-      "@babel/plugin-proposal-function-sent",
-      "@babel/plugin-proposal-export-namespace-from",
-      "@babel/plugin-proposal-numeric-separator",
-      "@babel/plugin-proposal-throw-expressions",
-      "@babel/plugin-proposal-export-default-from",
-      "@babel/plugin-proposal-logical-assignment-operators",
-      "@babel/plugin-proposal-optional-chaining",
-      [
-        "@babel/plugin-proposal-pipeline-operator",
-        {
-          "proposal": "minimal"
-        }
-      ],
-      "@babel/plugin-proposal-nullish-coalescing-operator",
-      "@babel/plugin-proposal-do-expressions",
-      "@babel/plugin-proposal-function-bind"
     ]
   },
   "eslintConfig": {
-    "extends": "bliss",
+    "extends": "erb/typescript",
     "rules": {
       "flowtype-errors/show-errors": "off"
     }
-  }
+  },
+  "browserslist": "node 13"
 }
