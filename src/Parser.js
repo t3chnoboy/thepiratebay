@@ -126,9 +126,8 @@ export function parseResults(resultsHTML: string, filter: Object = {}): Array<re
 
   const results = rawResults.map(function getRawResults() {
     const name: string = $(this).find('a.detLink').text();
-    const uploadDate: string = $(this).find('font').text().match(/Uploaded\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
-    const size: string = $(this).find('font').text().match(/Size (.+?),/)[1];
-
+    const uploadDate: string = $(this).find('font').text().match(/Uploaded|Transféré\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1];
+    const size: string = $(this).find('font').text().match(/Size|Taille (.+?),/)[1];
     const seeders: string = $(this).find('td[align="right"]').first().text();
     const leechers: string = $(this).find('td[align="right"]').next().text();
     const relativeLink: string = $(this).find('div.detName a').attr('href');
