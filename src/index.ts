@@ -7,16 +7,25 @@ import {
   parseTorrentPage,
   parseCommentsPage,
   parseTvShow,
-  parseCategories
+  parseCategories,
+  Categories,
+  ParsedTvShow
 } from "./parser";
 
+type OrderByOpt = "desc" | "asc";
+type SortByOpt = "desc" | "asc";
+
 type OrderByOpts = {
-  orderBy?: "seeds";
-  sortBy?: "desc" | "asc";
+  orderBy?: string | "seeds";
+  sortBy?: string | "desc" | "asc";
 };
 
-type Query = OrderByOpts & {
-  page?: number;
+type Search = OrderByOpts & {
+  page?: string;
+  category?: string;
+  filter?: {
+    verified: boolean;
+  };
 };
 
 export const defaultOrder: OrderByOpts = { orderBy: "seeds", sortBy: "desc" };
@@ -31,7 +40,7 @@ const searchDefaults = {
   sortBy: "desc"
 };
 
-export const primaryCategoryNumbers = {
+export const primaryCategoryNumbers: Record<string, number> = {
   audio: 100,
   video: 200,
   applications: 300,
@@ -67,8 +76,8 @@ export const primaryCategoryNumbers = {
  * @example: { orderBy: 'name', sortBy: 'desc' }
  */
 export function convertOrderByObject(
-  orderByObject: OrderByOpts = defaultOrder
-) {
+  orderByOpts: OrderByOpts = defaultOrder
+): string {
   const options = [
     ["name", "desc"],
     ["name", "asc"],
@@ -82,11 +91,16 @@ export function convertOrderByObject(
     ["leeches", "asc"]
   ];
 
+  const orderByOptsWithDeafults = {
+    ...defaultOrder,
+    ...orderByOpts
+  };
+
   // Find the query option
   const option = options.find(
     _option =>
-      _option.includes(orderByObject.orderBy) &&
-      _option.includes(orderByObject.sortBy)
+      _option.includes(orderByOptsWithDeafults.orderBy as OrderByOpt) &&
+      _option.includes(orderByOptsWithDeafults.sortBy as SortByOpt)
   );
 
   // Get the index of the query option
@@ -94,7 +108,7 @@ export function convertOrderByObject(
 
   if (!searchNumber) throw Error("Can't find option");
 
-  return searchNumber;
+  return String(searchNumber);
 }
 
 /**
@@ -136,7 +150,11 @@ function resolveCategory(
   return defaultCategory;
 }
 
-export function search(title = "*", opts: Query = {}) {
+export function search(title = "*", rawOpts: Search = {}) {
+  const opts = {
+    ...searchDefaults,
+    ...rawOpts
+  };
   const convertedCategory = resolveCategory(
     opts.category,
     parseInt(searchDefaults.category, 10)
@@ -210,7 +228,7 @@ export function recentTorrents() {
   return parsePage(`${baseUrl}/recent`, parseResults);
 }
 
-export function userTorrents(username: string, opts: Query = {}) {
+export function userTorrents(username: string, opts: Search = {}) {
   // This is the orderingNumber (1 - 10), not a orderBy param, like 'seeds', etc
   let { orderBy } = opts;
 
@@ -234,11 +252,11 @@ export function userTorrents(username: string, opts: Query = {}) {
  * @TODO: url not longer returning results
  */
 export function getTvShow(id: string) {
-  return parsePage(`${baseUrl}/tv/${id}`, parseTvShow);
+  return parsePage<ParsedTvShow>(`${baseUrl}/tv/${id}`, parseTvShow);
 }
 
 export function getCategories() {
-  return parsePage(`${baseUrl}/recent`, parseCategories);
+  return parsePage<Categories>(`${baseUrl}/recent`, parseCategories);
 }
 
 export default {

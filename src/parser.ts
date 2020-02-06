@@ -2,7 +2,7 @@
  * Parse all pages
  */
 import cheerio from "cheerio";
-import fetch from "isomorphic-fetch";
+import fetch from "node-fetch";
 import UrlParse from "url-parse";
 import { baseUrl } from "./constants";
 
@@ -10,7 +10,7 @@ import { baseUrl } from "./constants";
 
 const maxConcurrentRequests = 3;
 
-type FetchResult = {
+export type Item = {
   id: string;
   name: string;
   size: string;
@@ -27,12 +27,12 @@ type FetchResult = {
   uploaderLink: string;
 };
 
-type SubCategory = {
+export type SubCategory = {
   id: string;
   subcategories: SubCategory;
 };
 
-type Categories = {
+export type Categories = {
   name: string;
   id: string;
   subcategories: SubCategory;
@@ -61,8 +61,8 @@ export async function getProxyList(): Promise<Array<string>> {
   const $ = cheerio.load(response);
 
   const links = $('[rel="nofollow"]')
-    .map(function getElementLinks() {
-      return $(this).attr("href");
+    .map(function getElementLinks(_, el) {
+      return $(el).attr("href");
     })
     .get()
     .filter((_, index) => index < maxConcurrentRequests);
@@ -70,19 +70,19 @@ export async function getProxyList(): Promise<Array<string>> {
   return links;
 }
 
-type ParseResult = Array<FetchResult> | FetchResult;
-type ParseCallback = (
+export type ParseResult<T> = Array<T> | T;
+export type ParseCallback<T> = (
   resultsHTML: string,
-  filter: Record<string, any>
-) => ParseResult;
+  filter?: Record<string, any>
+) => ParseResult<T>;
 
-export function parsePage(
+export function parsePage<T>(
   url: string,
-  parseCallback: ParseCallback,
+  parseCallback: ParseCallback<T>,
   filter: Record<string, any> = {},
   method = "GET",
-  formData = ""
-): Promise<ParseResult> {
+  formData: string | NodeJS.ReadableStream = ""
+): Promise<ParseResult<T>> {
   const attempt = async (error?: string) => {
     if (error) console.log(error);
 
@@ -98,34 +98,31 @@ export function parsePage(
         _url =>
           new UrlParse(url).set("hostname", new UrlParse(_url).hostname).href
       )
-      .map(_url =>
-        fetch(_url, {
-          mode: "no-cors",
+      .map(async _url => {
+        const result = await fetch(_url, {
           method,
           body: formData
-        })
-          .then((response: Response) => response.text())
-          .then((body: string) =>
-            body.includes("502: Bad gateway") ||
-            body.includes("403 Forbidden") ||
-            body.includes("Database maintenance") ||
-            body.includes("Checking your browser before accessing") ||
-            body.includes("Origin DNS error")
-              ? new Error(
-                  "Database maintenance, Cloudflare problems, 403 or 502 error"
-                )
-              : Promise.resolve(body)
-          )
-      );
+        }).then<string>(response => response.text());
+        return result.includes("502: Bad gateway") ||
+          result.includes("403 Forbidden") ||
+          result.includes("Database maintenance") ||
+          result.includes("Checking your browser before accessing") ||
+          result.includes("Origin DNS error")
+          ? new Error(
+              "Database maintenance, Cloudflare problems, 403 or 502 error"
+            )
+          : Promise.resolve(result);
+      });
 
     const abandonFailedResponses = (index: number) => {
       const p = requests.splice(index, 1)[0];
       p.catch(() => {});
     };
 
-    const race = () => {
+    const race = (): Promise<string | void | Error> => {
       if (requests.length < 1) {
-        return new Error("None of the proxy requests were successful");
+        console.warn("None of the proxy requests were successful");
+        // throw new Error("None of the proxy requests were successful");
       }
       const indexedRequests = requests.map((p, index) =>
         p.catch(() => {
@@ -134,18 +131,18 @@ export function parsePage(
       );
       return Promise.race(indexedRequests).catch(index => {
         abandonFailedResponses(index);
-        return race(requests);
+        return race();
       });
     };
-    return race(requests);
+    return race();
   };
 
   return attempt()
     .catch(() => attempt("Failed, retrying"))
-    .then(response => parseCallback(response, filter));
+    .then(response => parseCallback(response as string, filter));
 }
 
-type ParseOpts = {
+export type ParseOpts = {
   filter?: boolean;
   verified?: boolean;
 };
@@ -153,61 +150,63 @@ type ParseOpts = {
 export function parseResults(
   resultsHTML: string,
   filter: ParseOpts = {}
-): Array<FetchResult> {
+): Array<Item> {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $("table#searchResult tr:has(a.detLink)");
 
-  const results = rawResults.map(function getRawResults() {
+  const results = rawResults.map(function getRawResults(el) {
     const name: string =
-      $(this)
+      $(el)
         .find("a.detLink")
         .text() || "";
     const uploadDate: string =
-      $(this)
-        .find("font")
-        .text()
-        .match(/Uploaded|Transféré\s(?:<b>)?(.+?)(?:<\/b>)?,/)[1] || "";
+      $(el)
+        ?.find("font")
+        ?.text()
+        ?.match(/Uploaded|Transféré\s(?:<b>)?(.+?)(?:<\/b>)?,/)?.[1] || "";
     const size: string =
-      $(this)
+      $(el)
         .find("font")
         .text()
-        .match(/Size|Taille (.+?),/)[1] || "";
-    const seeders: string = $(this)
+        .match(/Size|Taille (.+?),/)?.[1] || "";
+    const seeders: string = $(el)
       .find('td[align="right"]')
       .first()
       .text();
-    const leechers: string = $(this)
+    const leechers: string = $(el)
       .find('td[align="right"]')
       .next()
       .text();
     const relativeLink: string =
-      $(this)
+      $(el)
         .find("div.detName a")
         .attr("href") || "";
     const link: string = baseUrl + relativeLink;
-    const id = String(parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)[1], 10));
+    const id = String(
+      parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)?.[1] || "", 10)
+    );
     const magnetLink: string =
-      $(this)
+      $(el)
         .find('a[title="Download this torrent using magnet"]')
         .attr("href") || "";
-    const uploader: string = $(this)
+    const uploader: string = $(el)
       .find("font .detDesc")
       .text();
     const uploaderLink: string =
       baseUrl +
-      $(this)
+      $(el)
         .find("font a")
         .attr("href");
-    const verified: boolean = isTorrentVerified($(this));
+    const verified: boolean = isTorrentVerified($(el));
 
     const category = {
       id:
-        $(this)
+        $(el)
           .find("center a")
           .first()
           .attr("href")
-          .match(/\/browse\/(\d+)/)[1] || "",
-      name: $(this)
+          ?.match(/\/browse\/(\d+)/)?.[1] || "",
+      name: $(el)
         .find("center a")
         .first()
         .text()
@@ -215,12 +214,12 @@ export function parseResults(
 
     const subcategory = {
       id:
-        $(this)
+        $(el)
           .find("center a")
           .last()
           .attr("href")
-          .match(/\/browse\/(\d+)/)[1] || "",
-      name: $(this)
+          ?.match(/\/browse\/(\d+)/)?.[1] || "",
+      name: $(el)
         .find("center a")
         .last()
         .text()
@@ -252,38 +251,43 @@ export function parseResults(
     : parsedResultsArray;
 }
 
-type Torrent = {
+export type Torrent = {
   title: string;
   link: string;
   id: string;
 };
 
-type ParsedTvShow = {
+export type ParsedTvShow = {
   title: string;
   torrents: Array<Torrent>;
 };
 
-type ParsedTvShowWithSeasons = ParsedTvShow & {
+export type ParsedTvShowWithSeasons = {
+  title: string;
   seasons: string[];
 };
 
 export function parseTvShow(tvShowPage: string): Array<ParsedTvShow> {
   const $ = cheerio.load(tvShowPage);
   const seasons: string[] = $("dt a")
-    .map(() => $(this).text())
+    .map((_, el) => $(el).text())
     .get();
-  const rawLinks: Cheerio[] = $("dd");
+  const rawLinks = $("dd");
 
-  const torrents = rawLinks.map(element =>
-    $(this)
-      .find("a")
-      .map(() => ({
-        title: element.text(),
-        link: baseUrl + element.attr("href"),
-        id: element.attr("href").match(/\/torrent\/(\d+)/)[1]
-      }))
-      .get()
-  );
+  const torrents = rawLinks
+    .map((_, element) =>
+      $(element)
+        .find("a")
+        .map(() => ({
+          title: $(element).text(),
+          link: baseUrl + $(element).attr("href"),
+          id: $(element)
+            .attr("href")
+            ?.match(/\/torrent\/(\d+)/)?.[1]
+        }))
+        .get()
+    )
+    .get();
 
   return seasons.map((season, index) => ({
     title: season,
@@ -291,7 +295,7 @@ export function parseTvShow(tvShowPage: string): Array<ParsedTvShow> {
   }));
 }
 
-export function parseTorrentPage(torrentPage: string): FetchResult {
+export function parseTorrentPage(torrentPage: string): Item {
   const $ = cheerio.load(torrentPage);
   const name = $("#title")
     .text()
@@ -341,16 +345,18 @@ export function parseTvShows(tvShowsPage: string): ParsedTvShowWithSeasons[] {
   const $ = cheerio.load(tvShowsPage);
   const rawTitles = $("dt a");
   const series = rawTitles
-    .map(element => ({
-      title: element.text(),
-      id: element.attr("href").match(/\/tv\/(\d+)/)[1]
+    .map((_, element) => ({
+      title: $(element).text(),
+      id: $(element)
+        .attr("href")
+        ?.match(/\/tv\/(\d+)/)?.[1]
     }))
     .get();
 
   const rawSeasons: Cheerio = $("dd");
   const seasons = rawSeasons
-    .map(element =>
-      element
+    .map((_, element) =>
+      $(element)
         .find("a")
         .text()
         .match(/S\d+/g)
@@ -369,21 +375,28 @@ export function parseCategories(categoriesHTML: string): Array<Categories> {
   const categoriesContainer = $("select#category optgroup");
   let currentCategoryId = 0;
 
-  const categories = categoriesContainer.map(function getElements() {
+  const categories = categoriesContainer.map((_, el) => {
     currentCategoryId += 100;
 
-    const category = {
-      name: $(this).attr("label"),
+    const category: {
+      name: string;
+      id: string;
+      subcategories: Array<{
+        id: string;
+        name: string;
+      }>;
+    } = {
+      name: $(el).attr("label") || "",
       id: `${currentCategoryId}`,
       subcategories: []
     };
 
-    $(this)
+    $(el)
       .find("option")
       .each(function getSubcategory() {
         category.subcategories.push({
-          id: $(this).attr("value"),
-          name: $(this).text()
+          id: $(el).attr("value") || "",
+          name: $(el).text()
         });
       });
 
@@ -393,7 +406,7 @@ export function parseCategories(categoriesHTML: string): Array<Categories> {
   return categories.get();
 }
 
-type ParseCommentsPage = {
+export type ParseCommentsPage = {
   user: string;
   comment: string;
 };
@@ -405,12 +418,12 @@ export function parseCommentsPage(
 
   const comments = $.root()
     .contents()
-    .map(function getRawComments() {
-      const comment = $(this)
+    .map((_, el) => {
+      const comment = $(el)
         .find("div.comment")
         .text()
         .trim();
-      const user = $(this)
+      const user = $(el)
         .find("a")
         .text()
         .trim();

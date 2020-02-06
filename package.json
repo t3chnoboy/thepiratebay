@@ -28,23 +28,25 @@
     "version": "npm run build"
   },
   "devDependencies": {
-    "@babel/cli": "^7.0.0",
-    "@babel/core": "^7.0.0",
-    "@babel/preset-env": "^7.0.0",
+    "@babel/cli": "^7.8.4",
+    "@babel/core": "^7.8.4",
+    "@babel/preset-env": "^7.8.4",
     "@babel/preset-typescript": "^7.8.3",
     "@babel/register": "^7.0.0",
-    "@types/cheerio": "^0.22.15",
-    "@types/isomorphic-fetch": "^0.0.35",
+    "@types/cheerio": "^0.22.16",
+    "@types/jest": "^25.1.2",
+    "@types/node-fetch": "^2.5.4",
     "@types/url-parse": "^1.4.3",
-    "@typescript-eslint/eslint-plugin": "^2.17.0",
-    "babel-jest": "^23.4.2",
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "babel-jest": "^25.1.0",
     "chai": "^4.2.0",
-    "cross-env": "^6.0.3",
+    "cross-env": "^7.0.0",
     "eslint": "^6.8.0",
+    "eslint-config-airbnb-typescript": "^6.3.1",
     "eslint-config-bliss": "^4.6.0",
-    "eslint-config-erb": "^0.2.0",
+    "eslint-config-erb": "^0.3.0",
     "eslint-plugin-jsx-a11y": "^6.2.3",
-    "eslint-plugin-react": "^7.18.0",
+    "eslint-plugin-react": "^7.18.3",
     "husky": "^4.2.1",
     "jest-cli": "^25.1.0",
     "json-loader": "^0.5.7",
@@ -53,7 +55,7 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "form-data": "^3.0.0",
-    "isomorphic-fetch": "^2.2.1",
+    "node-fetch": "^2.6.0",
     "url-parse": "^1.4.7"
   },
   "files": [
@@ -68,6 +70,7 @@
   "eslintConfig": {
     "extends": "erb/typescript",
     "rules": {
+      "compat/compat": "off",
       "flowtype-errors/show-errors": "off"
     }
   },
