@@ -24,13 +24,20 @@ yarn add thepiratebay
 ## Usage
 
 ```js
+// ES6 module import
 import PirateBay from 'thepiratebay'
+/// CommonJS import
+const PirateBay = require('thepiratebay')
 
-await PirateBay.search('harry potter', {
-  category: 'video',
-  page: 3
-})
-console.log(searchResults)
+async function search() {
+  const searchResults = await PirateBay.search('harry potter', {
+    category: 'video',
+    page: 3,
+    orderBy: 'seeds',
+    sortBy: 'desc'
+  })
+  console.log(searchResults)
+}
 ```
 
 ## Methods
