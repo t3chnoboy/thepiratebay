@@ -2,9 +2,9 @@
  * Parse all pages
  */
 import cheerio from "cheerio";
-import fetch from "node-fetch";
 import UrlParse from "url-parse";
 import { baseUrl } from "./constants";
+import puppeteer from "puppeteer";
 
 /* eslint promise/no-promise-in-callback: 0, max-len: [2, 200] */
 
@@ -99,10 +99,18 @@ export function parsePage<T>(
           new UrlParse(url).set("hostname", new UrlParse(_url).hostname).href
       )
       .map(async _url => {
-        const result = await fetch(_url, {
-          method,
-          body: formData
-        }).then<string>(response => response.text());
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(_url)
+          .catch(async () => {
+            await browser.close();
+            new Error(
+              "Database maintenance, Cloudflare problems, 403 or 502 error"
+            )
+          })
+        
+        const result = await page.$eval('html', (e :any) => e.outerHTML);
+        await browser.close();
         return result.includes("502: Bad gateway") ||
           result.includes("403 Forbidden") ||
           result.includes("Database maintenance") ||
