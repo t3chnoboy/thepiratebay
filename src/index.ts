@@ -194,7 +194,7 @@ export function getTorrent(id: string | number | { link: string }) {
       return id.link;
     }
     return typeof id === "number" || /^\d+$/.test(id)
-      ? `${baseUrl}/torrent/${id}`
+      ? `${baseUrl}/description.php?id=${id}`
       : // If id is an object return it's link property. Otherwise,
         // return 'id' itself
         id;

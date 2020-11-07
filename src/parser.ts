@@ -303,7 +303,7 @@ export function parseTvShow(tvShowPage: string): Array<ParsedTvShow> {
 
 export function parseTorrentPage(torrentPage: string): Item {
   const $ = cheerio.load(torrentPage);
-  const name = $("#title")
+  const name = $("#name")
     .text()
     .trim();
 
@@ -325,9 +325,9 @@ export function parseTorrentPage(torrentPage: string): Item {
     .trim();
   const id = $("input[name=id]").attr("value") || "";
   const link = `${baseUrl}/torrent/${id}`;
-  const magnetLink = $('a[title="Get this torrent"]').attr("href") || "";
+  const magnetLink = $('a:contains("Get This Torrent")').attr("href") || "";
   const description =
-    $("div.nfo")
+    $("#descr")
       .text()
       .trim() || "";
 
