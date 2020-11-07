@@ -256,7 +256,7 @@ export function getTvShow(id: string) {
 }
 
 export function getCategories() {
-  return parsePage<Categories>(`${baseUrl}/recent`, parseCategories);
+  return parsePage<Categories>(`${baseUrl}/browse.php`, parseCategories);
 }
 
 export default {

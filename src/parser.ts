@@ -29,13 +29,13 @@ export type Item = {
 
 export type SubCategory = {
   id: string;
-  subcategories: SubCategory;
+  name: string;
 };
 
 export type Categories = {
   name: string;
   id: string;
-  subcategories: SubCategory;
+  subcategories: Array<SubCategory>;
 };
 
 /**
@@ -378,38 +378,27 @@ export function parseTvShows(tvShowsPage: string): ParsedTvShowWithSeasons[] {
 
 export function parseCategories(categoriesHTML: string): Array<Categories> {
   const $ = cheerio.load(categoriesHTML);
-  const categoriesContainer = $("select#category optgroup");
-  let currentCategoryId = 0;
+  const categoriesContainer = $(".browse .category_list");
 
-  const categories = categoriesContainer.map((_, el) => {
-    currentCategoryId += 100;
+  const categories :Categories[] = [];
 
-    const category: {
-      name: string;
-      id: string;
-      subcategories: Array<{
-        id: string;
-        name: string;
-      }>;
-    } = {
-      name: $(el).attr("label") || "",
-      id: `${currentCategoryId}`,
-      subcategories: []
-    };
+  categoriesContainer
+    .find("div")
+    .each((_, element) => {
+      const category :Categories = {
+        name: $(element).find("dt a").text(),
+        id: $(element).find("dt a").attr("href")?.match(/(?:category\:)(\d*)/)?.[1] || "",
+        subcategories: $(element).find("dd a:not(:contains('(?!)'))").map((_, el) => {
+          return {
+            id: $(el).attr("href")?.match(/(?:category\:)(\d*)/)?.[1] || "",
+            name: $(el).text()
+          }
+        }).get()
+      }
+      categories.push(category)
+    });
 
-    $(el)
-      .find("option")
-      .each(function getSubcategory() {
-        category.subcategories.push({
-          id: $(el).attr("value") || "",
-          name: $(el).text()
-        });
-      });
-
-    return category;
-  });
-
-  return categories.get();
+  return categories;
 }
 
 export type ParseCommentsPage = {
