@@ -178,9 +178,9 @@ export function search(title = "*", rawOpts: Search = {}) {
 
   const orderingNumber = convertOrderByObject({ orderBy, sortBy });
 
-  const url = `${baseUrl}/s/?${querystring.stringify({
+  const url = `${baseUrl}/search.php?${querystring.stringify({
     q: title,
-    category,
+    cat: category,
     page,
     orderBy: orderingNumber
   })}`;

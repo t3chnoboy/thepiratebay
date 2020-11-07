@@ -160,62 +160,60 @@ export function parseResults(
   filter: ParseOpts = {}
 ): Array<Item> {
   const $ = cheerio.load(resultsHTML);
-  const rawResults = $("table#searchResult tr:has(a.detLink)");
-
-  const results = rawResults.map(function getRawResults(el) {
+  const rawResults = $("ol#torrents li.list-entry");
+  
+  const results = rawResults.map(function getRawResults(_, el) {
     const name: string =
       $(el)
-        .find("a.detLink")
+        .find(".item-title a")
         .text() || "";
     const uploadDate: string =
       $(el)
-        ?.find("font")
+        ?.find(".item-uploaded")
         ?.text()
-        ?.match(/Uploaded|Transféré\s(?:<b>)?(.+?)(?:<\/b>)?,/)?.[1] || "";
     const size: string =
       $(el)
-        .find("font")
+        .find(".item-size")
         .text()
-        .match(/Size|Taille (.+?),/)?.[1] || "";
     const seeders: string = $(el)
-      .find('td[align="right"]')
+      .find('.item-seed')
       .first()
       .text();
     const leechers: string = $(el)
-      .find('td[align="right"]')
-      .next()
+      .find('.item-leech')
       .text();
     const relativeLink: string =
       $(el)
-        .find("div.detName a")
+        .find(".item-title a")
         .attr("href") || "";
     const link: string = baseUrl + relativeLink;
     const id = String(
-      parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)?.[1] || "", 10)
+      parseInt(/(?:id=)(\d*)/.exec(relativeLink)?.[1] || "", 10)
     );
     const magnetLink: string =
       $(el)
-        .find('a[title="Download this torrent using magnet"]')
+        .find('.item-icons a')
+        .first()
         .attr("href") || "";
     const uploader: string = $(el)
-      .find("font .detDesc")
+      .find(".item-user a")
       .text();
     const uploaderLink: string =
       baseUrl +
       $(el)
-        .find("font a")
+        .find(".item-user a")
         .attr("href");
     const verified: boolean = isTorrentVerified($(el));
 
     const category = {
       id:
         $(el)
-          .find("center a")
+          .find(".item-type a")
           .first()
           .attr("href")
-          ?.match(/\/browse\/(\d+)/)?.[1] || "",
+          ?.match(/(?:category\:)(\d*)/)?.[1] || "",
       name: $(el)
-        .find("center a")
+        .find(".item-type a")
         .first()
         .text()
     };
@@ -223,12 +221,12 @@ export function parseResults(
     const subcategory = {
       id:
         $(el)
-          .find("center a")
+          .find(".item-type a")
           .last()
           .attr("href")
-          ?.match(/\/browse\/(\d+)/)?.[1] || "",
+          ?.match(/(?:category\:)(\d*)/)?.[1] || "",
       name: $(el)
-        .find("center a")
+        .find(".item-type a")
         .last()
         .text()
     };
