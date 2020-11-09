@@ -10,8 +10,6 @@ import { parseCategories, parsePage, getProxyList } from "../src/parser";
 import Torrent, { convertOrderByObject } from "../src";
 import { baseUrl } from "../src/constants";
 
-/* eslint no-unused-expressions: off, import/no-named-as-default-member: off, jest/expect-expect: off, @typescript-eslint/no-unused-expressions: off, prefer-destructuring: off */
-
 const testingUsername = "YIFY";
 
 function torrentFactory() {

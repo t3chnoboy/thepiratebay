@@ -1090,12 +1090,13 @@
   resolved "https://registry.yarnpkg.com/@types/json-schema/-/json-schema-7.0.4.tgz#38fd73ddfd9b55abb1e1b2ed578cb55bd7b7d339"
   integrity sha512-8+KAKzEvSUdeo+kmqnKrqgeE+LcA0tjYWFY7RPProVYwnqDjukzO+3b6dLD56rYX5TdWejnEOLJYOIeh4CXKuA==
 
-"@types/node-fetch@^2.5.4":
-  version "2.5.4"
-  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.4.tgz#5245b6d8841fc3a6208b82291119bc11c4e0ce44"
-  integrity sha512-Oz6id++2qAOFuOlE1j0ouk1dzl3mmI1+qINPNBhi9nt/gVOz0G+13Ao6qjhdF0Ys+eOkhu6JnFmt38bR3H0POQ==
+"@types/node-fetch@^2.5.7":
+  version "2.5.7"
+  resolved "https://registry.yarnpkg.com/@types/node-fetch/-/node-fetch-2.5.7.tgz#20a2afffa882ab04d44ca786449a276f9f6bbf3c"
+  integrity sha512-o2WVNf5UhWRkxlf6eq+jMZDu7kjgpgJfl4xVNlvryc95O/6F2ld8ztKX+qu+Rjyet93WAWm5LjeX9H5FGkODvw==
   dependencies:
     "@types/node" "*"
+    form-data "^3.0.0"
 
 "@types/node@*":
   version "13.5.0"
@@ -1106,6 +1107,13 @@
   version "4.0.0"
   resolved "https://registry.yarnpkg.com/@types/parse-json/-/parse-json-4.0.0.tgz#2f8bb441434d163b35fb8ffdccd7138927ffb8c0"
   integrity sha512-//oorEZjL6sbPcKUaCdIGlIUeH26mgzimjBB77G6XRgnDl/L5wOnpyBGRe/Mmf5CVW3PwEBE1NjiMZ/ssFh4wA==
+
+"@types/puppeteer@^5.4.0":
+  version "5.4.0"
+  resolved "https://registry.yarnpkg.com/@types/puppeteer/-/puppeteer-5.4.0.tgz#1ef860bd7a9dcf0c4633aac8c0ec21f75b431868"
+  integrity sha512-zTYDLjnHjgzokrwKt7N0rgn7oZPYo1J0m8Ghu+gXqzLCEn8RWbELa2uprE2UFJ0jU/Sk0x9jXXdOH/5QQLFHhQ==
+  dependencies:
+    "@types/node" "*"
 
 "@types/stack-utils@^1.0.1":
   version "1.0.1"
