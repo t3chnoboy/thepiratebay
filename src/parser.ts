@@ -3,8 +3,8 @@
  */
 import cheerio from "cheerio";
 import UrlParse from "url-parse";
-import { baseUrl } from "./constants";
 import puppeteer from "puppeteer";
+import { baseUrl } from "./constants";
 
 /* eslint promise/no-promise-in-callback: 0, max-len: [2, 200] */
 
@@ -101,15 +101,14 @@ export function parsePage<T>(
       .map(async _url => {
         const browser = await puppeteer.launch();
         const page = await browser.newPage();
-        await page.goto(_url)
-          .catch(async () => {
-            await browser.close();
-            new Error(
-              "Database maintenance, Cloudflare problems, 403 or 502 error"
-            )
-          })
-        
-        const result = await page.$eval('html', (e :any) => e.outerHTML);
+        await page.goto(_url).catch(async () => {
+          await browser.close();
+          throw Error(
+            "Database maintenance, Cloudflare problems, 403 or 502 error"
+          );
+        });
+
+        const result = await page.$eval("html", (e: any) => e.outerHTML);
         await browser.close();
         return result.includes("502: Bad gateway") ||
           result.includes("403 Forbidden") ||
@@ -161,26 +160,24 @@ export function parseResults(
 ): Array<Item> {
   const $ = cheerio.load(resultsHTML);
   const rawResults = $("ol#torrents li.list-entry");
-  
+
   const results = rawResults.map(function getRawResults(_, el) {
     const name: string =
       $(el)
         .find(".item-title a")
         .text() || "";
-    const uploadDate: string =
-      $(el)
-        ?.find(".item-uploaded")
-        ?.text()
-    const size: string =
-      $(el)
-        .find(".item-size")
-        .text()
+    const uploadDate: string = $(el)
+      ?.find(".item-uploaded")
+      ?.text();
+    const size: string = $(el)
+      .find(".item-size")
+      .text();
     const seeders: string = $(el)
-      .find('.item-seed')
+      .find(".item-seed")
       .first()
       .text();
     const leechers: string = $(el)
-      .find('.item-leech')
+      .find(".item-leech")
       .text();
     const relativeLink: string =
       $(el)
@@ -192,7 +189,7 @@ export function parseResults(
     );
     const magnetLink: string =
       $(el)
-        .find('.item-icons a')
+        .find(".item-icons a")
         .first()
         .attr("href") || "";
     const uploader: string = $(el)
@@ -211,7 +208,7 @@ export function parseResults(
           .find(".item-type a")
           .first()
           .attr("href")
-          ?.match(/(?:category\:)(\d*)/)?.[1] || "",
+          ?.match(/(?:category:)(\d*)/)?.[1] || "",
       name: $(el)
         .find(".item-type a")
         .first()
@@ -224,7 +221,7 @@ export function parseResults(
           .find(".item-type a")
           .last()
           .attr("href")
-          ?.match(/(?:category\:)(\d*)/)?.[1] || "",
+          ?.match(/(?:category:)(\d*)/)?.[1] || "",
       name: $(el)
         .find(".item-type a")
         .last()
@@ -380,23 +377,33 @@ export function parseCategories(categoriesHTML: string): Array<Categories> {
   const $ = cheerio.load(categoriesHTML);
   const categoriesContainer = $(".browse .category_list");
 
-  const categories :Categories[] = [];
+  const categories: Categories[] = [];
 
-  categoriesContainer
-    .find("div")
-    .each((_, element) => {
-      const category :Categories = {
-        name: $(element).find("dt a").text(),
-        id: $(element).find("dt a").attr("href")?.match(/(?:category\:)(\d*)/)?.[1] || "",
-        subcategories: $(element).find("dd a:not(:contains('(?!)'))").map((_, el) => {
+  categoriesContainer.find("div").each((_, element) => {
+    const category: Categories = {
+      name: $(element)
+        .find("dt a")
+        .text(),
+      id:
+        $(element)
+          .find("dt a")
+          .attr("href")
+          ?.match(/(?:category:)(\d*)/)?.[1] || "",
+      subcategories: $(element)
+        .find("dd a:not(:contains('(?!)'))")
+        .map((i, el) => {
           return {
-            id: $(el).attr("href")?.match(/(?:category\:)(\d*)/)?.[1] || "",
+            id:
+              $(el)
+                .attr("href")
+                ?.match(/(?:category:)(\d*)/)?.[1] || "",
             name: $(el).text()
-          }
-        }).get()
-      }
-      categories.push(category)
-    });
+          };
+        })
+        .get()
+    };
+    categories.push(category);
+  });
 
   return categories;
 }
