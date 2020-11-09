@@ -2,8 +2,8 @@
  * Parse all pages
  */
 import cheerio from "cheerio";
-import fetch from "node-fetch";
 import UrlParse from "url-parse";
+import puppeteer from "puppeteer";
 import { baseUrl } from "./constants";
 
 /* eslint promise/no-promise-in-callback: 0, max-len: [2, 200] */
@@ -29,13 +29,13 @@ export type Item = {
 
 export type SubCategory = {
   id: string;
-  subcategories: SubCategory;
+  name: string;
 };
 
 export type Categories = {
   name: string;
   id: string;
-  subcategories: SubCategory;
+  subcategories: Array<SubCategory>;
 };
 
 /**
@@ -99,10 +99,17 @@ export function parsePage<T>(
           new UrlParse(url).set("hostname", new UrlParse(_url).hostname).href
       )
       .map(async _url => {
-        const result = await fetch(_url, {
-          method,
-          body: formData
-        }).then<string>(response => response.text());
+        const browser = await puppeteer.launch();
+        const page = await browser.newPage();
+        await page.goto(_url).catch(async () => {
+          await browser.close();
+          throw Error(
+            "Database maintenance, Cloudflare problems, 403 or 502 error"
+          );
+        });
+
+        const result = await page.$eval("html", (e: any) => e.outerHTML);
+        await browser.close();
         return result.includes("502: Bad gateway") ||
           result.includes("403 Forbidden") ||
           result.includes("Database maintenance") ||
@@ -152,62 +159,58 @@ export function parseResults(
   filter: ParseOpts = {}
 ): Array<Item> {
   const $ = cheerio.load(resultsHTML);
-  const rawResults = $("table#searchResult tr:has(a.detLink)");
+  const rawResults = $("ol#torrents li.list-entry");
 
-  const results = rawResults.map(function getRawResults(el) {
+  const results = rawResults.map(function getRawResults(_, el) {
     const name: string =
       $(el)
-        .find("a.detLink")
+        .find(".item-title a")
         .text() || "";
-    const uploadDate: string =
-      $(el)
-        ?.find("font")
-        ?.text()
-        ?.match(/Uploaded|Transféré\s(?:<b>)?(.+?)(?:<\/b>)?,/)?.[1] || "";
-    const size: string =
-      $(el)
-        .find("font")
-        .text()
-        .match(/Size|Taille (.+?),/)?.[1] || "";
+    const uploadDate: string = $(el)
+      ?.find(".item-uploaded")
+      ?.text();
+    const size: string = $(el)
+      .find(".item-size")
+      .text();
     const seeders: string = $(el)
-      .find('td[align="right"]')
+      .find(".item-seed")
       .first()
       .text();
     const leechers: string = $(el)
-      .find('td[align="right"]')
-      .next()
+      .find(".item-leech")
       .text();
     const relativeLink: string =
       $(el)
-        .find("div.detName a")
+        .find(".item-title a")
         .attr("href") || "";
     const link: string = baseUrl + relativeLink;
     const id = String(
-      parseInt(/^\/torrent\/(\d+)/.exec(relativeLink)?.[1] || "", 10)
+      parseInt(/(?:id=)(\d*)/.exec(relativeLink)?.[1] || "", 10)
     );
     const magnetLink: string =
       $(el)
-        .find('a[title="Download this torrent using magnet"]')
+        .find(".item-icons a")
+        .first()
         .attr("href") || "";
     const uploader: string = $(el)
-      .find("font .detDesc")
+      .find(".item-user a")
       .text();
     const uploaderLink: string =
       baseUrl +
       $(el)
-        .find("font a")
+        .find(".item-user a")
         .attr("href");
     const verified: boolean = isTorrentVerified($(el));
 
     const category = {
       id:
         $(el)
-          .find("center a")
+          .find(".item-type a")
           .first()
           .attr("href")
-          ?.match(/\/browse\/(\d+)/)?.[1] || "",
+          ?.match(/(?:category:)(\d*)/)?.[1] || "",
       name: $(el)
-        .find("center a")
+        .find(".item-type a")
         .first()
         .text()
     };
@@ -215,12 +218,12 @@ export function parseResults(
     const subcategory = {
       id:
         $(el)
-          .find("center a")
+          .find(".item-type a")
           .last()
           .attr("href")
-          ?.match(/\/browse\/(\d+)/)?.[1] || "",
+          ?.match(/(?:category:)(\d*)/)?.[1] || "",
       name: $(el)
-        .find("center a")
+        .find(".item-type a")
         .last()
         .text()
     };
@@ -297,7 +300,7 @@ export function parseTvShow(tvShowPage: string): Array<ParsedTvShow> {
 
 export function parseTorrentPage(torrentPage: string): Item {
   const $ = cheerio.load(torrentPage);
-  const name = $("#title")
+  const name = $("#name")
     .text()
     .trim();
 
@@ -319,9 +322,9 @@ export function parseTorrentPage(torrentPage: string): Item {
     .trim();
   const id = $("input[name=id]").attr("value") || "";
   const link = `${baseUrl}/torrent/${id}`;
-  const magnetLink = $('a[title="Get this torrent"]').attr("href") || "";
+  const magnetLink = $('a:contains("Get This Torrent")').attr("href") || "";
   const description =
-    $("div.nfo")
+    $("#descr")
       .text()
       .trim() || "";
 
@@ -372,38 +375,37 @@ export function parseTvShows(tvShowsPage: string): ParsedTvShowWithSeasons[] {
 
 export function parseCategories(categoriesHTML: string): Array<Categories> {
   const $ = cheerio.load(categoriesHTML);
-  const categoriesContainer = $("select#category optgroup");
-  let currentCategoryId = 0;
+  const categoriesContainer = $(".browse .category_list");
 
-  const categories = categoriesContainer.map((_, el) => {
-    currentCategoryId += 100;
+  const categories: Categories[] = [];
 
-    const category: {
-      name: string;
-      id: string;
-      subcategories: Array<{
-        id: string;
-        name: string;
-      }>;
-    } = {
-      name: $(el).attr("label") || "",
-      id: `${currentCategoryId}`,
-      subcategories: []
+  categoriesContainer.find("div").each((_, element) => {
+    const category: Categories = {
+      name: $(element)
+        .find("dt a")
+        .text(),
+      id:
+        $(element)
+          .find("dt a")
+          .attr("href")
+          ?.match(/(?:category:)(\d*)/)?.[1] || "",
+      subcategories: $(element)
+        .find("dd a:not(:contains('(?!)'))")
+        .map((i, el) => {
+          return {
+            id:
+              $(el)
+                .attr("href")
+                ?.match(/(?:category:)(\d*)/)?.[1] || "",
+            name: $(el).text()
+          };
+        })
+        .get()
     };
-
-    $(el)
-      .find("option")
-      .each(function getSubcategory() {
-        category.subcategories.push({
-          id: $(el).attr("value") || "",
-          name: $(el).text()
-        });
-      });
-
-    return category;
+    categories.push(category);
   });
 
-  return categories.get();
+  return categories;
 }
 
 export type ParseCommentsPage = {

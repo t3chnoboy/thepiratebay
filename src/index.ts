@@ -178,9 +178,9 @@ export function search(title = "*", rawOpts: Search = {}) {
 
   const orderingNumber = convertOrderByObject({ orderBy, sortBy });
 
-  const url = `${baseUrl}/s/?${querystring.stringify({
+  const url = `${baseUrl}/search.php?${querystring.stringify({
     q: title,
-    category,
+    cat: category,
     page,
     orderBy: orderingNumber
   })}`;
@@ -194,7 +194,7 @@ export function getTorrent(id: string | number | { link: string }) {
       return id.link;
     }
     return typeof id === "number" || /^\d+$/.test(id)
-      ? `${baseUrl}/torrent/${id}`
+      ? `${baseUrl}/description.php?id=${id}`
       : // If id is an object return it's link property. Otherwise,
         // return 'id' itself
         id;
@@ -256,7 +256,7 @@ export function getTvShow(id: string) {
 }
 
 export function getCategories() {
-  return parsePage<Categories>(`${baseUrl}/recent`, parseCategories);
+  return parsePage<Categories>(`${baseUrl}/browse.php`, parseCategories);
 }
 
 export default {
