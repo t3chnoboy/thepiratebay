@@ -35,7 +35,4 @@ jobs:
         run: yarn --frozen-lockfile
 
       - name: yarn test
-        env:
-          CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          CLIENT_SECRET: ${{ secrets.CLIENT_SECRET }}
         run: yarn test

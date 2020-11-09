@@ -23,7 +23,7 @@
     "clean": "rm -rf lib",
     "lint": "eslint --cache . --ext .js,.ts",
     "spec": "jest",
-    "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build",
+    "test": "cross-env NODE_ENV=test yarn spec && yarn build",
     "ts": "tsc",
     "version": "npm run build"
   },
