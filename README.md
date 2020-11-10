@@ -1,8 +1,7 @@
 The Pirate Bay node.js client
 =============================
 
-[![Join the chat at https://gitter.im/thepiratebay-node/Lobby](https://badges.gitter.im/thepiratebay-node/Lobby.svg)](https://gitter.im/thepiratebay-node/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
-[![Build Status](https://travis-ci.org/t3chnoboy/thepiratebay.svg?branch=master)](https://travis-ci.org/t3chnoboy/thepiratebay)
+![Test](https://github.com/t3chnoboy/thepiratebay/workflows/Test/badge.svg)
 [![NPM version](https://badge.fury.io/js/thepiratebay.svg)](http://badge.fury.io/js/thepiratebay)
 [![Dependency Status](https://img.shields.io/david/t3chnoboy/thepiratebay.svg)](https://david-dm.org/t3chnoboy/thepiratebay)
 [![npm](https://img.shields.io/npm/dm/thepiratebay.svg?maxAge=2592000)](https://npm-stat.com/charts.html?package=thepiratebay)
@@ -26,7 +25,7 @@ yarn add thepiratebay
 ```js
 import PirateBay from 'thepiratebay'
 
-await PirateBay.search('harry potter', {
+const searchResults = await PirateBay.search('harry potter', {
   category: 'video',
   page: 3
 })

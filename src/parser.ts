@@ -4,9 +4,8 @@
 import cheerio from "cheerio";
 import UrlParse from "url-parse";
 import puppeteer from "puppeteer";
+import fetch from "node-fetch";
 import { baseUrl } from "./constants";
-
-/* eslint promise/no-promise-in-callback: 0, max-len: [2, 200] */
 
 const maxConcurrentRequests = 3;
 

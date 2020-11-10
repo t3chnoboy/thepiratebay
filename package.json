@@ -23,7 +23,7 @@
     "clean": "rm -rf lib",
     "lint": "eslint --cache . --ext .js,.ts",
     "spec": "jest",
-    "test": "cross-env NODE_ENV=test npm run lint && npm run spec && npm run build",
+    "test": "cross-env NODE_ENV=test yarn spec && yarn build",
     "ts": "tsc",
     "version": "npm run build"
   },
@@ -35,7 +35,8 @@
     "@babel/register": "^7.0.0",
     "@types/cheerio": "^0.22.16",
     "@types/jest": "^25.1.2",
-    "@types/node-fetch": "^2.5.4",
+    "@types/node-fetch": "^2.5.7",
+    "@types/puppeteer": "^5.4.0",
     "@types/url-parse": "^1.4.3",
     "@typescript-eslint/eslint-plugin": "^2.19.0",
     "babel-jest": "^25.1.0",
@@ -55,8 +56,9 @@
   "dependencies": {
     "cheerio": "^1.0.0-rc.3",
     "form-data": "^3.0.0",
-    "url-parse": "^1.4.7",
-    "puppeteer": "^5.4.1"
+    "node-fetch": "^2.6.1",
+    "puppeteer": "^5.4.1",
+    "url-parse": "^1.4.7"
   },
   "files": [
     "lib"
